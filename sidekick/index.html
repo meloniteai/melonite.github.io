@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <title>Sidekick — by Melonite</title>
-<meta name="description" content="Sidekick — the coding agent companion CLI." />
+<meta name="description" content="Sidekick — the companion CLI for Melonite's autonomous software engineering platform." />
 <meta name="theme-color" content="#F55740" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -220,38 +220,36 @@
   }
   .hero-meta span::before { content: "↳ "; color: var(--ink-2); margin-right: 4px; }
 
-  /* ============== MARQUEE ============== */
+  /* ============== COMPAT STRIP ============== */
   .marquee {
     border-top: 1px solid var(--rule);
     border-bottom: 1px solid var(--rule);
-    padding: 22px 0;
+    padding: 14px 0;
     overflow: hidden;
+  }
+  .marquee .wrap {
+    display: flex; align-items: center; justify-content: center;
+    gap: 22px; flex-wrap: wrap;
   }
   .marquee-label {
     font-family: var(--mono); font-size: 10px; letter-spacing: .24em;
     text-transform: uppercase; color: var(--ink-3);
-    text-align: center; margin-bottom: 12px;
+    margin: 0;
   }
   .marquee-track {
-    display: flex; gap: 56px; align-items: center;
-    width: max-content;
-    animation: scroll 14s linear infinite;
-    font-family: var(--display); font-size: 22px;
+    display: inline-flex; gap: 22px; align-items: center;
+    font-family: var(--display); font-size: 15px;
     text-transform: uppercase; letter-spacing: .01em;
     color: var(--ink);
   }
   .marquee-track .sep {
-    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+    display: inline-block; width: 4px; height: 4px; border-radius: 50%;
     background: var(--ink-3);
     flex: 0 0 auto;
   }
   .marquee-track .soon {
-    font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
+    font-family: var(--mono); font-size: 10px; letter-spacing: .22em;
     text-transform: uppercase; color: var(--ink-2);
-  }
-  @keyframes scroll {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
   }
 
   /* ============== FEATURES ============== */
@@ -316,6 +314,39 @@
   }
   .mock-title { margin-left: 4px; }
   .mock-body { padding: 20px; color: var(--ink); }
+
+  /* Video mock — fills the mock body edge-to-edge, no padding */
+  .mock-body-video {
+    padding: 0;
+    background: #000;
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+  }
+  .feat-video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: #000;
+  }
+  .video-fallback-msg {
+    position: absolute; inset: 0;
+    display: none;
+    flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 8px;
+    color: rgba(255,255,255,.85);
+    font-family: var(--mono);
+    text-align: center; padding: 24px;
+    background:
+      repeating-linear-gradient(135deg, rgba(255,255,255,.02) 0 8px, transparent 8px 16px),
+      #1a1410;
+  }
+  .mock-body-video.video-fallback .video-fallback-msg { display: flex; }
+  .vf-glyph { font-size: 32px; opacity: .55; }
+  .vf-title { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; }
+  .vf-sub { font-size: 11px; color: rgba(255,255,255,.45); letter-spacing: .08em; }
 
   /* Trace mock */
   .trace-rows { display: grid; gap: 10px; padding: 4px 0; }
@@ -461,7 +492,7 @@
 <!-- =================== HERO =================== -->
 <section class="hero">
   <div class="wrap">
-    <span class="eyebrow">v0.0.7 · open beta</span>
+    <span class="eyebrow">v0.0.9 · open beta</span>
     <h1 class="display">SIDEKICK</h1>
 
     <div class="hero-cta" style="margin-top: 36px;">
@@ -487,16 +518,17 @@
   </div>
 </section>
 
-<!-- =================== MARQUEE =================== -->
+<!-- =================== COMPAT STRIP =================== -->
 <div class="marquee">
-  <div class="marquee-label">plays nicely with</div>
-  <div class="marquee-track" id="marquee">
-    <span>Claude Code</span>
-    <span class="sep" aria-hidden="true"></span>
-    <span>Codex</span>
-    <span class="sep" aria-hidden="true"></span>
-    <span class="soon">&amp; more coming soon</span>
-    <span class="sep" aria-hidden="true"></span>
+  <div class="wrap">
+    <div class="marquee-label">compatible with</div>
+    <div class="marquee-track" id="marquee">
+      <span>Claude Code</span>
+      <span class="sep" aria-hidden="true"></span>
+      <span>Codex</span>
+      <span class="sep" aria-hidden="true"></span>
+      <span class="soon">&amp; more coming soon</span>
+    </div>
   </div>
 </div>
 
@@ -511,25 +543,29 @@
       </p>
       <ul class="feat-list">
         <li><span><b>Bring your own.</b> Any LLM skill, script, or binary that returns a distance.</span></li>
-        <li><span><b>Pinned &amp; trusted.</b> Remote verifiers are sha256-pinned, TOFU.</span></li>
+        <li><span>Pinned &amp; trusted. Remote verifiers are sha256-pinned.</span></li>
       </ul>
     </div>
-    <div class="mock" aria-hidden="true">
+    <div class="mock mock-video" aria-hidden="true">
       <div class="mock-head">
         <span class="mock-dots"><i></i><i></i><i></i></span>
-        <span class="mock-title">sidekick.yaml</span>
+        <span class="mock-title">sidekick · demo</span>
       </div>
-      <div class="mock-body" style="font-size: 12.5px; line-height: 1.7;">
-        <span class="yaml-line"><span class="yk">goal_source:</span> <span class="yv">prompt</span></span>
-        <span class="yaml-line"><span class="yk">verifiers:</span></span>
-        <span class="yaml-line">  <span class="yd">- name:</span> <span class="yv">Architect</span></span>
-        <span class="yaml-line">    <span class="yk">type:</span> <span class="yv">agent</span>     <span class="yk">direction:</span> <span class="yv">N</span></span>
-        <span class="yaml-line">    <span class="yk">llm:</span> { <span class="yk">agent:</span> <span class="yv">claude</span>, <span class="yk">model:</span> <span class="yv">haiku</span> }</span>
-        <span class="yaml-line">  <span class="yd">- name:</span> <span class="yv">Test</span></span>
-        <span class="yaml-line">    <span class="yk">type:</span> <span class="yv">binary</span>    <span class="yk">direction:</span> <span class="yv">E</span></span>
-        <span class="yaml-line">    <span class="yk">binary:</span> { <span class="yk">command:</span> [<span class="yv">"go"</span>, <span class="yv">"test"</span>] }</span>
-        <span class="yaml-line">  <span class="yd">- name:</span> <span class="yv">Security</span>  <span class="yk">direction:</span> <span class="yv">S</span></span>
-        <span class="yaml-line">  <span class="yd">- name:</span> <span class="yv">Deployment</span> <span class="yk">direction:</span> <span class="yv">W</span></span>
+      <div class="mock-body mock-body-video">
+        <video
+          class="feat-video"
+          data-src="assets/sidekick-demo.mov"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+        ></video>
+        <div class="video-fallback-msg">
+          <span class="vf-glyph">▶</span>
+          <span class="vf-title">sidekick · demo video</span>
+          <span class="vf-sub">embedded from github user-attachments</span>
+        </div>
       </div>
     </div>
   </div>
@@ -590,9 +626,7 @@
     <div class="feat-copy">
       <div class="feat-num"><b>03</b> &nbsp;/&nbsp; wire</div>
       <h2 class="feat-title">Drop-in simple.</h2>
-      <p class="feat-body">
-        A reward signal your agent can actually read — minus the training loop. Just hooks and MCP.
-      </p>
+      <p class="feat-body">A reward signal your agent can read. </p>
       <ul class="feat-list">
         <li><span><b>Claude Code &amp; Codex.</b> Supported out of the box via agent hooks, MCP, and a single skill.</span></li>
         <li><span><b>Per-worktree sockets.</b> Parallelize per worktree, or run repos side-by-side.</span></li>
@@ -604,7 +638,7 @@
         <span class="mock-title">sidekick start</span>
       </div>
       <div class="mock-body" style="font-size: 12.5px;">
-        <span class="term-line"><span class="tp">▸</span> goal set <span class="tdim">via hud_set_goal</span></span>
+        <span class="term-line"><span class="tp">▸</span> goal set <span class="tdim">via sidekick_set_goal</span></span>
         <span class="term-line tdim">  &ldquo;ship the auth module&rdquo;</span>
         <span class="term-line"><span class="tp">▸</span> hook · write <span class="tdim">src/auth/session.ts</span></span>
         <span class="term-line"><span class="tp">▸</span> hook · write <span class="tdim">src/auth/refresh.ts</span></span>
@@ -613,7 +647,7 @@
         <span class="term-line"><span class="tok">✓</span> Security  <span class="tdim">0.08 · tokens scoped, no leaks</span></span>
         <span class="term-line"><span class="twarn">!</span> Test      <span class="tdim">0.64 · refresh path uncovered</span></span>
         <span class="term-line"><span class="tbad">✗</span> Deployment <span class="tdim">0.88 · missing migration</span></span>
-        <span class="term-line tdim">  agent → hud_status &middot; course-correcting</span>
+        <span class="term-line tdim">  agent → sidekick_status &middot; course-correcting</span>
       </div>
     </div>
   </div>
@@ -651,9 +685,23 @@
   document.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  // ---- duplicate marquee for seamless loop ----
-  const m = document.getElementById('marquee');
-  m.innerHTML = m.innerHTML + m.innerHTML;
+  // (compat strip is static — no JS needed)
+
+  // Promote video data-src → src only when not on the sandbox preview host
+  // (the github user-attachments URL is scoped to github sessions and 404s elsewhere)
+  (function setupFeatureVideo() {
+    const v = document.querySelector('.feat-video[data-src]');
+    if (!v) return;
+    const isSandbox = /claudeusercontent\.com$/.test(location.hostname);
+    const showFallback = () => {
+      const wrap = v.closest('.mock-body-video');
+      if (wrap) wrap.classList.add('video-fallback');
+      v.remove();
+    };
+    if (isSandbox) { showFallback(); return; }
+    v.addEventListener('error', showFallback, { once: true });
+    v.src = v.dataset.src;
+  })();
 </script>
 
 </body>
