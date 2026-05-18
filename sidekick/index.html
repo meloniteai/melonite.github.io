@@ -260,6 +260,10 @@
   }
   .feat-grid.flip { grid-template-columns: 1.1fr 1fr; }
   .feat-grid.flip .feat-copy { order: 2; }
+  /* Feature row that hosts the demo video gets a ~25% larger mock column */
+  .feat-grid:has(.mock-video) {
+    grid-template-columns: 1fr 1.62fr;
+  }
   .feat-num {
     font-family: var(--mono); font-size: 11px;
     color: var(--ink-3); letter-spacing: .22em; text-transform: uppercase;
