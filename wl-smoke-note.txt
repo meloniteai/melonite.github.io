@@ -1,0 +1,2 @@
+weightless lifecycle smoke — this file is changed by the PR but no verifier
+has ever judged it, so its hunk should land in the corpus as judged=false.
