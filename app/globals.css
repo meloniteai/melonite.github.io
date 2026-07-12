@@ -3,7 +3,7 @@
 :root {
   color-scheme: light;
   --paper: oklch(0.975 0.008 75);
-  --sky: oklch(0.88 0.075 226);
+  --sky: oklch(0.84 0.11 226);
 }
 
 * {
@@ -22,8 +22,8 @@ body {
   background-color: var(--paper);
   background-image: linear-gradient(
     100deg,
-    color-mix(in oklch, var(--sky) 82%, var(--paper)) 0%,
-    color-mix(in oklch, var(--sky) 48%, var(--paper)) 44%,
+    color-mix(in oklch, var(--sky) 92%, var(--paper)) 0%,
+    color-mix(in oklch, var(--sky) 56%, var(--paper)) 43%,
     var(--paper) 100%
   );
   background-position: center;
@@ -41,7 +41,7 @@ body::after {
   background: url("/fine-grain.png") repeat;
   background-size: 256px 256px;
   mix-blend-mode: soft-light;
-  opacity: 0.055;
+  opacity: 0.12;
 }
 
 main {
@@ -50,7 +50,7 @@ main {
 
 .scroll-stage {
   position: relative;
-  height: 400vh;
+  height: 360vh;
 }
 
 .sticky-scene {
@@ -78,6 +78,8 @@ main {
 }
 
 .hero-flower {
+  position: relative;
+  z-index: 1;
   display: block;
   width: min(50vw, 543px);
   max-width: 68vw;
@@ -87,6 +89,20 @@ main {
   user-select: none;
   transform: translateZ(0);
   filter: drop-shadow(0 20px 34px oklch(0.42 0.06 220 / 0.1));
+}
+
+.closing-frame {
+  position: absolute;
+  z-index: 2;
+  width: calc(100vw - 2px);
+  height: calc(100svh - 2px);
+  border: 1px solid oklch(0.35 0.035 220 / 0.62);
+  pointer-events: none;
+  will-change: width, height;
+}
+
+.empty-tail {
+  min-height: 100svh;
 }
 
 .sr-only {
@@ -103,7 +119,7 @@ main {
 
 @media (max-width: 640px) {
   .scroll-stage {
-    height: 340vh;
+    height: 300vh;
   }
 
   .hero-flower {
