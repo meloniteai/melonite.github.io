@@ -77,8 +77,14 @@ export default function Home() {
   }, []);
 
   return (
-    <main>
-      <section ref={stageRef} className="scroll-stage" aria-label="Tulip transformation">
+    <>
+      <nav className="site-nav" aria-label="Primary navigation">
+        <a href="#join">Join</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <main>
+      <section id="join" ref={stageRef} className="scroll-stage" aria-label="Tulip transformation">
         <div className="sticky-scene">
           <div ref={frameBoxRef} className="closing-frame" aria-hidden="true" />
           <img
@@ -94,7 +100,10 @@ export default function Home() {
           </p>
         </div>
       </section>
-      <section className="empty-tail" aria-label="End of transformation" />
-    </main>
+      <section id="about" className="empty-tail" aria-label="End of transformation">
+        <span id="contact" className="page-end-anchor" aria-hidden="true" />
+      </section>
+      </main>
+    </>
   );
 }
