@@ -11,7 +11,7 @@
 }
 
 html {
-  background: var(--paper);
+  background: #fff;
   scrollbar-color: oklch(0.72 0.03 225) transparent;
 }
 
@@ -19,29 +19,8 @@ body {
   margin: 0;
   min-width: 320px;
   color: oklch(0.23 0.02 225);
-  background-color: var(--paper);
-  background-image: linear-gradient(
-    100deg,
-    color-mix(in oklch, var(--sky) 92%, var(--paper)) 0%,
-    color-mix(in oklch, var(--sky) 56%, var(--paper)) 43%,
-    var(--paper) 100%
-  );
-  background-position: center;
-  background-size: cover;
-  background-attachment: fixed;
+  background: #fff;
   font-family: Arial, Helvetica, sans-serif;
-}
-
-body::after {
-  position: fixed;
-  inset: 0;
-  z-index: 10;
-  content: "";
-  pointer-events: none;
-  background: url("/fine-grain.png") repeat;
-  background-size: 256px 256px;
-  mix-blend-mode: soft-light;
-  opacity: 0.12;
 }
 
 main {
@@ -64,19 +43,6 @@ main {
   isolation: isolate;
 }
 
-.sticky-scene::before {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  content: "";
-  pointer-events: none;
-  background: radial-gradient(
-    circle at 54% 44%,
-    oklch(0.99 0.008 80 / 0.16),
-    transparent 34%
-  );
-}
-
 .hero-flower {
   position: relative;
   z-index: 1;
@@ -93,12 +59,30 @@ main {
 
 .closing-frame {
   position: absolute;
-  z-index: 2;
+  z-index: 0;
   width: calc(100vw - 2px);
   height: calc(100svh - 2px);
-  border: 1px solid oklch(0.35 0.035 220 / 0.62);
+  overflow: hidden;
+  border: 0;
+  border-radius: clamp(20px, 2.4vw, 36px);
+  background: linear-gradient(
+    100deg,
+    color-mix(in oklch, var(--sky) 92%, var(--paper)) 0%,
+    color-mix(in oklch, var(--sky) 56%, var(--paper)) 43%,
+    var(--paper) 100%
+  );
   pointer-events: none;
   will-change: width, height;
+}
+
+.closing-frame::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: url("/fine-grain.png") repeat;
+  background-size: 256px 256px;
+  mix-blend-mode: soft-light;
+  opacity: 0.12;
 }
 
 .empty-tail {
