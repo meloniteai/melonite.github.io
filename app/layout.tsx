@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Bodoni_Moda, Geist, Geist_Mono } from "next/font/google";
+import { Bodoni_Moda, Geist_Mono, Jost } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const jost = Jost({
+  variable: "--font-jost",
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
 });
 
 const geistMono = Geist_Mono({
@@ -20,8 +21,8 @@ const bodoniModa = Bodoni_Moda({
 });
 
 export const metadata: Metadata = {
-  title: "Melonite",
-  description: "Scroll to resolve the Melonite flower from glitch to clarity.",
+  title: "Melonite | Private Beta",
+  description: "Melonite is free to join by invitation during private beta.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
@@ -36,7 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${bodoniModa.variable} antialiased`}
+        className={`${jost.variable} ${geistMono.variable} ${bodoniModa.variable} antialiased`}
       >
         {children}
       </body>

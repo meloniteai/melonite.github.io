@@ -6,6 +6,10 @@
   --sky: oklch(0.84 0.11 226);
   --outer: rgb(247 249 232);
   --ink-blue: oklch(0.29 0.105 248);
+  --frame-border: 1px solid oklch(0.29 0.105 248 / 0.1);
+  --frame-radius: 12px;
+  --preview-frame-max-width: 1008px;
+  --preview-screenshot-to-frame: 92%;
 }
 
 * {
@@ -22,7 +26,7 @@ body {
   min-width: 320px;
   color: oklch(0.23 0.02 225);
   background: var(--outer);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-jost), Arial, Helvetica, sans-serif;
 }
 
 main {
@@ -34,14 +38,53 @@ main {
   top: 0;
   left: 0;
   z-index: 20;
-  display: flex;
+  display: grid;
   width: 100%;
-  justify-content: center;
-  gap: clamp(28px, 5vw, 68px);
+  justify-items: center;
   padding: 24px 24px 18px;
 }
 
+.site-nav-panel {
+  position: absolute;
+  top: 14px;
+  z-index: 0;
+  width: calc(100vw - 48px);
+  height: 36px;
+  background: var(--outer);
+  clip-path: inset(0 round 4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease-out;
+  will-change: clip-path;
+}
+
+.site-nav-inner,
+.site-nav-primary {
+  display: flex;
+  align-items: center;
+}
+
+.site-nav-inner {
+  position: relative;
+  z-index: 1;
+  width: max-content;
+  justify-content: center;
+  gap: clamp(28px, 5vw, 68px);
+}
+
+.site-nav-primary {
+  gap: clamp(28px, 5vw, 68px);
+}
+
+.site-nav-primary,
+.site-nav .discord-link {
+  will-change: transform;
+}
+
 .site-nav a {
+  display: inline-flex;
+  min-height: 16px;
+  align-items: center;
   color: var(--ink-blue);
   font-size: 12px;
   font-weight: 650;
@@ -61,6 +104,19 @@ main {
 .site-nav a:focus-visible {
   outline: 1px solid currentColor;
   outline-offset: 6px;
+}
+
+.site-nav .discord-link {
+  gap: 7px;
+}
+
+.discord-mark {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  background: currentColor;
+  -webkit-mask: url("/discord-mark.png") center / contain no-repeat;
+  mask: url("/discord-mark.png") center / contain no-repeat;
 }
 
 .scroll-stage {
@@ -84,7 +140,7 @@ main {
   z-index: 1;
   display: grid;
   justify-items: center;
-  gap: clamp(14px, 1.8vw, 24px);
+  gap: 0;
 }
 
 .hero-wordmark {
@@ -105,21 +161,78 @@ main {
   text-shadow: 0 3px 18px oklch(0.42 0.06 220 / 0.12);
 }
 
+.hero-message {
+  display: grid;
+  justify-items: center;
+  margin: clamp(28px, 4vw, 56px) 0 0;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 260ms ease-out;
+  will-change: opacity, transform;
+}
+
 .hero-slogan {
   margin: 0;
   color: var(--ink-blue);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-jost), Arial, Helvetica, sans-serif;
   font-size: clamp(0.9rem, 1.25vw, 1.15rem);
   font-weight: 650;
   letter-spacing: 0.075em;
   line-height: 1.2;
-  opacity: 0;
   text-align: center;
-  transform: translateY(8px);
+}
+
+.hero-access {
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  margin-top: clamp(18px, 2.4vw, 32px);
+}
+
+.invite-link {
+  position: relative;
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  border: 1px solid var(--ink-blue);
+  border-radius: 999px;
+  color: var(--outer);
+  background: var(--ink-blue);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-decoration: none;
+  text-transform: uppercase;
   transition:
-    opacity 260ms ease-out,
-    transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: opacity, transform;
+    color 180ms ease-out,
+    background-color 180ms ease-out;
+}
+
+.invite-link::before {
+  position: absolute;
+  inset: -7px;
+  content: "";
+}
+
+.invite-link:hover,
+.invite-link:focus-visible {
+  color: var(--ink-blue);
+  background: transparent;
+}
+
+.invite-link:focus-visible {
+  outline: 2px solid var(--ink-blue);
+  outline-offset: 4px;
+}
+
+.hero-access p {
+  margin: 0;
+  color: var(--ink-blue);
+  font-size: clamp(0.72rem, 0.9vw, 0.82rem);
+  font-weight: 500;
+  letter-spacing: 0.035em;
 }
 
 .flower-letter {
@@ -135,43 +248,184 @@ main {
 .closing-frame {
   position: absolute;
   z-index: 0;
-  width: calc(100vw - 2px);
-  height: calc(100svh - 2px);
+  width: 100vw;
+  height: 100svh;
   overflow: hidden;
   border: 0;
-  border-radius: clamp(20px, 2.4vw, 36px);
+  border-radius: 0;
   background: rgb(247 249 232) url("/cloud-halftone-bg-uneven-halftone-4k.webp") center / cover no-repeat;
   pointer-events: none;
   will-change: width, height;
 }
 
-.install-section {
+.product-preview {
   position: relative;
   display: grid;
   min-height: 100svh;
-  place-items: center;
-  padding: clamp(88px, 12vh, 144px) 24px;
+  align-content: center;
+  justify-items: center;
+  gap: clamp(34px, 5vw, 68px);
+  padding: clamp(96px, 14vh, 168px) clamp(20px, 4vw, 64px);
 }
 
-.install-command {
-  width: min(900px, 100%);
+.product-preview-copy {
+  display: grid;
+  justify-items: center;
+  gap: clamp(16px, 2vw, 24px);
+  text-align: center;
+}
+
+.product-preview-copy h2 {
+  max-width: 23ch;
   margin: 0;
-  overflow-x: auto;
-  padding: 18px 22px;
+  color: var(--ink-blue);
+  font-size: clamp(1.71rem, 3.6vw, 3.42rem);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+}
+
+.product-preview-copy p {
+  max-width: 68ch;
+  margin: 0;
+  color: oklch(0.34 0.045 242 / 0.68);
+  font-size: clamp(0.9rem, 1.15vw, 1.02rem);
+  font-weight: 400;
+  letter-spacing: 0.005em;
+  line-height: 1.65;
+}
+
+.product-preview-frame {
+  display: grid;
+  width: min(var(--preview-frame-max-width), 100%);
+  aspect-ratio: 2784 / 1888;
+  place-items: center;
+  overflow: hidden;
+  border: var(--frame-border);
+  border-radius: var(--frame-radius);
+  background: var(--outer) url("/screenshot-frame-bg-v3.png") center / cover no-repeat;
+}
+
+.product-preview-frame img {
+  display: block;
+  width: var(--preview-screenshot-to-frame);
+  height: auto;
+  object-fit: contain;
+}
+
+.install-command-frame {
+  position: relative;
+  display: grid;
+  width: min(900px, 100%);
+  min-height: 58px;
+  place-items: center;
+  padding: 18px 58px;
   border: 1px solid oklch(0.42 0.085 248);
   border-radius: 12px;
   color: var(--outer);
   background: var(--ink-blue);
+}
+
+.install-command {
+  width: 100%;
+  margin: 0;
+  overflow-x: auto;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
   font-family: var(--font-geist-mono), "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   font-size: clamp(0.72rem, 1.1vw, 0.88rem);
   line-height: 1.55;
   scrollbar-color: oklch(0.68 0.05 235) transparent;
+  text-align: center;
   white-space: nowrap;
+}
+
+.install-command code {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+  text-align: center;
 }
 
 .install-command:focus-visible {
   outline: 2px solid var(--ink-blue);
   outline-offset: 5px;
+}
+
+.copy-command {
+  position: absolute;
+  top: 50%;
+  right: 13px;
+  display: grid;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid oklch(0.93 0.018 85 / 0.36);
+  border-radius: 7px;
+  color: var(--outer);
+  background: transparent;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(4px, -50%);
+  transition:
+    opacity 180ms ease-out,
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 180ms ease-out,
+    background-color 180ms ease-out;
+}
+
+.install-command-frame:hover .copy-command,
+.install-command-frame:focus-within .copy-command {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(0, -50%);
+}
+
+.copy-command:hover,
+.copy-command:focus-visible {
+  color: var(--ink-blue);
+  background: var(--outer);
+}
+
+.copy-command:focus-visible {
+  outline: 2px solid var(--outer);
+  outline-offset: 3px;
+}
+
+.copy-icon {
+  position: relative;
+  width: 15px;
+  height: 16px;
+}
+
+.copy-icon::before,
+.copy-icon::after {
+  position: absolute;
+  width: 9px;
+  height: 11px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  content: "";
+}
+
+.copy-icon::before {
+  top: 0;
+  right: 0;
+}
+
+.copy-icon::after {
+  bottom: 0;
+  left: 0;
+  background: var(--ink-blue);
+}
+
+.copy-command:hover .copy-icon::after,
+.copy-command:focus-visible .copy-icon::after {
+  background: var(--outer);
 }
 
 .page-end-anchor {
@@ -192,6 +446,33 @@ main {
 }
 
 @media (max-width: 640px) {
+  .site-nav {
+    padding-inline: 14px;
+  }
+
+  .site-nav-panel {
+    width: calc(100vw - 28px);
+  }
+
+  .site-nav-inner,
+  .site-nav-primary {
+    gap: 16px;
+  }
+
+  .site-nav a {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+
+  .site-nav .discord-link {
+    gap: 5px;
+  }
+
+  .discord-mark {
+    width: 14px;
+    height: 14px;
+  }
+
   .scroll-stage {
     height: 300vh;
   }
@@ -204,6 +485,33 @@ main {
   .flower-letter {
     height: 1em;
     margin-inline: -0.14em -0.12em;
+  }
+
+  .hero-lockup {
+    gap: 0;
+  }
+
+  .invite-link {
+    min-height: 30px;
+    padding-inline: 14px;
+    font-size: 0.64rem;
+  }
+
+  .product-preview {
+    min-height: 72svh;
+    padding-inline: 16px;
+  }
+
+  .install-command-frame {
+    padding-inline: 50px;
+  }
+}
+
+@media (hover: none) {
+  .copy-command {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(0, -50%);
   }
 }
 
