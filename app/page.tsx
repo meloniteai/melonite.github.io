@@ -4,11 +4,12 @@ import { useEffect, useRef, useState } from "react";
 
 const FRAME_COUNT = 30;
 const frameSource = (index: number) =>
-  `/frames/hero-${String(index).padStart(3, "0")}.webp`;
+  `/frames-poppy/hero-${String(index).padStart(3, "0")}.webp`;
 
 export default function Home() {
   const stageRef = useRef<HTMLElement>(null);
   const frameBoxRef = useRef<HTMLDivElement>(null);
+  const sloganRef = useRef<HTMLParagraphElement>(null);
   const animationFrameRef = useRef<number | null>(null);
   const [frame, setFrame] = useState(FRAME_COUNT - 1);
 
@@ -55,6 +56,14 @@ export default function Home() {
         frameBoxRef.current.style.width = `${frameWidth}px`;
         frameBoxRef.current.style.height = `${frameHeight}px`;
       }
+
+      if (sloganRef.current) {
+        const isAtRevealSize = closingProgress >= 0.35;
+        sloganRef.current.style.opacity = isAtRevealSize ? "1" : "0";
+        sloganRef.current.style.transform = isAtRevealSize
+          ? "translateY(0)"
+          : "translateY(8px)";
+      }
     };
 
     const onScroll = () => {
@@ -84,23 +93,36 @@ export default function Home() {
         <a href="#contact">Contact</a>
       </nav>
       <main>
-      <section id="join" ref={stageRef} className="scroll-stage" aria-label="Tulip transformation">
+      <section id="join" ref={stageRef} className="scroll-stage" aria-label="Melonite flower transformation">
         <div className="sticky-scene">
           <div ref={frameBoxRef} className="closing-frame" aria-hidden="true" />
-          <img
-            className="hero-flower"
-            src={frameSource(frame)}
-            width="1086"
-            height="1448"
-            alt="A yellow tulip resolving from a mosaic glitch into a clear flower as the page scrolls"
-            draggable="false"
-          />
+          <div className="hero-lockup">
+            <div className="hero-wordmark" role="img" aria-label="Melonite">
+              <span aria-hidden="true">Melon</span>
+              <img
+                className="flower-letter"
+                src={frameSource(frame)}
+                width="1024"
+                height="1536"
+                alt=""
+                aria-hidden="true"
+                draggable="false"
+              />
+              <span aria-hidden="true">te</span>
+            </div>
+            <p ref={sloganRef} className="hero-slogan">
+              Iteration makes perfect.
+            </p>
+          </div>
           <p className="sr-only" aria-live="polite">
-            Animation frame {FRAME_COUNT - frame} of {FRAME_COUNT}
+            Flower clarity frame {FRAME_COUNT - frame} of {FRAME_COUNT}
           </p>
         </div>
       </section>
-      <section id="about" className="empty-tail" aria-label="End of transformation">
+      <section id="about" className="install-section" aria-label="Install Melonite">
+        <pre className="install-command" tabIndex={0}>
+          <code>curl -fsSL https://github.com/meloniteai/melonite-desktop/releases/latest/download/install.sh | sh</code>
+        </pre>
         <span id="contact" className="page-end-anchor" aria-hidden="true" />
       </section>
       </main>

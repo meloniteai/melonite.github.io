@@ -4,7 +4,8 @@
   color-scheme: light;
   --paper: oklch(0.975 0.008 75);
   --sky: oklch(0.84 0.11 226);
-  --outer: rgb(115 182 228);
+  --outer: rgb(247 249 232);
+  --ink-blue: oklch(0.29 0.105 248);
 }
 
 * {
@@ -41,14 +42,14 @@ main {
 }
 
 .site-nav a {
-  color: #fff;
+  color: var(--ink-blue);
   font-size: 12px;
   font-weight: 650;
   letter-spacing: 0.16em;
   line-height: 1;
   text-decoration: none;
   text-transform: uppercase;
-  text-shadow: 0 1px 3px oklch(0.32 0.04 220 / 0.28);
+  text-shadow: none;
   transition: opacity 180ms ease-out;
 }
 
@@ -78,18 +79,57 @@ main {
   isolation: isolate;
 }
 
-.hero-flower {
+.hero-lockup {
   position: relative;
   z-index: 1;
-  display: block;
-  width: min(50vw, 543px);
-  max-width: 68vw;
-  height: auto;
-  max-height: min(72.4vh, 724px);
-  object-fit: contain;
+  display: grid;
+  justify-items: center;
+  gap: clamp(14px, 1.8vw, 24px);
+}
+
+.hero-wordmark {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: oklch(0.99 0.003 230);
+  font-family: var(--font-bodoni-moda), "Bodoni 72", Didot, serif;
+  font-size: clamp(4.4rem, 10.5vw, 10.5rem);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.065em;
+  line-height: 0.76;
+  white-space: nowrap;
   user-select: none;
   transform: translateZ(0);
-  filter: drop-shadow(0 20px 34px oklch(0.42 0.06 220 / 0.1));
+  text-shadow: 0 3px 18px oklch(0.42 0.06 220 / 0.12);
+}
+
+.hero-slogan {
+  margin: 0;
+  color: var(--ink-blue);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-size: clamp(0.9rem, 1.25vw, 1.15rem);
+  font-weight: 650;
+  letter-spacing: 0.075em;
+  line-height: 1.2;
+  opacity: 0;
+  text-align: center;
+  transform: translateY(8px);
+  transition:
+    opacity 260ms ease-out,
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.flower-letter {
+  display: block;
+  width: auto;
+  height: 1.04em;
+  margin-inline: -0.12em -0.1em;
+  object-fit: contain;
+  transform: translate(0.07em, 0.04em);
+  filter: drop-shadow(0 12px 22px oklch(0.42 0.06 220 / 0.12));
 }
 
 .closing-frame {
@@ -100,29 +140,38 @@ main {
   overflow: hidden;
   border: 0;
   border-radius: clamp(20px, 2.4vw, 36px);
-  background: linear-gradient(
-    100deg,
-    color-mix(in oklch, var(--sky) 92%, var(--paper)) 0%,
-    color-mix(in oklch, var(--sky) 56%, var(--paper)) 43%,
-    var(--paper) 100%
-  );
+  background: rgb(247 249 232) url("/cloud-halftone-bg-uneven-halftone-4k.webp") center / cover no-repeat;
   pointer-events: none;
   will-change: width, height;
 }
 
-.closing-frame::after {
-  position: absolute;
-  inset: 0;
-  content: "";
-  background: url("/fine-grain.png") repeat;
-  background-size: 256px 256px;
-  mix-blend-mode: soft-light;
-  opacity: 0.12;
+.install-section {
+  position: relative;
+  display: grid;
+  min-height: 100svh;
+  place-items: center;
+  padding: clamp(88px, 12vh, 144px) 24px;
 }
 
-.empty-tail {
-  position: relative;
-  min-height: 100svh;
+.install-command {
+  width: min(900px, 100%);
+  margin: 0;
+  overflow-x: auto;
+  padding: 18px 22px;
+  border: 1px solid oklch(0.42 0.085 248);
+  border-radius: 12px;
+  color: var(--outer);
+  background: var(--ink-blue);
+  font-family: var(--font-geist-mono), "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: clamp(0.72rem, 1.1vw, 0.88rem);
+  line-height: 1.55;
+  scrollbar-color: oklch(0.68 0.05 235) transparent;
+  white-space: nowrap;
+}
+
+.install-command:focus-visible {
+  outline: 2px solid var(--ink-blue);
+  outline-offset: 5px;
 }
 
 .page-end-anchor {
@@ -147,10 +196,14 @@ main {
     height: 300vh;
   }
 
-  .hero-flower {
-    width: min(58vw, 543px);
-    max-width: 74vw;
-    max-height: 68svh;
+  .hero-wordmark {
+    font-size: clamp(3.25rem, 13.5vw, 6rem);
+    letter-spacing: -0.075em;
+  }
+
+  .flower-letter {
+    height: 1em;
+    margin-inline: -0.14em -0.12em;
   }
 }
 
