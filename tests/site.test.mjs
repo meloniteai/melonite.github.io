@@ -21,6 +21,7 @@ test("builds the updated standalone Melonite website", async () => {
   ]);
 
   assert.match(html, /<title>Melonite \| Private Beta<\/title>/i);
+  assert.match(html, /<link rel="icon" type="image\/png" href="\/favicon\.png" \/>/);
   assert.match(source, /<FloatingNav \/>/);
   assert.match(source, /<HeroSection \/>/);
   assert.match(source, /<InstallSection \/>/);
@@ -118,7 +119,7 @@ test("builds the updated standalone Melonite website", async () => {
 });
 
 test("keeps Figma assets local and durable", async () => {
-  const [preview, tocBackground, regularStrip, rotatedStrip, pixelGridBase, logoShape, logoLetter, discord, font42dot] = await Promise.all([
+  const [preview, tocBackground, regularStrip, rotatedStrip, pixelGridBase, logoShape, logoLetter, discord, favicon, font42dot] = await Promise.all([
     readFile(new URL("../public/figma/updated/product-preview-raw-1.png", import.meta.url)),
     readFile(new URL("../public/figma/updated/toc-bg.png", import.meta.url)),
     readFile(new URL("../public/figma/updated/sparse-strip-top-purple.png", import.meta.url)),
@@ -127,6 +128,7 @@ test("keeps Figma assets local and durable", async () => {
     readFile(new URL("../public/figma/updated/logo-shape.svg", import.meta.url)),
     readFile(new URL("../public/figma/updated/logo-m.svg", import.meta.url)),
     readFile(new URL("../public/figma/updated/discord.png", import.meta.url)),
+    readFile(new URL("../public/favicon.png", import.meta.url)),
     readFile(new URL("../src/fonts/42dot-sans-latin.woff2", import.meta.url)),
   ]);
 
@@ -139,5 +141,7 @@ test("keeps Figma assets local and durable", async () => {
   assert.ok(logoShape.byteLength > 10_000);
   assert.ok(logoLetter.byteLength > 10_000);
   assert.ok(discord.byteLength > 10_000);
+  assert.ok(favicon.byteLength > 2_000);
+  assert.equal(favicon.subarray(1, 4).toString("ascii"), "PNG");
   assert.ok(font42dot.byteLength > 20_000);
 });
