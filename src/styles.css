@@ -556,7 +556,7 @@ a {
   left: 4%;
   z-index: 5;
   display: flex;
-  width: min(205px, 14.4%);
+  width: min(188px, 14.4%);
   flex-direction: column;
   align-items: stretch;
   gap: 4px;
@@ -571,7 +571,6 @@ a {
   padding: 0 6px;
   overflow: hidden;
   border: 0;
-  border-radius: 3px;
   color: var(--white);
   background: #494949;
   cursor: pointer;
@@ -589,9 +588,13 @@ a {
   background: #3f3f3f;
 }
 
+.feature-toc button > span:last-child {
+  white-space: nowrap;
+}
+
 .feature-toc button.is-active {
-  color: var(--white);
-  background: #7cd6b8;
+  color: #000;
+  background: var(--white);
 }
 
 .feature-dot {
@@ -600,7 +603,7 @@ a {
   height: 4px;
   flex: 0 0 auto;
   border-radius: 50%;
-  background: var(--white);
+  background: currentColor;
 }
 
 .feature-toc button.is-active .feature-dot {
