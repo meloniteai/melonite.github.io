@@ -928,13 +928,14 @@ a {
   }
 
   .toc-background {
-    top: 12%;
-    width: 112%;
-    height: 76%;
+    top: 23%;
+    left: max(-45%, calc(50% - 500px));
+    width: min(190%, 1000px);
+    height: auto;
   }
 
   .feature-toc {
-    top: 15%;
+    top: 10%;
     left: 4%;
     width: 92%;
     flex-flow: row wrap;
@@ -951,9 +952,9 @@ a {
   }
 
   .feature-copy {
-    top: 36%;
-    left: 7%;
-    width: 86%;
+    top: 29%;
+    left: max(8%, calc(50% - 260px));
+    width: min(84%, 520px);
   }
 
   .feature-copy > p:last-child {
@@ -963,9 +964,11 @@ a {
   }
 
   .product-preview-image {
-    top: 68%;
-    right: 6%;
-    width: 92%;
+    top: 57%;
+    right: auto;
+    left: 50%;
+    width: min(88%, 560px);
+    transform: translateX(-50%);
   }
 
   .site-footer {

@@ -117,6 +117,8 @@ test("builds the updated standalone Melonite website", async () => {
   assert.match(styles, /\.feature-toc button\.is-active\s*\{[\s\S]*?color:\s*#000;[\s\S]*?background:\s*var\(--white\)/);
   assert.match(styles, /\.feature-toc button > span:last-child\s*\{[\s\S]*?white-space:\s*nowrap/);
   assert.doesNotMatch(styles, /\.feature-toc button\s*\{[^}]*border-radius/);
+  assert.match(styles, /@media \(max-width:\s*800px\)\s*\{[\s\S]*?\.toc-background\s*\{[\s\S]*?width:\s*min\(190%,\s*1000px\);[\s\S]*?height:\s*auto;/);
+  assert.match(styles, /@media \(max-width:\s*800px\)\s*\{[\s\S]*?\.product-preview-image\s*\{[\s\S]*?width:\s*min\(88%,\s*560px\)/);
   assert.match(styles, /\.invite-cta\s*\{[\s\S]*?margin:[\s\S]*?auto/);
   assert.match(styles, /\.install-command-frame\s*\{[\s\S]*?background:\s*#494949;[\s\S]*?border-radius:\s*4px;/);
   assert.match(installCommand, /curl -fsSL https:\/\/github\.com\/meloniteai\/melonite-desktop\/releases\/latest\/download\/install\.sh \| sh/);
