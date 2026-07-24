@@ -14,6 +14,8 @@ export function FloatingNav() {
           className={item.icon ? "discord-link" : undefined}
           key={item.label}
           href={item.href}
+          rel={item.icon ? "noopener noreferrer" : undefined}
+          target={item.icon ? "_blank" : undefined}
         >
           {item.icon ? <DiscordIcon className="discord-icon-nav" /> : null}
           {item.label}

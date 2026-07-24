@@ -75,6 +75,11 @@ test("builds the updated standalone Melonite website", async () => {
   assert.match(nav, /href:\s*"https:\/\/app\.melonite\.ai\/login"/);
   assert.match(nav, /href:\s*"https:\/\/discord\.gg\/88PSuaRNk"/);
   assert.match(footer, /href:\s*"https:\/\/discord\.gg\/88PSuaRNk"/);
+  assert.match(nav, /target=\{item\.icon \? "_blank" : undefined\}/);
+  assert.match(nav, /rel=\{item\.icon \? "noopener noreferrer" : undefined\}/);
+  assert.match(footer, /target=\{link\.icon \? "_blank" : undefined\}/);
+  assert.match(footer, /rel=\{link\.icon \? "noopener noreferrer" : undefined\}/);
+  assert.match(footer, /href:\s*"https:\/\/x\.com\/meloniteai"/);
   assert.match(nav, /<DiscordIcon className="discord-icon-nav"/);
   assert.match(footer, /<DiscordIcon className="discord-icon-footer"/);
   assert.match(discordIcon, /discord\.png/);
