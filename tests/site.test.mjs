@@ -117,6 +117,7 @@ test("builds the updated standalone Melonite website", async () => {
   assert.match(styles, /\.feature-toc button\.is-active\s*\{[\s\S]*?color:\s*#000;[\s\S]*?background:\s*var\(--white\)/);
   assert.match(styles, /\.feature-toc button > span:last-child\s*\{[\s\S]*?white-space:\s*nowrap/);
   assert.doesNotMatch(styles, /\.feature-toc button\s*\{[^}]*border-radius/);
+  assert.match(styles, /@media \(max-width:\s*800px\)\s*\{[\s\S]*?\.product-showcase\s*\{[\s\S]*?height:\s*260svh;[\s\S]*?overflow:\s*clip/);
   assert.match(styles, /@media \(max-width:\s*800px\)\s*\{[\s\S]*?\.toc-background\s*\{[\s\S]*?width:\s*min\(190%,\s*1000px\);[\s\S]*?height:\s*auto;/);
   assert.match(styles, /@media \(max-width:\s*800px\)\s*\{[\s\S]*?\.product-preview-image\s*\{[\s\S]*?width:\s*min\(88%,\s*560px\)/);
   assert.match(styles, /\.invite-cta\s*\{[\s\S]*?margin:[\s\S]*?auto/);

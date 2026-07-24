@@ -907,8 +907,8 @@ a {
   }
 
   .product-showcase {
-    height: 380svh;
-    overflow: hidden;
+    height: 260svh;
+    overflow: clip;
   }
 
   .pixel-strip {
