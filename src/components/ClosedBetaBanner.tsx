@@ -8,7 +8,7 @@ export function ClosedBetaBanner() {
   return (
     <aside className="closed-beta-banner" aria-label="Closed beta announcement">
       <p>Closed beta, taking invite requests!</p>
-      <a href="#download">Join</a>
+      <a href="https://app.melonite.ai/login">Join</a>
       <button
         type="button"
         aria-label="Dismiss closed beta announcement"

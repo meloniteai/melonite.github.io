@@ -2,7 +2,7 @@ import { DiscordIcon } from "./DiscordIcon";
 
 const FOOTER_LINKS = [
   { label: "About", href: "#about", icon: false },
-  { label: "Discord", href: "#discord", icon: true },
+  { label: "Discord", href: "https://discord.gg/88PSuaRNk", icon: true },
   { label: "X", href: "https://x.com/", icon: false },
 ] as const;
 

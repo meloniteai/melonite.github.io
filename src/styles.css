@@ -6,6 +6,14 @@
   src: url("./fonts/jost-latin.woff2") format("woff2");
 }
 
+@font-face {
+  font-family: "42dot Sans";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("./fonts/42dot-sans-latin.woff2") format("woff2");
+}
+
 :root {
   color-scheme: light;
   --hero-paper: #f0ede5;
@@ -14,6 +22,7 @@
   --muted: #171717;
   --white: #fff;
   --nav-center-y: 47.297px;
+  --font-42dot: "42dot Sans", "Helvetica Neue", Arial, sans-serif;
 }
 
 * {
@@ -107,7 +116,7 @@ a {
 }
 
 .hero-canvas,
-.about-canvas,
+.install-canvas,
 .product-canvas {
   position: relative;
   width: min(100%, 1242px);
@@ -218,6 +227,7 @@ a {
   min-width: 0;
   flex: 1 1 auto;
   margin: 0;
+  font-family: var(--font-42dot);
   font-size: min(12.129px, 0.9766vw);
   font-weight: 500;
   line-height: 1.2;
@@ -289,9 +299,48 @@ a {
   max-width: min(485px, 39.0625vw);
   margin: min(45.281px, 3.6458vw) auto 0;
   color: #4a4a4a;
+  font-family: var(--font-42dot);
   font-size: min(19.406px, 1.5625vw);
   font-weight: 400;
   line-height: 1.2;
+}
+
+.hero-emphasis {
+  position: relative;
+  z-index: 0;
+  display: inline-block;
+  margin-inline: 0.08em;
+  padding-inline: 0.13em;
+  color: currentColor;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.96em;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.hero-emphasis::before {
+  position: absolute;
+  inset: -0.03em -0.03em -0.01em;
+  z-index: -1;
+  border-radius: 3px;
+  background: #323232;
+  content: "";
+}
+
+.hero-emphasis-bad {
+  color: #ff3700;
+}
+
+.hero-emphasis-bad::before {
+  transform: rotate(-3deg);
+}
+
+.hero-emphasis-build {
+  color: #7fffd0;
+}
+
+.hero-emphasis-build::before {
+  transform: rotate(3deg);
 }
 
 .grid-halo {
@@ -354,64 +403,64 @@ a {
   font-weight: 800;
   line-height: 1;
   text-decoration: none;
-  text-transform: uppercase;
 }
 
-.about-section {
+.install-section {
   position: relative;
   z-index: 2;
   width: 100%;
-  height: min(440.684px, 35.4818vw);
+  height: min(472px, 30.7292vw);
   background: var(--section-paper);
 }
 
-.about-copy {
-  position: absolute;
-  top: min(145.547px, 11.7188vw);
-  left: 50%;
-  width: min(727.734px, 58.5938vw);
+.install-canvas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: min(84px, 5.4688vw);
   text-align: center;
-  transform: translateX(-50%);
 }
 
-.about-copy h2 {
+.install-canvas h2 {
   margin: 0;
   color: var(--white);
-  font-size: min(41.4px, 3.3333vw);
+  font-family: var(--font-42dot);
+  font-size: min(30px, 1.9531vw);
   font-weight: 800;
-  letter-spacing: -0.037em;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.install-details {
+  margin: min(30px, 1.9531vw) 0 0;
+  color: var(--white);
+  font-family: var(--font-42dot);
+  font-size: min(14px, 0.9115vw);
+  font-weight: 700;
+  letter-spacing: 0.02em;
   line-height: 1.2;
 }
 
-.about-copy p {
-  margin: min(21.832px, 1.7578vw) 0 0;
-  color: var(--muted);
-  font-size: min(15.523px, 1.25vw);
-  font-weight: 400;
-  line-height: 1.45;
-}
-
 .install-command-frame {
-  position: absolute;
-  top: min(358.113px, 28.8411vw);
-  left: 50%;
+  position: relative;
   display: flex;
   width: min(777.783px, 50.637vw);
   min-height: min(49.126px, 3.1983vw);
   align-items: center;
   gap: min(16px, 1.0417vw);
+  margin-top: min(44px, 2.8646vw);
   padding: min(10px, 0.651vw) min(20px, 1.3021vw);
   border-radius: 4px;
   color: var(--white);
   background: #494949;
-  transform: translateX(-50%);
 }
 
 .install-command-frame code {
   min-width: 0;
   flex: 1 1 auto;
   overflow-x: auto;
-  font-family: "Jost", "Helvetica Neue", sans-serif;
+  font-family: var(--font-42dot);
   font-size: min(14px, 0.9115vw);
   font-weight: 600;
   line-height: 1.15;
@@ -438,16 +487,22 @@ a {
 }
 
 .product-showcase {
+  --toc-parallax-y: 0;
+
   position: relative;
   z-index: 1;
   width: 100%;
-  height: min(946.863px, 76.237vw);
-  overflow: hidden;
+  height: 380svh;
   background: var(--section-paper);
 }
 
-.product-canvas {
-  z-index: 2;
+.product-stage {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
 }
 
 .pixel-strip {
@@ -463,25 +518,134 @@ a {
 }
 
 .pixel-strip-a {
-  top: max(-215.086px, -17.3177vw);
+  top: max(-215.086px, -14vw);
   z-index: 0;
 }
 
 .pixel-strip-b {
-  top: min(249.047px, 20.0521vw);
+  top: min(63vh, 520px);
   z-index: 1;
+}
+
+.toc-background {
+  position: absolute;
+  top: 18%;
+  left: 4%;
+  z-index: 2;
+  display: block;
+  width: 86%;
+  height: auto;
+  pointer-events: none;
+  transform: translate3d(
+    0,
+    calc(var(--toc-parallax-y) * 36px),
+    0
+  );
+  user-select: none;
+  will-change: transform;
+}
+
+.product-canvas {
+  z-index: 3;
+  width: min(92.79vw, 1425px);
+}
+
+.feature-toc {
+  position: absolute;
+  top: 30%;
+  left: 4%;
+  z-index: 5;
+  display: flex;
+  width: min(205px, 14.4%);
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+}
+
+.feature-toc button {
+  display: flex;
+  width: 100%;
+  height: 34px;
+  align-items: center;
+  gap: 16px;
+  padding: 0 6px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 3px;
+  color: var(--white);
+  background: #494949;
+  cursor: pointer;
+  font-family: var(--font-42dot);
+  font-size: clamp(14px, 1.3021vw, 20px);
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-align: left;
+  transition:
+    color 220ms ease-out,
+    background-color 220ms ease-out;
+}
+
+.feature-toc button:hover {
+  background: #3f3f3f;
+}
+
+.feature-toc button.is-active {
+  color: var(--white);
+  background: #7cd6b8;
+}
+
+.feature-dot {
+  display: none;
+  width: 4px;
+  height: 4px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--white);
+}
+
+.feature-toc button.is-active .feature-dot {
+  display: block;
+}
+
+.feature-copy {
+  position: absolute;
+  top: 28%;
+  left: 29%;
+  z-index: 5;
+  width: 25%;
+  color: #1c1c1c;
+  animation: feature-copy-enter 340ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.feature-copy > p:last-child {
+  margin: 0;
+  font-family: var(--font-42dot);
+  font-size: clamp(14px, 1.25vw, 19.2px);
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+@keyframes feature-copy-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .product-preview-image {
   position: absolute;
-  top: 0;
-  left: 50%;
-  z-index: 3;
+  top: 22%;
+  right: 5.5%;
+  z-index: 5;
   display: block;
-  width: 63.4766%;
+  width: 39%;
   height: auto;
   pointer-events: none;
-  transform: translateX(-50%);
   user-select: none;
 }
 
@@ -583,7 +747,7 @@ a {
   }
 
   .hero-canvas,
-  .about-canvas,
+  .install-canvas,
   .product-canvas {
     width: 100%;
   }
@@ -698,46 +862,36 @@ a {
     font-size: 13px;
   }
 
-  .about-section {
-    height: 560px;
+  .install-section {
+    height: 510px;
   }
 
-  .about-canvas {
-    padding: 98px 22px 0;
+  .install-canvas {
+    justify-content: flex-start;
+    padding: 150px 22px 0;
   }
 
-  .about-copy {
-    position: static;
-    width: 100%;
-    transform: none;
+  .install-canvas h2 {
+    max-width: 24ch;
+    font-size: clamp(24px, 7vw, 32px);
+    line-height: 1.2;
   }
 
-  .about-copy h2 {
-    font-size: clamp(33px, 9vw, 42px);
-    line-height: 1.08;
-  }
-
-  .about-copy p {
-    margin-top: 27px;
-    font-size: 15px;
+  .install-details {
+    max-width: 34ch;
+    margin-top: 30px;
+    font-size: 11px;
     line-height: 1.5;
-  }
-
-  .desktop-break {
-    display: none;
   }
 
   .install-command-frame {
     position: relative;
-    top: auto;
-    left: auto;
     width: 100%;
     height: 56px;
     gap: 10px;
-    margin: 56px auto 0;
+    margin: 48px auto 0;
     padding: 13px 14px;
     border-radius: 4px;
-    transform: none;
   }
 
   .install-command-frame code {
@@ -750,7 +904,7 @@ a {
   }
 
   .product-showcase {
-    height: 770px;
+    height: 380svh;
     overflow: hidden;
   }
 
@@ -763,18 +917,52 @@ a {
   }
 
   .pixel-strip-a {
-    top: -110px;
+    top: -70px;
   }
 
   .pixel-strip-b {
-    top: 300px;
+    top: 68%;
+  }
+
+  .toc-background {
+    top: 12%;
+    width: 112%;
+    height: 76%;
+  }
+
+  .feature-toc {
+    top: 15%;
+    left: 4%;
+    width: 92%;
+    flex-flow: row wrap;
+    gap: 4px;
+  }
+
+  .feature-toc button {
+    width: calc(50% - 2px);
+    height: 34px;
+    gap: 10px;
+    padding: 0 8px;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+  }
+
+  .feature-copy {
+    top: 36%;
+    left: 7%;
+    width: 86%;
+  }
+
+  .feature-copy > p:last-child {
+    margin-top: 0;
+    font-size: 14px;
+    line-height: 1.45;
   }
 
   .product-preview-image {
-    top: 12px;
-    left: 50%;
+    top: 68%;
+    right: 6%;
     width: 92%;
-    transform: translateX(-50%);
   }
 
   .site-footer {
@@ -794,15 +982,21 @@ a {
   }
 
   .floating-nav a,
-  .install-command-frame button {
+  .install-command-frame button,
+  .feature-toc button {
     transition: none;
   }
 
   .hero-grid-art,
   .closed-beta-banner,
   .hero-copy,
-  .grid-halo-hero-text {
+  .grid-halo-hero-text,
+  .toc-background {
     will-change: auto;
+  }
+
+  .toc-background {
+    transform: none;
   }
 
 }

@@ -11,13 +11,16 @@ export function HeroCopy() {
         and perfect execution
       </h1>
       <p>
-        Melonite fixes the B4D behavioral patterns of coding agents, and allows
-        you to build much faster without compromising quality
+        Melonite fixes the{" "}
+        <span className="hero-emphasis hero-emphasis-bad">bad</span> behavioral
+        patterns of coding agents, allowing you to{" "}
+        <span className="hero-emphasis hero-emphasis-build">build</span> much
+        faster without compromising quality
       </p>
       <div className="invite-cta">
         <InviteGridHalo />
-        <a className="invite-button" href="#download">
-          Request invite
+        <a className="invite-button" href="https://app.melonite.ai/login">
+          Request Invite
         </a>
       </div>
     </div>

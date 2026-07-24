@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 test("builds the updated standalone Melonite website", async () => {
-  const [html, source, heroSection, heroCopy, banner, brandMark, parallax, product, installCommand, nav, footer, discordIcon, styles] = await Promise.all([
+  const [html, source, heroSection, heroCopy, banner, brandMark, parallax, product, installSection, installCommand, nav, footer, discordIcon, styles] = await Promise.all([
     readFile(new URL("../dist/index.html", import.meta.url), "utf8"),
     readFile(new URL("../src/App.tsx", import.meta.url), "utf8"),
     readFile(new URL("../src/components/HeroSection.tsx", import.meta.url), "utf8"),
@@ -12,6 +12,7 @@ test("builds the updated standalone Melonite website", async () => {
     readFile(new URL("../src/components/BrandMark.tsx", import.meta.url), "utf8"),
     readFile(new URL("../src/components/useHeroParallax.ts", import.meta.url), "utf8"),
     readFile(new URL("../src/components/ProductShowcase.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../src/components/InstallSection.tsx", import.meta.url), "utf8"),
     readFile(new URL("../src/components/InstallCommand.tsx", import.meta.url), "utf8"),
     readFile(new URL("../src/components/FloatingNav.tsx", import.meta.url), "utf8"),
     readFile(new URL("../src/components/Footer.tsx", import.meta.url), "utf8"),
@@ -22,7 +23,7 @@ test("builds the updated standalone Melonite website", async () => {
   assert.match(html, /<title>Melonite \| Private Beta<\/title>/i);
   assert.match(source, /<FloatingNav \/>/);
   assert.match(source, /<HeroSection \/>/);
-  assert.match(source, /<AboutSection \/>/);
+  assert.match(source, /<InstallSection \/>/);
   assert.match(source, /<ProductShowcase \/>/);
   assert.doesNotMatch(heroSection, /HeroMorph/);
   assert.doesNotMatch(heroSection, /hero-animation\.(mp4|webm)/);
@@ -42,7 +43,10 @@ test("builds the updated standalone Melonite website", async () => {
   assert.doesNotMatch(heroSection, /<InviteGridHalo \/>/);
   assert.match(heroCopy, /<InviteGridHalo \/>/);
   assert.match(heroCopy, /className="invite-cta"/);
-  assert.match(heroCopy, /Melonite fixes the B4D behavioral patterns/);
+  assert.match(heroCopy, /hero-emphasis-bad/);
+  assert.match(heroCopy, /hero-emphasis-build/);
+  assert.match(heroCopy, />bad</);
+  assert.match(heroCopy, />build</);
   assert.match(banner, /Closed beta, taking invite requests!/);
   assert.match(banner, /Dismiss closed beta announcement/);
   assert.match(brandMark, /logo-shape\.svg/);
@@ -53,8 +57,23 @@ test("builds the updated standalone Melonite website", async () => {
   assert.match(product, /sparse-strip-top-purple\.png/);
   assert.match(product, /sparse-strip-bottom-purple\.png/);
   assert.match(product, /product-preview-raw-1\.png/);
+  assert.match(product, /Prompt Weave/);
+  assert.match(product, /Melonite Agent/);
+  assert.match(product, /Watchers/);
+  assert.match(product, /feature-toc/);
+  assert.match(product, /toc-background/);
+  assert.match(product, /toc-bg\.png/);
+  assert.match(product, /id="about"/);
   assert.match(product, /<Footer \/>/);
-  assert.match(product, /<\/div>\s*<Footer \/>/);
+  assert.match(installSection, /Download for MacOS, Windows or Linux/);
+  assert.match(installSection, /USE YOUR EXISTING SUBSCRIPTIONS/);
+  assert.match(installSection, /OPEN SOURCE \(MIT\)/);
+  assert.match(installSection, /id="install"/);
+  assert.match(heroCopy, /href="https:\/\/app\.melonite\.ai\/login"/);
+  assert.match(banner, /href="https:\/\/app\.melonite\.ai\/login"/);
+  assert.match(nav, /href:\s*"https:\/\/app\.melonite\.ai\/login"/);
+  assert.match(nav, /href:\s*"https:\/\/discord\.gg\/88PSuaRNk"/);
+  assert.match(footer, /href:\s*"https:\/\/discord\.gg\/88PSuaRNk"/);
   assert.match(nav, /<DiscordIcon className="discord-icon-nav"/);
   assert.match(footer, /<DiscordIcon className="discord-icon-footer"/);
   assert.match(discordIcon, /discord\.png/);
@@ -82,8 +101,14 @@ test("builds the updated standalone Melonite website", async () => {
   assert.match(styles, /\.pixel-strip-b\s*\{/);
   assert.match(styles, /\.grid-halo-hero-text\s*\{/);
   assert.match(styles, /\.grid-halo-invite\s*\{/);
+  assert.match(styles, /42dot-sans-latin\.woff2/);
+  assert.match(styles, /\.hero-emphasis-bad\s*\{[\s\S]*?#ff3700/);
+  assert.match(styles, /\.hero-emphasis-build\s*\{[\s\S]*?#7fffd0/);
+  assert.match(styles, /\.hero-emphasis::before\s*\{[\s\S]*?background:\s*#323232/);
+  assert.match(styles, /\.toc-background\s*\{[\s\S]*?width:\s*86%/);
+  assert.match(styles, /calc\(var\(--toc-parallax-y\) \* 36px\)/);
+  assert.match(styles, /\.feature-toc button\.is-active\s*\{[\s\S]*?#7cd6b8/);
   assert.match(styles, /\.invite-cta\s*\{[\s\S]*?margin:[\s\S]*?auto/);
-  assert.match(styles, /\.product-preview-image\s*\{[\s\S]*?left:\s*50%;[\s\S]*?translateX\(-50%\)/);
   assert.match(styles, /\.install-command-frame\s*\{[\s\S]*?background:\s*#494949;[\s\S]*?border-radius:\s*4px;/);
   assert.match(installCommand, /curl -fsSL https:\/\/github\.com\/meloniteai\/melonite-desktop\/releases\/latest\/download\/install\.sh \| sh/);
   assert.match(styles, /--hero-parallax-x/);
@@ -93,17 +118,20 @@ test("builds the updated standalone Melonite website", async () => {
 });
 
 test("keeps Figma assets local and durable", async () => {
-  const [preview, regularStrip, rotatedStrip, pixelGridBase, logoShape, logoLetter, discord] = await Promise.all([
+  const [preview, tocBackground, regularStrip, rotatedStrip, pixelGridBase, logoShape, logoLetter, discord, font42dot] = await Promise.all([
     readFile(new URL("../public/figma/updated/product-preview-raw-1.png", import.meta.url)),
+    readFile(new URL("../public/figma/updated/toc-bg.png", import.meta.url)),
     readFile(new URL("../public/figma/updated/sparse-strip-top-purple.png", import.meta.url)),
     readFile(new URL("../public/figma/updated/sparse-strip-bottom-purple.png", import.meta.url)),
     readFile(new URL("../public/figma/updated/pixel-grid-base-clean.png", import.meta.url)),
     readFile(new URL("../public/figma/updated/logo-shape.svg", import.meta.url)),
     readFile(new URL("../public/figma/updated/logo-m.svg", import.meta.url)),
     readFile(new URL("../public/figma/updated/discord.png", import.meta.url)),
+    readFile(new URL("../src/fonts/42dot-sans-latin.woff2", import.meta.url)),
   ]);
 
   assert.ok(preview.byteLength > 100_000);
+  assert.ok(tocBackground.byteLength > 30_000);
   assert.ok(regularStrip.byteLength > 1_000_000);
   assert.ok(rotatedStrip.byteLength > 500_000);
   assert.ok(pixelGridBase.byteLength > 8_000);
@@ -111,4 +139,5 @@ test("keeps Figma assets local and durable", async () => {
   assert.ok(logoShape.byteLength > 10_000);
   assert.ok(logoLetter.byteLength > 10_000);
   assert.ok(discord.byteLength > 10_000);
+  assert.ok(font42dot.byteLength > 20_000);
 });

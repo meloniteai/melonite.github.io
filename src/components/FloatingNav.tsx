@@ -1,9 +1,9 @@
 import { DiscordIcon } from "./DiscordIcon";
 
 const NAV_ITEMS = [
-  { label: "Join", href: "#download", icon: false },
+  { label: "Join", href: "https://app.melonite.ai/login", icon: false },
   { label: "About", href: "#about", icon: false },
-  { label: "Discord", href: "#discord", icon: true },
+  { label: "Discord", href: "https://discord.gg/88PSuaRNk", icon: true },
 ] as const;
 
 export function FloatingNav() {

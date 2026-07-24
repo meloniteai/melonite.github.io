@@ -1,6 +1,6 @@
-import { AboutSection } from "./components/AboutSection";
 import { FloatingNav } from "./components/FloatingNav";
 import { HeroSection } from "./components/HeroSection";
+import { InstallSection } from "./components/InstallSection";
 import { ProductShowcase } from "./components/ProductShowcase";
 
 export default function App() {
@@ -9,7 +9,7 @@ export default function App() {
       <FloatingNav />
       <main>
         <HeroSection />
-        <AboutSection />
+        <InstallSection />
         <ProductShowcase />
       </main>
     </>
