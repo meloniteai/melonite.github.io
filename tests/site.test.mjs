@@ -75,6 +75,11 @@ test("builds the updated standalone Melonite website", async () => {
   assert.match(nav, /href:\s*"https:\/\/app\.melonite\.ai\/login"/);
   assert.match(nav, /href:\s*"https:\/\/discord\.gg\/88PSuaRNk"/);
   assert.match(footer, /href:\s*"https:\/\/discord\.gg\/88PSuaRNk"/);
+  assert.match(nav, /target=\{item\.icon \? "_blank" : undefined\}/);
+  assert.match(nav, /rel=\{item\.icon \? "noopener noreferrer" : undefined\}/);
+  assert.match(footer, /target=\{link\.icon \? "_blank" : undefined\}/);
+  assert.match(footer, /rel=\{link\.icon \? "noopener noreferrer" : undefined\}/);
+  assert.match(footer, /href:\s*"https:\/\/x\.com\/meloniteai"/);
   assert.match(nav, /<DiscordIcon className="discord-icon-nav"/);
   assert.match(footer, /<DiscordIcon className="discord-icon-footer"/);
   assert.match(discordIcon, /discord\.png/);
@@ -108,7 +113,13 @@ test("builds the updated standalone Melonite website", async () => {
   assert.match(styles, /\.hero-emphasis::before\s*\{[\s\S]*?background:\s*#323232/);
   assert.match(styles, /\.toc-background\s*\{[\s\S]*?width:\s*86%/);
   assert.match(styles, /calc\(var\(--toc-parallax-y\) \* 36px\)/);
-  assert.match(styles, /\.feature-toc button\.is-active\s*\{[\s\S]*?#7cd6b8/);
+  assert.match(styles, /\.feature-toc\s*\{[\s\S]*?width:\s*min\(188px,\s*14\.4%\)/);
+  assert.match(styles, /\.feature-toc button\.is-active\s*\{[\s\S]*?color:\s*#000;[\s\S]*?background:\s*var\(--white\)/);
+  assert.match(styles, /\.feature-toc button > span:last-child\s*\{[\s\S]*?white-space:\s*nowrap/);
+  assert.doesNotMatch(styles, /\.feature-toc button\s*\{[^}]*border-radius/);
+  assert.match(styles, /@media \(max-width:\s*800px\)\s*\{[\s\S]*?\.product-showcase\s*\{[\s\S]*?height:\s*260svh;[\s\S]*?overflow:\s*clip/);
+  assert.match(styles, /@media \(max-width:\s*800px\)\s*\{[\s\S]*?\.toc-background\s*\{[\s\S]*?width:\s*min\(190%,\s*1000px\);[\s\S]*?height:\s*auto;/);
+  assert.match(styles, /@media \(max-width:\s*800px\)\s*\{[\s\S]*?\.product-preview-image\s*\{[\s\S]*?width:\s*min\(88%,\s*560px\)/);
   assert.match(styles, /\.invite-cta\s*\{[\s\S]*?margin:[\s\S]*?auto/);
   assert.match(styles, /\.install-command-frame\s*\{[\s\S]*?background:\s*#494949;[\s\S]*?border-radius:\s*4px;/);
   assert.match(installCommand, /curl -fsSL https:\/\/github\.com\/meloniteai\/melonite-desktop\/releases\/latest\/download\/install\.sh \| sh/);

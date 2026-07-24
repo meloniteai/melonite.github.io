@@ -3,7 +3,7 @@ import { DiscordIcon } from "./DiscordIcon";
 const FOOTER_LINKS = [
   { label: "About", href: "#about", icon: false },
   { label: "Discord", href: "https://discord.gg/88PSuaRNk", icon: true },
-  { label: "X", href: "https://x.com/", icon: false },
+  { label: "X", href: "https://x.com/meloniteai", icon: false },
 ] as const;
 
 export function Footer() {
@@ -14,6 +14,8 @@ export function Footer() {
           className={link.icon ? "discord-link" : undefined}
           key={link.label}
           href={link.href}
+          rel={link.icon ? "noopener noreferrer" : undefined}
+          target={link.icon ? "_blank" : undefined}
         >
           {link.icon ? <DiscordIcon className="discord-icon-footer" /> : null}
           {link.label}
