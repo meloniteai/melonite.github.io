@@ -70,6 +70,8 @@ test("builds the updated standalone Melonite website", async () => {
   assert.match(installSection, /USE YOUR EXISTING SUBSCRIPTIONS/);
   assert.match(installSection, /OPEN SOURCE \(MIT\)/);
   assert.match(installSection, /id="install"/);
+  assert.match(installSection, /className="install-content"/);
+  assert.match(installSection, /ResizeObserver/);
   assert.match(heroCopy, /href="https:\/\/app\.melonite\.ai\/login"/);
   assert.match(banner, /href="https:\/\/app\.melonite\.ai\/login"/);
   assert.match(nav, /href:\s*"https:\/\/app\.melonite\.ai\/login"/);
@@ -122,6 +124,10 @@ test("builds the updated standalone Melonite website", async () => {
   assert.match(styles, /@media \(max-width:\s*800px\)\s*\{[\s\S]*?\.product-preview-image\s*\{[\s\S]*?width:\s*min\(88%,\s*560px\)/);
   assert.match(styles, /\.invite-cta\s*\{[\s\S]*?margin:[\s\S]*?auto/);
   assert.match(styles, /\.install-command-frame\s*\{[\s\S]*?background:\s*#494949;[\s\S]*?border-radius:\s*4px;/);
+  assert.match(
+    styles,
+    /\.install-content\s*\{[\s\S]*?translateY\(var\(--install-content-shift,\s*0\)\)/,
+  );
   assert.match(installCommand, /curl -fsSL https:\/\/github\.com\/meloniteai\/melonite-desktop\/releases\/latest\/download\/install\.sh \| sh/);
   assert.match(styles, /--hero-parallax-x/);
   assert.match(styles, /calc\(var\(--hero-parallax-x\) \* -14px\)/);
