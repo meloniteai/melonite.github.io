@@ -418,8 +418,15 @@ a {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: min(84px, 5.4688vw);
   text-align: center;
+}
+
+.install-content {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  transform: translateY(var(--install-content-shift, 0));
 }
 
 .install-canvas h2 {
@@ -729,6 +736,10 @@ a {
 }
 
 @media (max-width: 800px) {
+  :root {
+    --nav-center-y: 35px;
+  }
+
   .floating-nav {
     top: 14px;
     width: auto;
@@ -777,11 +788,11 @@ a {
   }
 
   .brand-mark {
-    top: 76px;
+    top: var(--nav-center-y);
     left: 24px;
     width: 54px;
     min-width: 0;
-    transform: none;
+    transform: translateY(-50%);
   }
 
   .closed-beta-banner {
@@ -870,8 +881,7 @@ a {
   }
 
   .install-canvas {
-    justify-content: flex-start;
-    padding: 150px 22px 0;
+    padding-inline: 22px;
   }
 
   .install-canvas h2 {
@@ -979,6 +989,13 @@ a {
     font-size: 11px;
     white-space: nowrap;
     transform: none;
+  }
+}
+
+@media (max-width: 360px) {
+  .brand-mark {
+    left: 10px;
+    width: 42px;
   }
 }
 
