@@ -1,0 +1,42 @@
+export type SpaceGridMotionMode = "auto" | "full" | "reduced";
+
+export const SPACE_GRID_DEFAULTS = {
+  backgroundColor: "#000000",
+  centerFollow: 0.18,
+  dprCap: 1.5,
+  edgeFade: 0.18,
+  gravityRadius: 0.42,
+  gravityStrength: 0.78,
+  gridColor: "#9a84ff",
+  gridGlow: 0,
+  gridIntensity: 0.96,
+  gridScale: 1,
+  lineThickness: 0.86,
+  motionMode: "auto" as SpaceGridMotionMode,
+  paused: false,
+  speed: 1,
+  starCoolColor: "#8db8ff",
+  starDensity: 0.4,
+  starIntensity: 0.94,
+  starSmear: 1.18,
+  starWarmColor: "#e8a1c8",
+};
+
+export const HERO_SPACE_GRID_SETTINGS = {
+  backgroundColor: "#f0ede5",
+  centerFollow: 0.18,
+  edgeFade: 0.27,
+  gravityRadius: 0.1,
+  gravityStrength: 0.78,
+  gridColor: "#d562f3",
+  gridGlow: 0.5,
+  gridIntensity: 0.28,
+  gridScale: 1.46,
+  lineThickness: 0.92,
+  speed: 0.68,
+  starCoolColor: "#6574ad",
+  starDensity: 0.37,
+  starIntensity: 0.42,
+  starSmear: 0.79,
+  starWarmColor: "#a96f89",
+} as const;

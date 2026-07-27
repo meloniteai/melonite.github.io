@@ -3,6 +3,8 @@ import { BrandMark } from "./BrandMark";
 import { ClosedBetaBanner } from "./ClosedBetaBanner";
 import { HeroTextGridHalo } from "./GridHalos";
 import { HeroCopy } from "./HeroCopy";
+import { SpaceGridCanvas } from "./SpaceGridCanvas";
+import { HERO_SPACE_GRID_SETTINGS } from "./spaceGridDefaults";
 import { useHeroParallax } from "./useHeroParallax";
 
 export function HeroSection() {
@@ -15,6 +17,10 @@ export function HeroSection() {
       className="hero-section"
       aria-labelledby="hero-title"
     >
+      <SpaceGridCanvas
+        {...HERO_SPACE_GRID_SETTINGS}
+        className="hero-space-grid"
+      />
       <img
         className="hero-transition-art"
         src="/figma/updated/pixel-grid-base-clean.png"
