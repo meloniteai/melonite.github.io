@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 test("builds the updated standalone Melonite website", async () => {
-  const [html, source, heroSection, heroCopy, banner, brandMark, parallax, product, installSection, installCommand, nav, footer, discordIcon, styles] = await Promise.all([
+  const [html, source, heroSection, heroCopy, banner, brandMark, parallax, product, installSection, installCommand, nav, footer, discordIcon, spaceGrid, gridDefaults, styles] = await Promise.all([
     readFile(new URL("../dist/index.html", import.meta.url), "utf8"),
     readFile(new URL("../src/App.tsx", import.meta.url), "utf8"),
     readFile(new URL("../src/components/HeroSection.tsx", import.meta.url), "utf8"),
@@ -17,6 +17,8 @@ test("builds the updated standalone Melonite website", async () => {
     readFile(new URL("../src/components/FloatingNav.tsx", import.meta.url), "utf8"),
     readFile(new URL("../src/components/Footer.tsx", import.meta.url), "utf8"),
     readFile(new URL("../src/components/DiscordIcon.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../src/components/SpaceGridCanvas.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../src/components/spaceGridDefaults.ts", import.meta.url), "utf8"),
     readFile(new URL("../src/styles.css", import.meta.url), "utf8"),
   ]);
 
@@ -29,6 +31,8 @@ test("builds the updated standalone Melonite website", async () => {
   assert.doesNotMatch(heroSection, /HeroMorph/);
   assert.doesNotMatch(heroSection, /hero-animation\.(mp4|webm)/);
   assert.match(heroSection, /useHeroParallax\(sectionRef\)/);
+  assert.match(heroSection, /<SpaceGridCanvas/);
+  assert.match(heroSection, /\{\.\.\.HERO_SPACE_GRID_SETTINGS\}/);
   assert.match(heroSection, /hero-grid-overlay\.png/);
   assert.match(heroSection, /pixel-grid-base-clean\.png/);
   assert.match(
@@ -99,6 +103,22 @@ test("builds the updated standalone Melonite website", async () => {
     /\.hero-grid-art\s*\{[\s\S]*?top:\s*min\(27\.91px,\s*2\.2472vw\);[\s\S]*?left:\s*5%;[\s\S]*?width:\s*90%;/,
   );
   assert.match(styles, /scale3d\(1\.15,\s*1\.035,\s*1\)/);
+  assert.match(
+    styles,
+    /\.hero-space-grid\[data-webgl-unavailable="true"\][\s\S]*?~\s*\.hero-canvas[\s\S]*?\.hero-grid-art\s*\{[\s\S]*?display:\s*block/,
+  );
+  assert.match(spaceGrid, /webglcontextlost/);
+  assert.match(spaceGrid, /webglcontextrestored/);
+  assert.match(spaceGrid, /dataset\.webglUnavailable = "true"/);
+  assert.match(gridDefaults, /speed:\s*0\.68/);
+  assert.match(gridDefaults, /gravityRadius:\s*0\.1/);
+  assert.match(gridDefaults, /gridGlow:\s*0\.5/);
+  assert.match(gridDefaults, /gridIntensity:\s*0\.28/);
+  assert.match(gridDefaults, /gridScale:\s*1\.46/);
+  assert.match(gridDefaults, /lineThickness:\s*0\.92/);
+  assert.match(gridDefaults, /starDensity:\s*0\.37/);
+  assert.match(gridDefaults, /starIntensity:\s*0\.42/);
+  assert.match(gridDefaults, /starSmear:\s*0\.79/);
   assert.match(styles, /\.closed-beta-banner\s*\{/);
   assert.match(styles, /\.hero-copy\s*\{[\s\S]*?left:\s*50%;[\s\S]*?text-align:\s*center;/);
   assert.match(styles, /--hero-paper:\s*#f0ede5/);
