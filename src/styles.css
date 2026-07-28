@@ -476,8 +476,7 @@ a {
 .install-command-frame {
   position: relative;
   display: flex;
-  width: max-content;
-  max-width: calc(100% - 36px);
+  width: min(960px, calc(100% - 36px));
   min-height: 49.126px;
   align-items: center;
   gap: 17.063px;
@@ -491,12 +490,12 @@ a {
 .install-command-frame code {
   min-width: 0;
   flex: 1 1 auto;
-  overflow-x: auto;
+  overflow: hidden;
   font-family: "Jost", sans-serif;
-  font-size: 17.06px;
-  font-weight: 600;
+  font-size: clamp(10px, 1.333vw, 17.06px);
+  font-weight: 500;
   line-height: 1.1;
-  scrollbar-width: thin;
+  text-overflow: clip;
   white-space: nowrap;
 }
 
@@ -998,6 +997,7 @@ a {
 
   .install-command-frame code {
     font-size: 10px;
+    text-overflow: ellipsis;
   }
 
   .install-command-frame button {

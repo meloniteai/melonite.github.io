@@ -93,6 +93,14 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
     installCommand,
     /curl -fsSL https:\/\/github\.com\/meloniteai\/melonite-desktop\/releases\/latest\/download\/install\.sh \| sh/,
   );
+  assert.match(
+    styles,
+    /\.install-command-frame code\s*\{[\s\S]*?overflow:\s*hidden;[\s\S]*?font-weight:\s*500;/,
+  );
+  assert.doesNotMatch(
+    styles,
+    /\.install-command-frame code\s*\{[\s\S]*?overflow-x:\s*auto/,
+  );
 
   assert.match(netPositive, /Turn net-negative into net-positive/);
   assert.match(netPositive, /durable ACP and Session Lifecycle OSS work/);
