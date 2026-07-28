@@ -21,12 +21,6 @@ export function HeroSection() {
         {...HERO_SPACE_GRID_SETTINGS}
         className="hero-space-grid"
       />
-      <img
-        className="hero-transition-art"
-        src="/figma/updated/pixel-grid-base-clean.png"
-        alt=""
-        aria-hidden="true"
-      />
       <div className="hero-canvas">
         <img
           className="hero-grid-art"

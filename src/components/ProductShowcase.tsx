@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Footer } from "./Footer";
+import { InstallSection } from "./InstallSection";
 
 const FEATURES = [
   {
@@ -45,8 +45,12 @@ export function ProductShowcase() {
       const scrollable = Math.max(section.offsetHeight - window.innerHeight, 1);
       const progress = Math.min(1, Math.max(0, -rect.top / scrollable));
       section.style.setProperty(
-        "--toc-parallax-y",
-        (progress - 0.5).toFixed(4),
+        "--feature-progress",
+        progress.toFixed(4),
+      );
+      section.style.setProperty(
+        "--feature-slider-height",
+        `${24 + progress * 101}px`,
       );
       const nextFeature = Math.min(
         FEATURES.length - 1,
@@ -75,86 +79,61 @@ export function ProductShowcase() {
       if (animationFrame.current !== null) {
         window.cancelAnimationFrame(animationFrame.current);
       }
-      showcaseSection?.style.removeProperty("--toc-parallax-y");
+      showcaseSection?.style.removeProperty("--feature-progress");
+      showcaseSection?.style.removeProperty("--feature-slider-height");
     };
   }, []);
-
-  const selectFeature = (index: number) => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const sectionTop = window.scrollY + section.getBoundingClientRect().top;
-    const scrollable = Math.max(section.offsetHeight - window.innerHeight, 1);
-    const target = sectionTop + (index / (FEATURES.length - 1)) * scrollable;
-    window.scrollTo({
-      top: target,
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ? "auto"
-        : "smooth",
-    });
-  };
 
   const feature = FEATURES[activeFeature];
 
   return (
-    <section
-      ref={sectionRef}
-      id="about"
-      className="product-showcase"
-      aria-label="How Melonite works"
-    >
-      <div className="product-stage">
-        <img
-          className="pixel-strip pixel-strip-a"
-          src="/figma/updated/sparse-strip-top-purple.png"
-          alt=""
-          aria-hidden="true"
-        />
-        <img
-          className="pixel-strip pixel-strip-b"
-          src="/figma/updated/sparse-strip-bottom-purple.png"
-          alt=""
-          aria-hidden="true"
-        />
-        <div className="product-canvas">
-          <img
-            className="toc-background"
-            src="/figma/updated/toc-bg.png"
-            alt=""
-            aria-hidden="true"
-          />
-          <nav className="feature-toc" aria-label="Melonite capabilities">
-            {FEATURES.map((item, index) => (
-              <button
-                key={item.id}
-                type="button"
-                className={index === activeFeature ? "is-active" : undefined}
-                aria-current={index === activeFeature ? "step" : undefined}
-                onClick={() => selectFeature(index)}
-              >
-                <span className="feature-dot" aria-hidden="true" />
-                <span>{item.label}</span>
-              </button>
-            ))}
-          </nav>
-          <article
-            key={feature.id}
-            className="feature-copy"
-            aria-live="polite"
-          >
-            <p>{feature.copy}</p>
-          </article>
-          <img
-            className="product-preview-image"
-            src="/figma/updated/product-preview-raw-1.png"
-            width="2784"
-            height="1888"
-            alt="Melonite desktop app showing an agent iteration session"
-          />
+    <>
+      <section
+        ref={sectionRef}
+        id="install"
+        className="product-showcase"
+        aria-labelledby="install-title"
+      >
+        <div className="product-stage">
+          <InstallSection />
+          <div className="product-canvas">
+            <div
+              className="feature-slider"
+              role="progressbar"
+              aria-label="Melonite capability"
+              aria-valuemin={1}
+              aria-valuemax={FEATURES.length}
+              aria-valuenow={activeFeature + 1}
+              aria-valuetext={feature.label}
+            >
+              <span className="feature-slider-fill" aria-hidden="true" />
+            </div>
+            <article
+              key={feature.id}
+              className="feature-copy"
+              aria-live="polite"
+            >
+              <h2>{feature.label}</h2>
+              <p>{feature.copy}</p>
+            </article>
+            <img
+              className="product-preview-image"
+              src="/figma/lp-new/product-preview.png"
+              width="2784"
+              height="1888"
+              alt="Melonite desktop app showing an agent iteration session"
+            />
+          </div>
         </div>
-        <Footer />
-        <span id="discord" className="discord-anchor" aria-hidden="true" />
-      </div>
-    </section>
+      </section>
+      <img
+        className="mid-pixel-strip"
+        src="/figma/lp-new/pixel-strip.png"
+        width="1920"
+        height="122"
+        alt=""
+        aria-hidden="true"
+      />
+    </>
   );
 }
