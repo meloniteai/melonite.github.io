@@ -56,6 +56,7 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   assert.match(heroSection, /\{\.\.\.HERO_SPACE_GRID_SETTINGS\}/);
   assert.match(heroSection, /hero-grid-overlay\.png/);
   assert.match(heroSection, /<ClosedBetaBanner \/>/);
+  assert.match(heroSection, /<FogTransition \/>/);
   assert.doesNotMatch(heroSection, /HeroTextGridHalo|HeroMorph|hero-animation/);
   assert.match(
     heroCopy,
@@ -116,9 +117,12 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   assert.match(gridDefaults, /lineThickness:\s*0\.92/);
   assert.match(gridDefaults, /starIntensity:\s*0\.52/);
 
-  // The fog experiment is deliberately disconnected, but retained as a component.
+  // The fog shader is integrated into the hero as an organic atmospheric layer.
   assert.match(fogTransition, /ShaderMaterial/);
   assert.match(fogTransition, /fragmentShader/);
+  assert.match(fogTransition, /transparent:\s*true/);
+  assert.match(fogTransition, /alpha:\s*true/);
+  assert.match(fogTransition, /renderer\.setClearColor\(0x000000,\s*0\)/);
   assert.match(fogTransition, /requestAnimationFrame/);
   assert.match(fogTransition, /prefers-reduced-motion/);
   assert.match(fogTransition, /IntersectionObserver/);
@@ -176,6 +180,10 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   );
   assert.match(styles, /\.fog-transition\s*\{/);
   assert.match(styles, /\.fog-transition-canvas\s*\{/);
+  assert.match(
+    styles,
+    /\.fog-transition\s*\{[\s\S]*?position:\s*absolute;[\s\S]*?top:\s*-92px;[\s\S]*?right:\s*-12%;/,
+  );
   assert.match(styles, /42dot-sans-latin\.woff2/);
   assert.match(styles, /--hero-parallax-x/);
   assert.match(styles, /--feature-slider-height/);

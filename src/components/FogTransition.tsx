@@ -55,7 +55,7 @@ const fragmentShader = `
   void main() {
     vec2 uv = gl_FragCoord.xy / uResolution.xy;
     vec2 point = uv * vec2(2.55, 1.42);
-    float drift = uTime * 0.18;
+    float drift = uTime * 0.24;
     vec2 warp = vec2(
       fbm(point * 0.72 + vec2(drift * 0.28, 2.4)),
       fbm(point * 0.78 + vec2(5.1, -drift * 0.2))
@@ -68,23 +68,45 @@ const fragmentShader = `
     float fineFog = fbm(
       warpedPoint * 2.25 + vec2(-drift * 0.72, drift * 0.18)
     );
-    float upperBias = smoothstep(
-      0.03 + (broadFog - 0.5) * 0.18,
-      0.59 + (broadFog - 0.5) * 0.12,
+    float contourNoise = fbm(
+      vec2(uv.x * 3.2 + drift * 0.2, drift * -0.08 + 4.7)
+    );
+    float crest =
+      0.34 +
+      (contourNoise - 0.5) * 0.4 +
+      sin(uv.x * 5.1 + 0.7) * 0.085 +
+      sin(uv.x * 10.8 + drift * 0.16) * 0.035 +
+      (uv.x - 0.5) * 0.1;
+    crest +=
+      exp(-pow((uv.x - 0.69) / 0.19, 2.0)) * 0.17 -
+      exp(-pow((uv.x - 0.32) / 0.14, 2.0)) * 0.07;
+    float verticalShape = smoothstep(
+      crest - 0.1,
+      crest + 0.11,
       uv.y
     );
     float edgeFade =
-      smoothstep(0.0, 0.13, uv.y) *
-      (1.0 - smoothstep(0.88, 1.0, uv.y));
+      smoothstep(0.0, 0.06, uv.y) *
+      (1.0 - smoothstep(0.79, 1.0, uv.y));
+    float sideShape = mix(
+      0.72,
+      1.08,
+      smoothstep(0.0, 0.62, uv.x)
+    );
+    sideShape *= 1.0 -
+      smoothstep(0.78, 1.02, uv.x) * 0.18;
     float fogStructure = smoothstep(
       0.36,
       0.72,
       broadFog * 0.78 + fineFog * 0.32
     );
     float density = 0.46 + fogStructure * 0.68;
-    float fog = clamp(density * upperBias * edgeFade, 0.0, 1.0);
+    float fog = clamp(
+      density * verticalShape * edgeFade * sideShape,
+      0.0,
+      1.0
+    );
 
-    vec3 paper = vec3(0.941, 0.929, 0.898);
     vec3 pearl = vec3(0.875, 0.899, 0.977);
     vec3 lavender = vec3(0.655, 0.674, 0.925);
     vec3 blue = vec3(0.404, 0.510, 0.925);
@@ -100,9 +122,9 @@ const fragmentShader = `
       smoothstep(0.5, 0.92, uv.y) *
         (0.22 + smoothstep(0.5, 0.82, fineFog) * 0.16)
     );
-    vec3 color = mix(paper, fogColor, fog);
+    float alpha = fog * (0.48 + fogStructure * 0.34);
 
-    gl_FragColor = vec4(color, 1.0);
+    gl_FragColor = vec4(fogColor, alpha);
   }
 `;
 
@@ -124,6 +146,7 @@ export function FogTransition() {
     const material = new ShaderMaterial({
       vertexShader,
       fragmentShader,
+      transparent: true,
       uniforms: {
         uTime: { value: 0 },
         uResolution: { value: new Vector2(1, 1) },
@@ -138,8 +161,9 @@ export function FogTransition() {
     try {
       renderer = new WebGLRenderer({
         canvas,
-        alpha: false,
+        alpha: true,
         antialias: false,
+        premultipliedAlpha: true,
         powerPreference: "low-power",
       });
     } catch {
@@ -150,6 +174,7 @@ export function FogTransition() {
     }
 
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.setClearColor(0x000000, 0);
 
     let frame: number | null = null;
     let visible = true;

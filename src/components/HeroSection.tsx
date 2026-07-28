@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { BrandMark } from "./BrandMark";
 import { ClosedBetaBanner } from "./ClosedBetaBanner";
+import { FogTransition } from "./FogTransition";
 import { HeroCopy } from "./HeroCopy";
 import { SpaceGridCanvas } from "./SpaceGridCanvas";
 import { HERO_SPACE_GRID_SETTINGS } from "./spaceGridDefaults";
@@ -20,6 +21,7 @@ export function HeroSection() {
         {...HERO_SPACE_GRID_SETTINGS}
         className="hero-space-grid"
       />
+      <FogTransition />
       <div className="hero-canvas">
         <img
           className="hero-grid-art"
