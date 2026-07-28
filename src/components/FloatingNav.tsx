@@ -1,4 +1,6 @@
 import { type RefObject, useLayoutEffect, useRef } from "react";
+import { DiscordIcon } from "./DiscordIcon";
+import { GitHubIcon } from "./GitHubIcon";
 
 const NAV_ITEMS = [
   {
@@ -19,6 +21,12 @@ const NAV_ITEMS = [
     href: "https://discord.gg/88PSuaRNk",
     external: true,
   },
+  {
+    id: "github",
+    label: "GitHub",
+    href: "https://github.com/meloniteai",
+    external: true,
+  },
 ] as const;
 
 const MORPH_DISTANCE = 112;
@@ -34,6 +42,7 @@ function smoothstep(start: number, end: number, value: number) {
 function useFloatingNavMorph(
   navRef: RefObject<HTMLElement | null>,
   enabled: boolean,
+  itemCount: number,
 ) {
   useLayoutEffect(() => {
     const nav = navRef.current;
@@ -44,6 +53,7 @@ function useFloatingNavMorph(
       nav.style.setProperty("--nav-join-x", "0px");
       nav.style.setProperty("--nav-melonite-x", "0px");
       nav.style.setProperty("--nav-discord-x", "0px");
+      nav.style.setProperty("--nav-github-x", "0px");
       nav.style.setProperty("--nav-link-color", "rgb(253 252 248)");
       nav.style.setProperty("--nav-shell-opacity", "1");
       nav.style.setProperty("--nav-shell-scale", "1");
@@ -60,7 +70,10 @@ function useFloatingNavMorph(
     const discord = nav.querySelector<HTMLAnchorElement>(
       '[data-nav-item="discord"]',
     );
-    if (!join || !melonite || !discord) return;
+    const github = nav.querySelector<HTMLAnchorElement>(
+      '[data-nav-item="github"]',
+    );
+    if (!join || !melonite || !discord || !github) return;
 
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -69,6 +82,7 @@ function useFloatingNavMorph(
     let joinOffset = 0;
     let meloniteOffset = 0;
     let discordOffset = 0;
+    let githubOffset = 0;
     let shellPadding = 0;
 
     const render = () => {
@@ -92,17 +106,20 @@ function useFloatingNavMorph(
       const joinX = joinOffset * openProgress;
       const meloniteX = meloniteOffset * openProgress;
       const discordX = discordOffset * openProgress;
+      const githubX = githubOffset * openProgress;
       const shellLeft =
         Math.min(
           join.offsetLeft + joinX,
           melonite.offsetLeft + meloniteX,
           discord.offsetLeft + discordX,
+          github.offsetLeft + githubX,
         ) - shellPadding;
       const shellRight =
         Math.max(
           join.offsetLeft + joinX + join.offsetWidth,
           melonite.offsetLeft + meloniteX + melonite.offsetWidth,
           discord.offsetLeft + discordX + discord.offsetWidth,
+          github.offsetLeft + githubX + github.offsetWidth,
         ) + shellPadding;
       const shellWidth = shellRight - shellLeft;
       const shellCenterOffset =
@@ -119,6 +136,10 @@ function useFloatingNavMorph(
       nav.style.setProperty(
         "--nav-discord-x",
         `${discordX.toFixed(2)}px`,
+      );
+      nav.style.setProperty(
+        "--nav-github-x",
+        `${githubX.toFixed(2)}px`,
       );
       nav.style.setProperty(
         "--nav-link-color",
@@ -153,20 +174,25 @@ function useFloatingNavMorph(
       const pageInset = mobile ? 18 : 36;
       const leftGap = mobile ? 14 : 24;
       const itemGap = mobile ? 16 : 28;
+      const socialGap = mobile ? 12 : 18;
       shellPadding = Number.parseFloat(
         window.getComputedStyle(nav).paddingLeft,
       );
       const joinStart =
         (brandBounds?.right ?? pageInset + (mobile ? 48 : 60)) + leftGap;
       const meloniteStart = joinStart + join.offsetWidth + itemGap;
+      const githubStart =
+        window.innerWidth - pageInset - github.offsetWidth;
       const discordStart =
-        window.innerWidth - pageInset - discord.offsetWidth;
+        githubStart - socialGap - discord.offsetWidth;
 
       joinOffset = joinStart - (navBounds.left + join.offsetLeft);
       meloniteOffset =
         meloniteStart - (navBounds.left + melonite.offsetLeft);
       discordOffset =
         discordStart - (navBounds.left + discord.offsetLeft);
+      githubOffset =
+        githubStart - (navBounds.left + github.offsetLeft);
       render();
     };
 
@@ -192,7 +218,7 @@ function useFloatingNavMorph(
       window.removeEventListener("resize", handleResize);
       reducedMotion.removeEventListener("change", measure);
     };
-  }, [enabled, navRef]);
+  }, [enabled, itemCount, navRef]);
 }
 
 interface FloatingNavProps {
@@ -201,7 +227,7 @@ interface FloatingNavProps {
 
 export function FloatingNav({ morphOnScroll = true }: FloatingNavProps) {
   const navRef = useRef<HTMLElement>(null);
-  useFloatingNavMorph(navRef, morphOnScroll);
+  useFloatingNavMorph(navRef, morphOnScroll, NAV_ITEMS.length);
 
   return (
     <nav
@@ -219,6 +245,11 @@ export function FloatingNav({ morphOnScroll = true }: FloatingNavProps) {
           rel={item.external ? "noopener noreferrer" : undefined}
           target={item.external ? "_blank" : undefined}
         >
+          {item.id === "discord" ? (
+            <DiscordIcon className="nav-social-icon" />
+          ) : item.id === "github" ? (
+            <GitHubIcon className="nav-social-icon" />
+          ) : null}
           {item.label}
         </a>
       ))}

@@ -71,6 +71,7 @@ a {
 
 .floating-nav {
   --nav-discord-x: calc(50vw - 210px);
+  --nav-github-x: calc(50vw - 150px);
   --nav-join-x: calc(-50vw + 180px);
   --nav-link-color: var(--charcoal);
   --nav-melonite-x: calc(-50vw + 250px);
@@ -109,6 +110,9 @@ a {
 
 .floating-nav a {
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   color: var(--nav-link-color);
   font-size: 17.06px;
   font-weight: 800;
@@ -118,6 +122,34 @@ a {
   white-space: nowrap;
   transition: opacity 160ms ease-out;
   will-change: color, transform;
+}
+
+.discord-icon,
+.github-icon {
+  display: block;
+  flex: 0 0 auto;
+  background: currentColor;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+}
+
+.discord-icon {
+  mask-image: url("/figma/lp-new-light/discord.svg");
+  -webkit-mask-image: url("/figma/lp-new-light/discord.svg");
+}
+
+.github-icon {
+  mask-image: url("/figma/lp-new-light/github.svg");
+  -webkit-mask-image: url("/figma/lp-new-light/github.svg");
+}
+
+.nav-social-icon {
+  width: 16px;
+  height: 16px;
 }
 
 .floating-nav-item-join {
@@ -130,6 +162,10 @@ a {
 
 .floating-nav-item-discord {
   transform: translate3d(var(--nav-discord-x), 0, 0);
+}
+
+.floating-nav-item-github {
+  transform: translate3d(var(--nav-github-x), 0, 0);
 }
 
 .floating-nav a:hover {
@@ -766,8 +802,21 @@ a {
 }
 
 .footer-links a {
+  display: flex;
+  align-items: center;
+  gap: 5px;
   opacity: 0.9;
   text-decoration: none;
+}
+
+.footer-link-icon {
+  width: 14px;
+  height: 14px;
+  background: var(--offwhite);
+}
+
+img.footer-link-icon {
+  filter: brightness(0) invert(1);
 }
 
 .footer-links a:hover {
@@ -865,6 +914,7 @@ a {
 @media (max-width: 800px) {
   .floating-nav {
     --nav-discord-x: calc(50vw - 125px);
+    --nav-github-x: calc(50vw - 72px);
     --nav-join-x: calc(-50vw + 100px);
     --nav-melonite-x: calc(-50vw + 156px);
 
@@ -875,6 +925,11 @@ a {
 
   .floating-nav a {
     font-size: 12px;
+  }
+
+  .nav-social-icon {
+    width: 14px;
+    height: 14px;
   }
 
   .hero-section {
@@ -1152,6 +1207,16 @@ a {
 
   .hero-copy h1 {
     font-size: 31px;
+  }
+
+  .footer-top {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .footer-links {
+    max-width: 100%;
+    justify-content: flex-start;
   }
 }
 

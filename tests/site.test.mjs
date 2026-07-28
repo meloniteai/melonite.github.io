@@ -110,25 +110,35 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   assert.match(nav, /label:\s*"Join"/);
   assert.match(nav, /label:\s*"Melonite"/);
   assert.match(nav, /label:\s*"Discord"/);
+  assert.match(nav, /label:\s*"GitHub"/);
   assert.match(nav, /MORPH_DISTANCE\s*=\s*112/);
   assert.match(nav, /dataset\.navState\s*=/);
   assert.match(nav, /window\.addEventListener\("scroll"/);
   assert.match(nav, /--nav-shell-x/);
-  assert.doesNotMatch(nav, /DiscordIcon/);
+  assert.match(nav, /<DiscordIcon className="nav-social-icon" \/>/);
+  assert.match(nav, /<GitHubIcon className="nav-social-icon" \/>/);
   assert.match(nav, /target=\{item\.external \? "_blank" : undefined\}/);
   assert.match(footer, /lp-new-light\/footer-logo\.svg/);
   assert.match(footer, /<span>Melonite<\/span>/);
   assert.match(footer, /href:\s*"https:\/\/x\.com\/meloniteai"/);
+  assert.match(footer, /href:\s*"https:\/\/github\.com\/meloniteai"/);
+  assert.match(footer, /<DiscordIcon className="footer-link-icon" \/>/);
+  assert.match(footer, /<GitHubIcon className="footer-link-icon" \/>/);
+  assert.match(styles, /mask-image:\s*url\("\/figma\/lp-new-light\/discord\.svg"\)/);
+  assert.match(styles, /mask-image:\s*url\("\/figma\/lp-new-light\/github\.svg"\)/);
 
   assert.match(spaceGrid, /webglcontextlost/);
   assert.match(spaceGrid, /webglcontextrestored/);
   assert.match(spaceGrid, /dataset\.webglUnavailable = "true"/);
-  assert.match(gridDefaults, /speed:\s*0\.68/);
+  assert.match(gridDefaults, /speed:\s*0\.544/);
   assert.match(gridDefaults, /gridGlow:\s*0\.62/);
   assert.match(gridDefaults, /gridIntensity:\s*0\.4/);
   assert.match(gridDefaults, /gridScale:\s*1\.46/);
   assert.match(gridDefaults, /lineThickness:\s*0\.92/);
-  assert.match(gridDefaults, /starIntensity:\s*0\.52/);
+  assert.match(gridDefaults, /starDensity:\s*0\.78/);
+  assert.match(gridDefaults, /starIntensity:\s*1\.12/);
+  assert.match(gridDefaults, /starCoolColor:\s*"#e2f3fa"/i);
+  assert.match(gridDefaults, /starWarmColor:\s*"#e2f3fa"/i);
 
   // The fog shader is integrated into the hero as an organic atmospheric layer.
   assert.match(fogTransition, /ShaderMaterial/);

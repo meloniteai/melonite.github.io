@@ -1,11 +1,26 @@
+import { DiscordIcon } from "./DiscordIcon";
+import { GitHubIcon } from "./GitHubIcon";
+
 const FOOTER_LINKS = [
-  { label: "About", href: "#about", external: false },
+  { label: "About", href: "#about", external: false, icon: null },
   {
     label: "Discord",
     href: "https://discord.gg/88PSuaRNk",
     external: true,
+    icon: "/figma/lp-new-light/discord.svg",
   },
-  { label: "X", href: "https://x.com/meloniteai", external: true },
+  {
+    label: "GitHub",
+    href: "https://github.com/meloniteai",
+    external: true,
+    icon: "/figma/lp-new-light/github.svg",
+  },
+  {
+    label: "X",
+    href: "https://x.com/meloniteai",
+    external: true,
+    icon: null,
+  },
 ] as const;
 
 export function Footer() {
@@ -29,6 +44,11 @@ export function Footer() {
               rel={link.external ? "noopener noreferrer" : undefined}
               target={link.external ? "_blank" : undefined}
             >
+              {link.icon === "/figma/lp-new-light/discord.svg" ? (
+                <DiscordIcon className="footer-link-icon" />
+              ) : link.icon === "/figma/lp-new-light/github.svg" ? (
+                <GitHubIcon className="footer-link-icon" />
+              ) : null}
               {link.label}
             </a>
           ))}
