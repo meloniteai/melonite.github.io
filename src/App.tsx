@@ -1,5 +1,5 @@
+import { DownloadSection } from "./components/DownloadSection";
 import { FloatingNav } from "./components/FloatingNav";
-import { FogTransition } from "./components/FogTransition";
 import { Footer } from "./components/Footer";
 import { HeroSection } from "./components/HeroSection";
 import { NetPositiveSection } from "./components/NetPositiveSection";
@@ -11,9 +11,9 @@ export default function App() {
       <FloatingNav />
       <main>
         <HeroSection />
-        <FogTransition />
         <ProductShowcase />
         <NetPositiveSection />
+        <DownloadSection />
       </main>
       <Footer />
     </>

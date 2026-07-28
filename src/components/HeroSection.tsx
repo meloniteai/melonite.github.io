@@ -1,7 +1,6 @@
 import { useRef } from "react";
 import { BrandMark } from "./BrandMark";
 import { ClosedBetaBanner } from "./ClosedBetaBanner";
-import { HeroTextGridHalo } from "./GridHalos";
 import { HeroCopy } from "./HeroCopy";
 import { SpaceGridCanvas } from "./SpaceGridCanvas";
 import { HERO_SPACE_GRID_SETTINGS } from "./spaceGridDefaults";
@@ -30,7 +29,6 @@ export function HeroSection() {
         />
         <BrandMark />
         <ClosedBetaBanner />
-        <HeroTextGridHalo />
         <HeroCopy />
       </div>
     </section>

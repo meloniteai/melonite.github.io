@@ -2,12 +2,12 @@ const COMMUNITY_LINKS = [
   {
     label: "GitHub",
     href: "https://github.com/meloniteai",
-    icon: "/figma/lp-new/github.svg",
+    icon: "/figma/lp-new-light/github.svg",
   },
   {
     label: "Discord",
     href: "https://discord.gg/88PSuaRNk",
-    icon: "/figma/lp-new/discord.svg",
+    icon: "/figma/lp-new-light/discord.svg",
   },
 ] as const;
 
@@ -35,7 +35,7 @@ export function NetPositiveSection() {
               rel="noopener noreferrer"
               target="_blank"
             >
-              <img src={link.icon} width="15" height="15" alt="" />
+              <img src={link.icon} width="24" height="24" alt="" />
               <span>{link.label}</span>
             </a>
           ))}

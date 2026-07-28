@@ -87,53 +87,59 @@ export function ProductShowcase() {
   const feature = FEATURES[activeFeature];
 
   return (
-    <>
-      <section
-        ref={sectionRef}
-        id="install"
-        className="product-showcase"
-        aria-labelledby="install-title"
-      >
-        <div className="product-stage">
-          <InstallSection />
-          <div className="product-canvas">
-            <div
-              className="feature-slider"
-              role="progressbar"
-              aria-label="Melonite capability"
-              aria-valuemin={1}
-              aria-valuemax={FEATURES.length}
-              aria-valuenow={activeFeature + 1}
-              aria-valuetext={feature.label}
-            >
-              <span className="feature-slider-fill" aria-hidden="true" />
-            </div>
-            <article
-              key={feature.id}
-              className="feature-copy"
-              aria-live="polite"
-            >
-              <h2>{feature.label}</h2>
-              <p>{feature.copy}</p>
-            </article>
-            <img
-              className="product-preview-image"
-              src="/figma/lp-new/product-preview.png"
-              width="2784"
-              height="1888"
-              alt="Melonite desktop app showing an agent iteration session"
-            />
+    <section
+      ref={sectionRef}
+      id="install"
+      className="product-showcase"
+      aria-labelledby="install-title"
+    >
+      <div className="product-stage">
+        <img
+          className="mid-pixel-field"
+          src="/figma/lp-new-light/pixel-field.png"
+          width="1920"
+          height="819"
+          alt=""
+          aria-hidden="true"
+        />
+        <InstallSection />
+        <div className="product-canvas">
+          <img
+            className="showcase-slab"
+            src="/figma/lp-new-light/showcase-slab.svg"
+            width="1488"
+            height="534"
+            alt=""
+            aria-hidden="true"
+          />
+          <div
+            className="feature-slider"
+            role="progressbar"
+            aria-label="Melonite capability"
+            aria-valuemin={1}
+            aria-valuemax={FEATURES.length}
+            aria-valuenow={activeFeature + 1}
+            aria-valuetext={feature.label}
+          >
+            <span className="feature-slider-fill" aria-hidden="true" />
           </div>
+          <article
+            key={feature.id}
+            className="feature-copy"
+            aria-live="polite"
+          >
+            <h2>{feature.label}</h2>
+            <p>{feature.copy}</p>
+          </article>
+          <img
+            className="product-preview-image"
+            src="/figma/lp-new-light/product-preview.png"
+            width="2784"
+            height="1888"
+            alt="Melonite desktop app showing an agent iteration session"
+          />
         </div>
-      </section>
-      <img
-        className="mid-pixel-strip"
-        src="/figma/lp-new/pixel-strip.png"
-        width="1920"
-        height="122"
-        alt=""
-        aria-hidden="true"
-      />
-    </>
+      </div>
+    </section>
   );
 }

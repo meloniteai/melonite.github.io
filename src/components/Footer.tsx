@@ -14,11 +14,12 @@ export function Footer() {
       <div className="footer-top">
         <a className="footer-home" href="#" aria-label="Melonite home">
           <img
-            src="/figma/lp-new/footer-logo.svg"
+            src="/figma/lp-new-light/footer-logo.svg"
             width="60"
             height="51"
             alt=""
           />
+          <span>Melonite</span>
         </a>
         <nav className="footer-links" aria-label="Footer">
           {FOOTER_LINKS.map((link) => (
