@@ -4,10 +4,8 @@ interface DiscordIconProps {
 
 export function DiscordIcon({ className = "" }: DiscordIconProps) {
   return (
-    <img
+    <span
       className={`discord-icon ${className}`.trim()}
-      src="/figma/updated/discord.png"
-      alt=""
       aria-hidden="true"
     />
   );

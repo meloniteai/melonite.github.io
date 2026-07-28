@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { BrandMark } from "./BrandMark";
 import { ClosedBetaBanner } from "./ClosedBetaBanner";
-import { HeroTextGridHalo } from "./GridHalos";
+import { FogTransition } from "./FogTransition";
 import { HeroCopy } from "./HeroCopy";
 import { SpaceGridCanvas } from "./SpaceGridCanvas";
 import { HERO_SPACE_GRID_SETTINGS } from "./spaceGridDefaults";
@@ -18,15 +18,12 @@ export function HeroSection() {
       aria-labelledby="hero-title"
     >
       <SpaceGridCanvas
+        key="hero-blue-star-composite"
         {...HERO_SPACE_GRID_SETTINGS}
         className="hero-space-grid"
+        shaderRevision={4}
       />
-      <img
-        className="hero-transition-art"
-        src="/figma/updated/pixel-grid-base-clean.png"
-        alt=""
-        aria-hidden="true"
-      />
+      <FogTransition />
       <div className="hero-canvas">
         <img
           className="hero-grid-art"
@@ -36,7 +33,6 @@ export function HeroSection() {
         />
         <BrandMark />
         <ClosedBetaBanner />
-        <HeroTextGridHalo />
         <HeroCopy />
       </div>
     </section>

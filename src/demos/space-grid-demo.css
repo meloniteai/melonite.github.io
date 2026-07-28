@@ -82,6 +82,10 @@ a {
   pointer-events: auto;
 }
 
+.space-grid-demo .floating-nav::before {
+  display: none;
+}
+
 .space-grid-demo .floating-nav a {
   display: inline-flex;
   align-items: center;

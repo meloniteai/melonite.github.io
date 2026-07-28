@@ -1,14 +1,9 @@
-import { InviteGridHalo } from "./GridHalos";
-
 export function HeroCopy() {
   return (
-    <div className="hero-copy" data-figma-node="283:11529">
+    <div className="hero-copy" data-figma-node="542:2277">
       <h1 id="hero-title">
-        At the exact delta between
-        <br />
-        frontier coding
-        <br />
-        and perfect execution
+        A tool for the new CTO Superbuilder - move extremely fast without
+        compromising quality
       </h1>
       <p>
         Melonite fixes the{" "}
@@ -18,7 +13,6 @@ export function HeroCopy() {
         faster without compromising quality
       </p>
       <div className="invite-cta">
-        <InviteGridHalo />
         <a className="invite-button" href="https://app.melonite.ai/login">
           Request Invite
         </a>
