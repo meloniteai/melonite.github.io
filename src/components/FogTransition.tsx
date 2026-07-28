@@ -54,24 +54,34 @@ const fragmentShader = `
 
   void main() {
     vec2 uv = gl_FragCoord.xy / uResolution.xy;
-    float aspect = uResolution.x / max(uResolution.y, 1.0);
-    vec2 point = vec2(uv.x * aspect, uv.y);
-    float drift = uTime * 0.035;
+    vec2 point = uv * vec2(2.55, 1.42);
+    float drift = uTime * 0.18;
+    vec2 warp = vec2(
+      fbm(point * 0.72 + vec2(drift * 0.28, 2.4)),
+      fbm(point * 0.78 + vec2(5.1, -drift * 0.2))
+    ) - 0.5;
+    vec2 warpedPoint = point + warp * vec2(0.48, 0.24);
 
-    float broadFog = fbm(point * 1.38 + vec2(drift, -drift * 0.16));
-    float fineFog = fbm(point * 2.7 + vec2(-drift * 0.42, drift * 0.12));
+    float broadFog = fbm(
+      warpedPoint * 1.12 + vec2(drift, -drift * 0.14)
+    );
+    float fineFog = fbm(
+      warpedPoint * 2.25 + vec2(-drift * 0.72, drift * 0.18)
+    );
     float upperBias = smoothstep(
-      0.04 + (broadFog - 0.5) * 0.09,
-      0.61 + (broadFog - 0.5) * 0.07,
+      0.03 + (broadFog - 0.5) * 0.18,
+      0.59 + (broadFog - 0.5) * 0.12,
       uv.y
     );
     float edgeFade =
       smoothstep(0.0, 0.13, uv.y) *
       (1.0 - smoothstep(0.88, 1.0, uv.y));
-    float density =
-      0.8 +
-      (broadFog - 0.5) * 0.26 +
-      (fineFog - 0.5) * 0.1;
+    float fogStructure = smoothstep(
+      0.36,
+      0.72,
+      broadFog * 0.78 + fineFog * 0.32
+    );
+    float density = 0.46 + fogStructure * 0.68;
     float fog = clamp(density * upperBias * edgeFade, 0.0, 1.0);
 
     vec3 paper = vec3(0.941, 0.929, 0.898);
@@ -81,12 +91,14 @@ const fragmentShader = `
 
     float lavenderMix =
       smoothstep(0.16, 0.78, uv.y) * 0.68 +
-      (broadFog - 0.5) * 0.1;
+      (broadFog - 0.5) * 0.18 +
+      (fogStructure - 0.5) * 0.24;
     vec3 fogColor = mix(pearl, lavender, lavenderMix);
     fogColor = mix(
       fogColor,
       blue,
-      smoothstep(0.52, 0.92, uv.y) * 0.28
+      smoothstep(0.5, 0.92, uv.y) *
+        (0.22 + smoothstep(0.5, 0.82, fineFog) * 0.16)
     );
     vec3 color = mix(paper, fogColor, fog);
 

@@ -62,6 +62,8 @@ test("builds the updated standalone Melonite website", async () => {
   assert.match(parallax, /prefers-reduced-motion/);
   assert.match(fogTransition, /ShaderMaterial/);
   assert.match(fogTransition, /fragmentShader/);
+  assert.match(fogTransition, /uTime\s*\*\s*0\.18/);
+  assert.match(fogTransition, /uv\s*\*\s*vec2\(2\.55,\s*1\.42\)/);
   assert.match(fogTransition, /requestAnimationFrame/);
   assert.match(fogTransition, /prefers-reduced-motion/);
   assert.match(fogTransition, /IntersectionObserver/);
