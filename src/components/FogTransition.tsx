@@ -107,15 +107,15 @@ const fragmentShader = `
       1.0
     );
 
-    vec3 pearl = vec3(0.875, 0.899, 0.977);
-    vec3 lavender = vec3(0.655, 0.674, 0.925);
-    vec3 blue = vec3(0.404, 0.510, 0.925);
+    vec3 pearl = vec3(0.949, 0.976, 0.988);
+    vec3 sky = vec3(0.886, 0.953, 0.980);
+    vec3 blue = vec3(0.729, 0.867, 0.941);
 
     float lavenderMix =
       smoothstep(0.16, 0.78, uv.y) * 0.68 +
       (broadFog - 0.5) * 0.18 +
       (fogStructure - 0.5) * 0.24;
-    vec3 fogColor = mix(pearl, lavender, lavenderMix);
+    vec3 fogColor = mix(pearl, sky, lavenderMix);
     fogColor = mix(
       fogColor,
       blue,

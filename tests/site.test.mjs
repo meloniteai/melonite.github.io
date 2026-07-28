@@ -123,6 +123,7 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   assert.match(fogTransition, /transparent:\s*true/);
   assert.match(fogTransition, /alpha:\s*true/);
   assert.match(fogTransition, /renderer\.setClearColor\(0x000000,\s*0\)/);
+  assert.match(fogTransition, /vec3 sky = vec3\(0\.886,\s*0\.953,\s*0\.980\)/);
   assert.match(fogTransition, /requestAnimationFrame/);
   assert.match(fogTransition, /prefers-reduced-motion/);
   assert.match(fogTransition, /IntersectionObserver/);
