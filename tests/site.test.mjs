@@ -15,7 +15,6 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
     product,
     installSection,
     installCommand,
-    download,
     nav,
     footer,
     netPositive,
@@ -34,7 +33,6 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
     readFile(new URL("../src/components/ProductShowcase.tsx", import.meta.url), "utf8"),
     readFile(new URL("../src/components/InstallSection.tsx", import.meta.url), "utf8"),
     readFile(new URL("../src/components/InstallCommand.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../src/components/DownloadSection.tsx", import.meta.url), "utf8"),
     readFile(new URL("../src/components/FloatingNav.tsx", import.meta.url), "utf8"),
     readFile(new URL("../src/components/Footer.tsx", import.meta.url), "utf8"),
     readFile(new URL("../src/components/NetPositiveSection.tsx", import.meta.url), "utf8"),
@@ -50,8 +48,8 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   assert.match(app, /<HeroSection \/>/);
   assert.match(app, /<ProductShowcase \/>/);
   assert.match(app, /<NetPositiveSection \/>/);
-  assert.match(app, /<DownloadSection \/>/);
   assert.match(app, /<Footer \/>/);
+  assert.doesNotMatch(app, /DownloadSection/);
   assert.doesNotMatch(app, /FogTransition/);
 
   assert.match(heroSection, /<SpaceGridCanvas/);
@@ -84,6 +82,10 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   assert.match(product, /<InstallSection \/>/);
   assert.doesNotMatch(product, /pixel-strip|mid-pixel-strip|feature-toc/);
   assert.match(installSection, /Download for MacOS, Windows or Linux/);
+  assert.match(installSection, /className="install-os-icons"/);
+  assert.match(installSection, /lp-new-light\/windows\.svg/);
+  assert.match(installSection, /lp-new-light\/apple\.svg/);
+  assert.match(installSection, /lp-new-light\/ubuntu\.svg/);
   assert.match(installSection, /USE YOUR EXISTING SUBSCRIPTIONS/);
   assert.match(installSection, /OPEN SOURCE \(MIT\)/);
   assert.match(
@@ -95,13 +97,6 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   assert.match(netPositive, /durable ACP and Session Lifecycle OSS work/);
   assert.match(netPositive, /lp-new-light\/github\.svg/);
   assert.match(netPositive, /lp-new-light\/discord\.svg/);
-  assert.match(download, /Get started/);
-  assert.match(download, /Install on macOS, Windows, or Linux/);
-  assert.match(download, /lp-new-light\/windows\.svg/);
-  assert.match(download, /lp-new-light\/apple\.svg/);
-  assert.match(download, /lp-new-light\/ubuntu\.svg/);
-  assert.match(download, /Request Invite/);
-
   assert.match(nav, /label:\s*"Join"/);
   assert.match(nav, /label:\s*"About"/);
   assert.match(nav, /label:\s*"Discord"/);
@@ -143,6 +138,14 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   assert.match(styles, /\.mid-pixel-field\s*\{[\s\S]*?height:\s*819px/);
   assert.match(
     styles,
+    /\.install-os-icons\s*\{[\s\S]*?gap:\s*12px;[\s\S]*?margin-bottom:\s*36px/,
+  );
+  assert.match(
+    styles,
+    /\.install-os-icons img\s*\{[\s\S]*?width:\s*24px;[\s\S]*?height:\s*24px/,
+  );
+  assert.match(
+    styles,
     /\.product-canvas\s*\{[\s\S]*?width:\s*min\(1225px,\s*max\(760px,\s*63\.8021vw\),\s*calc\(100% - 48px\)\);[\s\S]*?aspect-ratio:\s*1225\s*\/\s*597/,
   );
   assert.match(
@@ -159,7 +162,8 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   );
   assert.match(styles, /\.feature-slider\s*\{[\s\S]*?height:\s*125px/);
   assert.match(styles, /\.net-positive-section\s*\{[\s\S]*?height:\s*405px/);
-  assert.match(styles, /\.download-section\s*\{[\s\S]*?height:\s*374px/);
+  assert.doesNotMatch(styles, /\.download-section\s*\{/);
+  assert.doesNotMatch(styles, /\.download-content\s*\{/);
   assert.match(styles, /\.site-footer\s*\{[\s\S]*?height:\s*231px/);
   assert.match(
     styles,

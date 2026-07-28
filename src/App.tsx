@@ -1,4 +1,3 @@
-import { DownloadSection } from "./components/DownloadSection";
 import { FloatingNav } from "./components/FloatingNav";
 import { Footer } from "./components/Footer";
 import { HeroSection } from "./components/HeroSection";
@@ -13,7 +12,6 @@ export default function App() {
         <HeroSection />
         <ProductShowcase />
         <NetPositiveSection />
-        <DownloadSection />
       </main>
       <Footer />
     </>
