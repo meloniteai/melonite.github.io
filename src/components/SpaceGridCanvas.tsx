@@ -35,6 +35,7 @@ const FRAGMENT_SHADER = `
   uniform float uGridScale;
   uniform float uStarDensity;
   uniform float uStarIntensity;
+  uniform float uStarRadius;
   uniform float uStarSmear;
   uniform vec3 uGridColor;
   uniform vec3 uBackgroundColor;
@@ -154,7 +155,8 @@ const FRAGMENT_SHADER = `
     float starWidth = (
       0.00042
       + hash21(starId + vec2(53.2, 5.4)) * 0.00072
-    ) * (1.0 + normalizedSpeed * 0.28);
+    ) * (1.0 + normalizedSpeed * 0.28)
+      * uStarRadius;
     float core = 1.0 - smoothstep(
       starWidth + pixelWidth,
       starWidth * 2.4 + pixelWidth,
@@ -373,6 +375,7 @@ export interface SpaceGridCanvasProps {
   starCoolColor?: string;
   starDensity?: number;
   starIntensity?: number;
+  starRadius?: number;
   starSmear?: number;
   starWarmColor?: string;
 }
@@ -393,6 +396,7 @@ interface LiveSettings {
   starCoolColor: string;
   starDensity: number;
   starIntensity: number;
+  starRadius: number;
   starSmear: number;
   starWarmColor: string;
 }
@@ -427,6 +431,7 @@ export function SpaceGridCanvas({
   starCoolColor = SPACE_GRID_DEFAULTS.starCoolColor,
   starDensity = SPACE_GRID_DEFAULTS.starDensity,
   starIntensity = SPACE_GRID_DEFAULTS.starIntensity,
+  starRadius = SPACE_GRID_DEFAULTS.starRadius,
   starSmear = SPACE_GRID_DEFAULTS.starSmear,
   starWarmColor = SPACE_GRID_DEFAULTS.starWarmColor,
 }: SpaceGridCanvasProps) {
@@ -448,6 +453,7 @@ export function SpaceGridCanvas({
     starCoolColor,
     starDensity,
     starIntensity,
+    starRadius,
     starSmear,
     starWarmColor,
   });
@@ -469,6 +475,7 @@ export function SpaceGridCanvas({
       starCoolColor,
       starDensity,
       starIntensity,
+      starRadius,
       starSmear,
       starWarmColor,
     };
@@ -488,6 +495,7 @@ export function SpaceGridCanvas({
     starCoolColor,
     starDensity,
     starIntensity,
+    starRadius,
     starSmear,
     starWarmColor,
   ]);
@@ -566,6 +574,7 @@ export function SpaceGridCanvas({
       },
       uStarDensity: { value: settingsRef.current.starDensity },
       uStarIntensity: { value: settingsRef.current.starIntensity },
+      uStarRadius: { value: settingsRef.current.starRadius },
       uStarSmear: { value: settingsRef.current.starSmear },
       uStarWarmColor: {
         value: new THREE.Color(settingsRef.current.starWarmColor),
@@ -601,6 +610,7 @@ export function SpaceGridCanvas({
       uniforms.uSpeed.value = settings.speed;
       uniforms.uStarDensity.value = settings.starDensity;
       uniforms.uStarIntensity.value = settings.starIntensity;
+      uniforms.uStarRadius.value = settings.starRadius;
       uniforms.uStarSmear.value = settings.starSmear;
 
       if (settings.backgroundColor !== lastBackgroundColor) {

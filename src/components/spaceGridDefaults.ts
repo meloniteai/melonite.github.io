@@ -18,6 +18,7 @@ export const SPACE_GRID_DEFAULTS = {
   starCoolColor: "#8db8ff",
   starDensity: 0.4,
   starIntensity: 0.94,
+  starRadius: 1,
   starSmear: 1.18,
   starWarmColor: "#e8a1c8",
 };
@@ -37,6 +38,7 @@ export const HERO_SPACE_GRID_SETTINGS = {
   starCoolColor: "#e2f3fa",
   starDensity: 0.507,
   starIntensity: 1.12,
-  starSmear: 0.79,
+  starRadius: 0.7,
+  starSmear: 0.553,
   starWarmColor: "#e2f3fa",
 } as const;

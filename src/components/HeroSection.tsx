@@ -21,7 +21,7 @@ export function HeroSection() {
         key="hero-blue-star-composite"
         {...HERO_SPACE_GRID_SETTINGS}
         className="hero-space-grid"
-        shaderRevision={3}
+        shaderRevision={4}
       />
       <FogTransition />
       <div className="hero-canvas">

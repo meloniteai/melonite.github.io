@@ -19,6 +19,7 @@ interface DemoSettings {
   speed: number;
   starDensity: number;
   starIntensity: number;
+  starRadius: number;
   starSmear: number;
 }
 
@@ -34,6 +35,7 @@ const INITIAL_SETTINGS: DemoSettings = {
   speed: HERO_SPACE_GRID_SETTINGS.speed,
   starDensity: HERO_SPACE_GRID_SETTINGS.starDensity,
   starIntensity: HERO_SPACE_GRID_SETTINGS.starIntensity,
+  starRadius: HERO_SPACE_GRID_SETTINGS.starRadius,
   starSmear: HERO_SPACE_GRID_SETTINGS.starSmear,
 };
 
@@ -132,6 +134,7 @@ export function SpaceGridDemo() {
           starCoolColor={HERO_SPACE_GRID_SETTINGS.starCoolColor}
           starDensity={settings.starDensity}
           starIntensity={settings.starIntensity}
+          starRadius={settings.starRadius}
           starSmear={settings.starSmear}
           starWarmColor={HERO_SPACE_GRID_SETTINGS.starWarmColor}
         />
@@ -248,6 +251,14 @@ export function SpaceGridDemo() {
               step={0.01}
               value={settings.starIntensity}
               onChange={updateSetting("starIntensity")}
+            />
+            <RangeControl
+              label="Star radius"
+              min={0.35}
+              max={1.5}
+              step={0.01}
+              value={settings.starRadius}
+              onChange={updateSetting("starRadius")}
             />
             <RangeControl
               label="Star smear"

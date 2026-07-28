@@ -54,7 +54,7 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
 
   assert.match(heroSection, /<SpaceGridCanvas/);
   assert.match(heroSection, /key="hero-blue-star-composite"/);
-  assert.match(heroSection, /shaderRevision=\{3\}/);
+  assert.match(heroSection, /shaderRevision=\{4\}/);
   assert.match(heroSection, /\{\.\.\.HERO_SPACE_GRID_SETTINGS\}/);
   assert.match(heroSection, /hero-grid-overlay\.png/);
   assert.match(heroSection, /<ClosedBetaBanner \/>/);
@@ -143,6 +143,8 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   assert.match(gridDefaults, /lineThickness:\s*0\.92/);
   assert.match(gridDefaults, /starDensity:\s*0\.507/);
   assert.match(gridDefaults, /starIntensity:\s*1\.12/);
+  assert.match(gridDefaults, /starRadius:\s*0\.7/);
+  assert.match(gridDefaults, /starSmear:\s*0\.553/);
   assert.match(gridDefaults, /starCoolColor:\s*"#e2f3fa"/i);
   assert.match(gridDefaults, /starWarmColor:\s*"#e2f3fa"/i);
 
