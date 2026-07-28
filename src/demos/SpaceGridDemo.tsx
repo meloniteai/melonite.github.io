@@ -137,7 +137,7 @@ export function SpaceGridDemo() {
         />
 
         <div className="space-grid-demo__hero-content">
-          <FloatingNav />
+          <FloatingNav morphOnScroll={false} />
           <BrandMark />
           <ClosedBetaBanner />
           <HeroTextGridHalo />

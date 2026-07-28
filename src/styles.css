@@ -70,6 +70,14 @@ a {
 }
 
 .floating-nav {
+  --nav-discord-x: calc(50vw - 210px);
+  --nav-join-x: calc(-50vw + 180px);
+  --nav-link-color: var(--charcoal);
+  --nav-melonite-x: calc(-50vw + 250px);
+  --nav-shell-opacity: 0;
+  --nav-shell-scale: 1;
+  --nav-shell-x: 0px;
+
   position: fixed;
   top: 64px;
   left: 50%;
@@ -79,19 +87,49 @@ a {
   justify-content: center;
   gap: 34.126px;
   padding: 12.797px 29.86px;
-  border-radius: 4px;
-  background: var(--footer-charcoal);
+  isolation: isolate;
+  pointer-events: none;
   transform: translateX(-50%);
 }
 
+.floating-nav::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 4px;
+  background: var(--footer-charcoal);
+  content: "";
+  opacity: var(--nav-shell-opacity);
+  pointer-events: none;
+  transform: translate3d(var(--nav-shell-x), 0, 0)
+    scaleX(var(--nav-shell-scale));
+  transform-origin: center;
+  will-change: opacity, transform;
+}
+
 .floating-nav a {
-  color: #fdfcf8;
+  position: relative;
+  color: var(--nav-link-color);
   font-size: 17.06px;
   font-weight: 800;
   line-height: 1;
+  pointer-events: auto;
   text-decoration: none;
   white-space: nowrap;
   transition: opacity 160ms ease-out;
+  will-change: color, transform;
+}
+
+.floating-nav-item-join {
+  transform: translate3d(var(--nav-join-x), 0, 0);
+}
+
+.floating-nav-item-melonite {
+  transform: translate3d(var(--nav-melonite-x), 0, 0);
+}
+
+.floating-nav-item-discord {
+  transform: translate3d(var(--nav-discord-x), 0, 0);
 }
 
 .floating-nav a:hover {
@@ -389,7 +427,7 @@ a {
   align-items: center;
   gap: 36px;
   padding: 108px 36px 20px;
-  overflow: hidden;
+  overflow: clip visible;
   isolation: isolate;
   background-image:
     linear-gradient(
@@ -488,7 +526,12 @@ a {
   position: relative;
   z-index: 2;
   display: grid;
-  width: min(1225px, max(760px, 63.8021vw), calc(100% - 48px));
+  width: min(
+    1225px,
+    max(760px, 63.8021vw),
+    max(760px, calc(205.1926svh - 888.48px)),
+    calc(100% - 48px)
+  );
   height: auto;
   aspect-ratio: 1225 / 597;
   min-height: 0;
@@ -821,6 +864,10 @@ a {
 
 @media (max-width: 800px) {
   .floating-nav {
+    --nav-discord-x: calc(50vw - 125px);
+    --nav-join-x: calc(-50vw + 100px);
+    --nav-melonite-x: calc(-50vw + 156px);
+
     top: 14px;
     gap: 20px;
     padding: 13px 18px;

@@ -99,8 +99,12 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   assert.match(netPositive, /lp-new-light\/github\.svg/);
   assert.match(netPositive, /lp-new-light\/discord\.svg/);
   assert.match(nav, /label:\s*"Join"/);
-  assert.match(nav, /label:\s*"About"/);
+  assert.match(nav, /label:\s*"Melonite"/);
   assert.match(nav, /label:\s*"Discord"/);
+  assert.match(nav, /MORPH_DISTANCE\s*=\s*112/);
+  assert.match(nav, /dataset\.navState\s*=/);
+  assert.match(nav, /window\.addEventListener\("scroll"/);
+  assert.match(nav, /--nav-shell-x/);
   assert.doesNotMatch(nav, /DiscordIcon/);
   assert.match(nav, /target=\{item\.external \? "_blank" : undefined\}/);
   assert.match(footer, /lp-new-light\/footer-logo\.svg/);
@@ -138,7 +142,7 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   );
   assert.match(
     styles,
-    /\.product-stage\s*\{[\s\S]*?position:\s*sticky;[\s\S]*?top:\s*0;[\s\S]*?height:\s*100svh/,
+    /\.product-stage\s*\{[\s\S]*?position:\s*sticky;[\s\S]*?top:\s*0;[\s\S]*?height:\s*100svh;[\s\S]*?overflow:\s*clip visible/,
   );
   assert.match(styles, /\.mid-pixel-field\s*\{[\s\S]*?height:\s*819px/);
   assert.match(
@@ -151,7 +155,7 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   );
   assert.match(
     styles,
-    /\.product-canvas\s*\{[\s\S]*?width:\s*min\(1225px,\s*max\(760px,\s*63\.8021vw\),\s*calc\(100% - 48px\)\);[\s\S]*?aspect-ratio:\s*1225\s*\/\s*597/,
+    /\.product-canvas\s*\{[\s\S]*?width:\s*min\([\s\S]*?1225px,[\s\S]*?max\(760px,\s*63\.8021vw\),[\s\S]*?max\(760px,\s*calc\(205\.1926svh - 888\.48px\)\),[\s\S]*?calc\(100% - 48px\)[\s\S]*?\);[\s\S]*?aspect-ratio:\s*1225\s*\/\s*597/,
   );
   assert.match(
     styles,
