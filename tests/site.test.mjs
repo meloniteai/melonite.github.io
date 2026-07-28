@@ -53,6 +53,8 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   assert.doesNotMatch(app, /FogTransition/);
 
   assert.match(heroSection, /<SpaceGridCanvas/);
+  assert.match(heroSection, /key="hero-blue-star-composite"/);
+  assert.match(heroSection, /shaderRevision=\{3\}/);
   assert.match(heroSection, /\{\.\.\.HERO_SPACE_GRID_SETTINGS\}/);
   assert.match(heroSection, /hero-grid-overlay\.png/);
   assert.match(heroSection, /<ClosedBetaBanner \/>/);
@@ -130,12 +132,16 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   assert.match(spaceGrid, /webglcontextlost/);
   assert.match(spaceGrid, /webglcontextrestored/);
   assert.match(spaceGrid, /dataset\.webglUnavailable = "true"/);
+  assert.match(spaceGrid, /pow\(max\(stars\.a,\s*0\.0\),\s*0\.65\)/);
+  assert.match(spaceGrid, /vec3 starContrastColor = mix/);
+  assert.match(spaceGrid, /vec3\(0\.18,\s*0\.55,\s*0\.76\)/);
+  assert.doesNotMatch(spaceGrid, /backgroundLuminance/);
   assert.match(gridDefaults, /speed:\s*0\.544/);
   assert.match(gridDefaults, /gridGlow:\s*0\.62/);
-  assert.match(gridDefaults, /gridIntensity:\s*0\.4/);
+  assert.match(gridDefaults, /gridIntensity:\s*0\.28/);
   assert.match(gridDefaults, /gridScale:\s*1\.46/);
   assert.match(gridDefaults, /lineThickness:\s*0\.92/);
-  assert.match(gridDefaults, /starDensity:\s*0\.78/);
+  assert.match(gridDefaults, /starDensity:\s*0\.507/);
   assert.match(gridDefaults, /starIntensity:\s*1\.12/);
   assert.match(gridDefaults, /starCoolColor:\s*"#e2f3fa"/i);
   assert.match(gridDefaults, /starWarmColor:\s*"#e2f3fa"/i);
@@ -154,6 +160,10 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   assert.match(styles, /--offwhite:\s*#f0ede5/);
   assert.match(styles, /--purple:\s*#6b59c7/i);
   assert.match(styles, /\.hero-section\s*\{[\s\S]*?height:\s*743\.594px/);
+  assert.match(
+    styles,
+    /\.hero-section::after\s*\{[\s\S]*?rgba\(240,\s*237,\s*229,\s*0\.34\)\s*0%/,
+  );
   assert.match(styles, /\.product-showcase\s*\{[\s\S]*?height:\s*360svh/);
   assert.match(
     styles,

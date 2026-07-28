@@ -18,8 +18,10 @@ export function HeroSection() {
       aria-labelledby="hero-title"
     >
       <SpaceGridCanvas
+        key="hero-blue-star-composite"
         {...HERO_SPACE_GRID_SETTINGS}
         className="hero-space-grid"
+        shaderRevision={3}
       />
       <FogTransition />
       <div className="hero-canvas">

@@ -179,7 +179,7 @@ const FRAGMENT_SHADER = `
     vec3 starColor = mix(
       pearl,
       uStarCoolColor,
-      0.24 + colorSeed * 0.3
+      0.78 + colorSeed * 0.18
     );
     float warmMix = smoothstep(0.82, 1.0, colorSeed) * 0.42;
     starColor = mix(starColor, uStarWarmColor, warmMix);
@@ -327,28 +327,25 @@ const FRAGMENT_SHADER = `
     mesh = pow(clamp(mesh * uGridIntensity, 0.0, 1.0), 0.88);
     mesh *= gridViewportFade;
 
-    float backgroundLuminance = dot(
-      uBackgroundColor,
-      vec3(0.2126, 0.7152, 0.0722)
-    );
     float starAlpha = clamp(
-      stars.a * uStarIntensity,
+      pow(max(stars.a, 0.0), 0.65)
+        * uStarIntensity
+        * 1.45,
       0.0,
-      0.78
+      0.92
     );
     vec3 normalizedStarColor = stars.rgb / max(stars.a, 0.0001);
-    vec3 luminousStars = uBackgroundColor
-      + stars.rgb * uStarIntensity;
-    vec3 inkStars = mix(
-      uBackgroundColor,
-      normalizedStarColor * 0.56,
-      starAlpha
+    vec3 starContrastColor = mix(
+      normalizedStarColor,
+      vec3(0.18, 0.55, 0.76),
+      0.62
     );
-    vec3 color = mix(
-      luminousStars,
-      inkStars,
-      smoothstep(0.56, 0.76, backgroundLuminance)
+    vec3 visibleStarColor = mix(
+      starContrastColor,
+      normalizedStarColor,
+      smoothstep(0.58, 0.92, starAlpha) * 0.38
     );
+    vec3 color = mix(uBackgroundColor, visibleStarColor, starAlpha);
     color = mix(color, uGridColor, meshGlow);
     color = mix(color, uGridColor, mesh);
     gl_FragColor = vec4(color, 1.0);
@@ -371,6 +368,7 @@ export interface SpaceGridCanvasProps {
   lineThickness?: number;
   motionMode?: SpaceGridMotionMode;
   paused?: boolean;
+  shaderRevision?: number;
   speed?: number;
   starCoolColor?: string;
   starDensity?: number;
@@ -424,6 +422,7 @@ export function SpaceGridCanvas({
   lineThickness = SPACE_GRID_DEFAULTS.lineThickness,
   motionMode = SPACE_GRID_DEFAULTS.motionMode,
   paused = SPACE_GRID_DEFAULTS.paused,
+  shaderRevision = 1,
   speed = SPACE_GRID_DEFAULTS.speed,
   starCoolColor = SPACE_GRID_DEFAULTS.starCoolColor,
   starDensity = SPACE_GRID_DEFAULTS.starDensity,
@@ -808,7 +807,7 @@ export function SpaceGridCanvas({
       material.dispose();
       renderer.dispose();
     };
-  }, [dprCap, motionMode]);
+  }, [dprCap, motionMode, shaderRevision]);
 
   return (
     <div
