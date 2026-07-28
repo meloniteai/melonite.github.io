@@ -122,7 +122,7 @@ const fragmentShader = `
       smoothstep(0.5, 0.92, uv.y) *
         (0.22 + smoothstep(0.5, 0.82, fineFog) * 0.16)
     );
-    float alpha = fog * (0.48 + fogStructure * 0.34);
+    float alpha = fog * (0.64 + fogStructure * 0.34);
 
     gl_FragColor = vec4(fogColor, alpha);
   }
