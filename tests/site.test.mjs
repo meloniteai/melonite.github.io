@@ -141,7 +141,22 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
     /\.product-stage\s*\{[\s\S]*?position:\s*sticky;[\s\S]*?top:\s*0;[\s\S]*?height:\s*100svh/,
   );
   assert.match(styles, /\.mid-pixel-field\s*\{[\s\S]*?height:\s*819px/);
-  assert.match(styles, /\.product-canvas\s*\{[\s\S]*?height:\s*597px/);
+  assert.match(
+    styles,
+    /\.product-canvas\s*\{[\s\S]*?width:\s*min\(1225px,\s*max\(760px,\s*63\.8021vw\),\s*calc\(100% - 48px\)\);[\s\S]*?aspect-ratio:\s*1225\s*\/\s*597/,
+  );
+  assert.match(
+    styles,
+    /\.showcase-slab\s*\{[\s\S]*?width:\s*121\.4694%;[\s\S]*?height:\s*auto/,
+  );
+  assert.match(
+    styles,
+    /\.product-preview-image\s*\{[\s\S]*?width:\s*100%;[\s\S]*?height:\s*auto;[\s\S]*?object-fit:\s*contain/,
+  );
+  assert.match(
+    styles,
+    /@media \(max-width:\s*800px\)\s*\{[\s\S]*?\.showcase-slab\s*\{[\s\S]*?width:\s*calc\(100% \+ 24px\);[\s\S]*?height:\s*calc\(100% - 64px\)/,
+  );
   assert.match(styles, /\.feature-slider\s*\{[\s\S]*?height:\s*125px/);
   assert.match(styles, /\.net-positive-section\s*\{[\s\S]*?height:\s*405px/);
   assert.match(styles, /\.download-section\s*\{[\s\S]*?height:\s*374px/);
