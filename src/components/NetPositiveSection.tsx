@@ -23,9 +23,9 @@ export function NetPositiveSection() {
           Turn net-negative into net-positive
         </h2>
         <p>
-          Open source, MIT licensed, and designed to work with your existing
-          subscriptions. Don’t want to use our app? You can build your own
-          custom agent using our durable ACP and Session Lifecycle OSS work.
+          Move fast with Coding Agents, but write code that is actually
+          maintainable. Don’t want to use our app? build your own Agent using
+          our Durable ACP and Session Lifecycle SDKs.
         </p>
         <div className="community-links">
           {COMMUNITY_LINKS.map((link) => (

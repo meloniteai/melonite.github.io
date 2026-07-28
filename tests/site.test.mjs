@@ -103,7 +103,8 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   );
 
   assert.match(netPositive, /Turn net-negative into net-positive/);
-  assert.match(netPositive, /durable ACP and Session Lifecycle OSS work/);
+  assert.match(netPositive, /Move fast with Coding Agents/);
+  assert.match(netPositive, /Durable ACP and Session Lifecycle SDKs/);
   assert.match(netPositive, /lp-new-light\/github\.svg/);
   assert.match(netPositive, /lp-new-light\/discord\.svg/);
   assert.match(nav, /label:\s*"Join"/);
@@ -179,6 +180,14 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   );
   assert.match(styles, /\.feature-slider\s*\{[\s\S]*?height:\s*125px/);
   assert.match(styles, /\.net-positive-section\s*\{[\s\S]*?height:\s*405px/);
+  assert.match(
+    styles,
+    /\.community-links\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2,\s*245px\)/,
+  );
+  assert.match(
+    styles,
+    /\.community-links a\s*\{[\s\S]*?width:\s*245px;[\s\S]*?height:\s*50px/,
+  );
   assert.doesNotMatch(styles, /\.download-section\s*\{/);
   assert.doesNotMatch(styles, /\.download-content\s*\{/);
   assert.match(styles, /\.site-footer\s*\{[\s\S]*?height:\s*231px/);
