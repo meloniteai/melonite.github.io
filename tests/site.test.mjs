@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 test("builds the updated standalone Melonite website", async () => {
-  const [html, source, heroSection, heroCopy, banner, brandMark, parallax, product, installSection, installCommand, nav, footer, netPositive, discordIcon, spaceGrid, gridDefaults, styles] = await Promise.all([
+  const [html, source, heroSection, heroCopy, banner, brandMark, parallax, fogTransition, product, installSection, installCommand, nav, footer, netPositive, discordIcon, spaceGrid, gridDefaults, styles] = await Promise.all([
     readFile(new URL("../dist/index.html", import.meta.url), "utf8"),
     readFile(new URL("../src/App.tsx", import.meta.url), "utf8"),
     readFile(new URL("../src/components/HeroSection.tsx", import.meta.url), "utf8"),
@@ -11,6 +11,7 @@ test("builds the updated standalone Melonite website", async () => {
     readFile(new URL("../src/components/ClosedBetaBanner.tsx", import.meta.url), "utf8"),
     readFile(new URL("../src/components/BrandMark.tsx", import.meta.url), "utf8"),
     readFile(new URL("../src/components/useHeroParallax.ts", import.meta.url), "utf8"),
+    readFile(new URL("../src/components/FogTransition.tsx", import.meta.url), "utf8"),
     readFile(new URL("../src/components/ProductShowcase.tsx", import.meta.url), "utf8"),
     readFile(new URL("../src/components/InstallSection.tsx", import.meta.url), "utf8"),
     readFile(new URL("../src/components/InstallCommand.tsx", import.meta.url), "utf8"),
@@ -27,6 +28,7 @@ test("builds the updated standalone Melonite website", async () => {
   assert.match(html, /<link rel="icon" type="image\/png" href="\/favicon\.png" \/>/);
   assert.match(source, /<FloatingNav \/>/);
   assert.match(source, /<HeroSection \/>/);
+  assert.match(source, /<FogTransition \/>/);
   assert.match(source, /<ProductShowcase \/>/);
   assert.match(source, /<NetPositiveSection \/>/);
   assert.match(source, /<Footer \/>/);
@@ -58,6 +60,12 @@ test("builds the updated standalone Melonite website", async () => {
   assert.match(parallax, /pointermove/);
   assert.match(parallax, /requestAnimationFrame/);
   assert.match(parallax, /prefers-reduced-motion/);
+  assert.match(fogTransition, /ShaderMaterial/);
+  assert.match(fogTransition, /fragmentShader/);
+  assert.match(fogTransition, /requestAnimationFrame/);
+  assert.match(fogTransition, /prefers-reduced-motion/);
+  assert.match(fogTransition, /IntersectionObserver/);
+  assert.match(fogTransition, /webglcontextlost/);
   assert.match(product, /pixel-strip\.png/);
   assert.match(product, /product-preview\.png/);
   assert.match(product, /Prompt Weave/);
@@ -126,6 +134,8 @@ test("builds the updated standalone Melonite website", async () => {
   assert.match(styles, /--hero-paper:\s*#f0ede5/);
   assert.match(styles, /--section-paper:\s*#afa8e3/);
   assert.match(styles, /\.mid-pixel-strip\s*\{/);
+  assert.match(styles, /\.fog-transition\s*\{/);
+  assert.match(styles, /\.fog-transition-canvas\s*\{/);
   assert.match(styles, /\.grid-halo-hero-text\s*\{/);
   assert.match(styles, /\.grid-halo-invite\s*\{/);
   assert.match(styles, /42dot-sans-latin\.woff2/);
