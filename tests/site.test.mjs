@@ -287,3 +287,23 @@ test("keeps the exact lp-new-all-light exports local and durable", async () => {
   assert.ok(favicon.byteLength > 2_000);
   assert.ok(font.byteLength > 20_000);
 });
+
+test("publishes the product manual for people and agents", async () => {
+  const [html, markdown, llms, full, footer] = await Promise.all([
+    readFile(new URL("../dist/manual/index.html", import.meta.url), "utf8"),
+    readFile(new URL("../dist/manual.md", import.meta.url), "utf8"),
+    readFile(new URL("../dist/llms.txt", import.meta.url), "utf8"),
+    readFile(new URL("../dist/llms-full.txt", import.meta.url), "utf8"),
+    readFile(new URL("../src/components/Footer.tsx", import.meta.url), "utf8"),
+  ]);
+
+  for (const copy of [html, markdown, full]) {
+    assert.match(copy, /@short-name watch this session for the specific behavior to check/);
+    assert.match(copy, /Only the person can create a free-form watcher/);
+  }
+  assert.equal(full, markdown);
+  assert.match(html, /<link rel="canonical" href="https:\/\/melonite\.ai\/manual\/"/);
+  assert.match(llms, /https:\/\/melonite\.ai\/manual\.md/);
+  assert.match(llms, /https:\/\/melonite\.ai\/llms-full\.txt/);
+  assert.match(footer, /label: "Manual", href: "\/manual\/"/);
+});

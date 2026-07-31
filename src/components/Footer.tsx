@@ -3,6 +3,7 @@ import { GitHubIcon } from "./GitHubIcon";
 
 const FOOTER_LINKS = [
   { label: "About", href: "#about", external: false, icon: null },
+  { label: "Manual", href: "/manual/", external: false, icon: null },
   {
     label: "Discord",
     href: "https://discord.gg/88PSuaRNk",

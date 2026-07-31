@@ -6,11 +6,12 @@
   "scripts": {
     "dev": "vite",
     "demo:grid": "vite --port 4173 --strictPort --open /space-grid-demo.html",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build && node scripts/build-manual.mjs",
     "test": "npm run build && node --test tests/site.test.mjs",
     "lint": "eslint src"
   },
   "dependencies": {
+    "marked": "^16.2.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "three": "^0.185.1"

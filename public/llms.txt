@@ -1,0 +1,12 @@
+# Melonite
+
+> Melonite supervises coding-agent Work sessions with durable rule sets, task-specific watchers, proof, and editable follow-up prompts.
+
+## Documentation
+
+- [Product manual](https://melonite.ai/manual.md): Concise product concepts and operating instructions in Markdown.
+- [Product manual for humans](https://melonite.ai/manual/): The same manual rendered as a web page.
+
+## Full text
+
+- [llms-full.txt](https://melonite.ai/llms-full.txt): The complete product manual in one text file.
