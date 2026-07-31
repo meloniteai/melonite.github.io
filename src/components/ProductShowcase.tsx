@@ -49,8 +49,8 @@ export function ProductShowcase() {
         progress.toFixed(4),
       );
       section.style.setProperty(
-        "--feature-slider-height",
-        `${24 + progress * 101}px`,
+        "--feature-fill-scale",
+        (0.2 + progress * 0.8).toFixed(4),
       );
       const nextFeature = Math.min(
         FEATURES.length - 1,
@@ -80,7 +80,7 @@ export function ProductShowcase() {
         window.cancelAnimationFrame(animationFrame.current);
       }
       showcaseSection?.style.removeProperty("--feature-progress");
-      showcaseSection?.style.removeProperty("--feature-slider-height");
+      showcaseSection?.style.removeProperty("--feature-fill-scale");
     };
   }, []);
 
@@ -104,14 +104,6 @@ export function ProductShowcase() {
         />
         <InstallSection />
         <div className="product-canvas">
-          <img
-            className="showcase-slab"
-            src="/figma/lp-new-light/showcase-slab.svg"
-            width="1488"
-            height="534"
-            alt=""
-            aria-hidden="true"
-          />
           <div
             className="feature-slider"
             role="progressbar"
@@ -123,14 +115,22 @@ export function ProductShowcase() {
           >
             <span className="feature-slider-fill" aria-hidden="true" />
           </div>
-          <article
-            key={feature.id}
-            className="feature-copy"
-            aria-live="polite"
-          >
-            <h2>{feature.label}</h2>
-            <p>{feature.copy}</p>
-          </article>
+          <div className="feature-copy" aria-live="polite">
+            <div className="feature-copy-stack">
+              {FEATURES.map((item, index) => (
+                <article
+                  key={item.id}
+                  className={`feature-copy-panel${
+                    index === activeFeature ? " is-active" : ""
+                  }`}
+                  aria-hidden={index !== activeFeature}
+                >
+                  <h2>{item.label}</h2>
+                  <p>{item.copy}</p>
+                </article>
+              ))}
+            </div>
+          </div>
           <img
             className="product-preview-image"
             src="/figma/lp-new-light/product-preview.png"
