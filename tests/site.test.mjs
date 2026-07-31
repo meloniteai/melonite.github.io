@@ -74,7 +74,7 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   assert.match(parallax, /prefers-reduced-motion/);
 
   assert.match(product, /lp-new-light\/pixel-field\.png/);
-  assert.match(product, /lp-new-light\/showcase-slab\.svg/);
+  assert.doesNotMatch(product, /lp-new-light\/showcase-slab\.svg/);
   assert.match(product, /lp-new-light\/product-preview\.png/);
   assert.match(product, /feature-slider/);
   assert.match(product, /role="progressbar"/);
@@ -97,7 +97,7 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   );
   assert.match(
     styles,
-    /\.install-command-frame code\s*\{[\s\S]*?overflow:\s*hidden;[\s\S]*?font-weight:\s*500;/,
+    /\.install-command-frame code\s*\{[\s\S]*?overflow:\s*hidden;[\s\S]*?font-weight:\s*400;/,
   );
   assert.doesNotMatch(
     styles,
@@ -175,6 +175,10 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
     styles,
     /\.product-stage\s*\{[\s\S]*?position:\s*sticky;[\s\S]*?top:\s*0;[\s\S]*?height:\s*100svh;[\s\S]*?overflow:\s*clip visible/,
   );
+  assert.match(
+    styles,
+    /\.product-stage\s*\{[\s\S]*?gap:\s*36px;[\s\S]*?padding:\s*64px 36px;/,
+  );
   assert.match(styles, /\.mid-pixel-field\s*\{[\s\S]*?height:\s*819px/);
   assert.match(
     styles,
@@ -188,9 +192,22 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
     styles,
     /\.product-canvas\s*\{[\s\S]*?width:\s*min\([\s\S]*?1225px,[\s\S]*?max\(760px,\s*63\.8021vw\),[\s\S]*?max\(760px,\s*calc\(205\.1926svh - 888\.48px\)\),[\s\S]*?calc\(100% - 48px\)[\s\S]*?\);[\s\S]*?aspect-ratio:\s*1225\s*\/\s*597/,
   );
+  assert.doesNotMatch(styles, /\.showcase-slab\s*\{/);
   assert.match(
     styles,
-    /\.showcase-slab\s*\{[\s\S]*?width:\s*121\.4694%;[\s\S]*?height:\s*auto/,
+    /\.feature-copy\s*\{[\s\S]*?height:\s*330px;[\s\S]*?color:\s*var\(--charcoal\)/,
+  );
+  assert.match(
+    styles,
+    /\.feature-copy h2\s*\{[\s\S]*?color:\s*var\(--charcoal\);[\s\S]*?font-family:\s*var\(--font-jost\);[\s\S]*?font-weight:\s*500/,
+  );
+  assert.match(
+    styles,
+    /\.feature-copy-panel\s*\{[\s\S]*?display:\s*flex;[\s\S]*?flex-direction:\s*column;[\s\S]*?row-gap:\s*20px;[\s\S]*?opacity:\s*0;[\s\S]*?transition:[\s\S]*?opacity 220ms ease-out/,
+  );
+  assert.match(
+    styles,
+    /\.feature-copy-panel\.is-active\s*\{[\s\S]*?opacity:\s*1;[\s\S]*?visibility:\s*visible/,
   );
   assert.match(
     styles,
@@ -198,9 +215,16 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   );
   assert.match(
     styles,
-    /@media \(max-width:\s*800px\)\s*\{[\s\S]*?\.showcase-slab\s*\{[\s\S]*?width:\s*calc\(100% \+ 24px\);[\s\S]*?height:\s*calc\(100% - 64px\)/,
+    /\.feature-slider\s*\{[\s\S]*?grid-column:\s*1;[\s\S]*?align-self:\s*center;[\s\S]*?height:\s*125px;[\s\S]*?transform:\s*translateY\(-102\.5px\)/,
   );
-  assert.match(styles, /\.feature-slider\s*\{[\s\S]*?height:\s*125px/);
+  assert.match(
+    styles,
+    /\.product-canvas\s*\{[\s\S]*?grid-template-columns:\s*4px 28px calc\(35\.5102% - 32px\) 1\.3061% 63\.1837%/,
+  );
+  assert.match(
+    styles,
+    /\.feature-copy-stack\s*\{[\s\S]*?width:\s*100%;[\s\S]*?min-width:\s*0;[\s\S]*?overflow:\s*hidden/,
+  );
   assert.match(styles, /\.net-positive-section\s*\{[\s\S]*?height:\s*405px/);
   assert.match(
     styles,
@@ -228,9 +252,15 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
     styles,
     /\.fog-transition\s*\{[\s\S]*?position:\s*absolute;[\s\S]*?top:\s*-92px;[\s\S]*?right:\s*-12%;/,
   );
-  assert.match(styles, /42dot-sans-latin\.woff2/);
+  assert.match(styles, /jost-latin\.woff2/);
+  assert.doesNotMatch(styles, /42dot-sans-latin\.woff2/);
+  assert.doesNotMatch(styles, /Asta Sans|42dot Sans|SFMono-Regular/);
   assert.match(styles, /--hero-parallax-x/);
-  assert.match(styles, /--feature-slider-height/);
+  assert.match(styles, /--feature-fill-scale/);
+  assert.match(
+    styles,
+    /\.feature-slider-fill\s*\{[\s\S]*?height:\s*100%;[\s\S]*?transform:\s*scaleY\(var\(--feature-fill-scale\)\)/,
+  );
 });
 
 test("keeps the exact lp-new-all-light exports local and durable", async () => {
@@ -259,7 +289,7 @@ test("keeps the exact lp-new-all-light exports local and durable", async () => {
     readFile(new URL("../public/figma/lp-new-light/apple.svg", import.meta.url)),
     readFile(new URL("../public/figma/lp-new-light/ubuntu.svg", import.meta.url)),
     readFile(new URL("../public/favicon.png", import.meta.url)),
-    readFile(new URL("../src/fonts/42dot-sans-latin.woff2", import.meta.url)),
+    readFile(new URL("../src/fonts/jost-latin.woff2", import.meta.url)),
   ]);
 
   assert.ok(preview.byteLength > 500_000);
