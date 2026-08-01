@@ -63,7 +63,7 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   assert.doesNotMatch(heroSection, /HeroTextGridHalo|HeroMorph|hero-animation/);
   assert.match(
     heroCopy,
-    /A tool for the new CTO Superbuilder - move extremely fast without[\s\S]*compromising quality/,
+    /A tool for the new CTO Superbuilder\. Move extremely fast without[\s\S]*compromising quality/,
   );
   assert.match(heroCopy, /hero-emphasis-bad/);
   assert.match(heroCopy, /hero-emphasis-build/);
