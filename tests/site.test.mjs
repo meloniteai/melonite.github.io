@@ -54,7 +54,8 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
 
   assert.match(heroSection, /<SpaceGridCanvas/);
   assert.match(heroSection, /key="hero-blue-star-composite"/);
-  assert.match(heroSection, /shaderRevision=\{4\}/);
+  assert.match(heroSection, /shaderRevision=\{15\}/);
+  assert.match(heroSection, /holeMotionTargetRef=\{sectionRef\}/);
   assert.match(heroSection, /\{\.\.\.HERO_SPACE_GRID_SETTINGS\}/);
   assert.match(heroSection, /hero-grid-overlay\.png/);
   assert.match(heroSection, /<ClosedBetaBanner \/>/);
@@ -135,12 +136,46 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   assert.match(spaceGrid, /pow\(max\(stars\.a,\s*0\.0\),\s*0\.65\)/);
   assert.match(spaceGrid, /vec3 starContrastColor = mix/);
   assert.match(spaceGrid, /vec3\(0\.18,\s*0\.55,\s*0\.76\)/);
+  assert.match(spaceGrid, /roundedBoxDistance/);
+  assert.match(spaceGrid, /bool hitsSideWall = xRatio > yRatio/);
+  assert.match(
+    spaceGrid,
+    /vec2 tunnelHalfSize = vec2\([\s\S]*?min\(aspect \* 0\.4425,\s*0\.5175\),[\s\S]*?0\.315/,
+  );
+  assert.match(spaceGrid, /float wallSeam = 1\.0 - smoothstep/);
+  assert.match(spaceGrid, /float oneSidedGridTrail/);
+  assert.match(spaceGrid, /const publishHoleMotion = \(\) =>/);
+  assert.match(spaceGrid, /--hero-hole-x/);
+  assert.match(spaceGrid, /--hero-hole-y/);
+  assert.match(spaceGrid, /CONTENT_GRAVITY_FOLLOW = 0\.015/);
+  assert.match(spaceGrid, /--hero-content-gravity-x/);
+  assert.match(
+    spaceGrid,
+    /float outwardProgress = 1\.0 - smoothstep\(0\.18,\s*1\.02,\s*depth\)/,
+  );
+  assert.match(spaceGrid, /mix\(0\.035,\s*0\.92,\s*smearStrength\)/);
+  assert.match(spaceGrid, /float terminalSmear = pow/);
+  assert.match(spaceGrid, /terminalSmear \* 0\.55/);
+  assert.match(spaceGrid, /terminalSmear \* 5\.0/);
+  assert.match(spaceGrid, /float outwardIntensity = mix/);
+  assert.match(spaceGrid, /uniform float uGridDensity/);
+  assert.match(spaceGrid, /float gridDensity = clamp\(uGridDensity/);
+  assert.match(spaceGrid, /\* 10\.0 \* gridDensity/);
+  assert.match(spaceGrid, /depthTrail \* 0\.78/);
+  assert.match(spaceGrid, /pow\(outwardIntensity,\s*0\.72\)/);
+  assert.match(
+    spaceGrid,
+    /roundedBoxDistance\([\s\S]*?tunnelHalfSize,[\s\S]*?0\.05/,
+  );
+  assert.doesNotMatch(spaceGrid, /tunnelRadii|wallAngle|clearanceRadii/);
   assert.doesNotMatch(spaceGrid, /backgroundLuminance/);
   assert.match(gridDefaults, /speed:\s*0\.544/);
+  assert.match(gridDefaults, /centerFollow:\s*0\.08/);
   assert.match(gridDefaults, /gridGlow:\s*0\.62/);
+  assert.match(gridDefaults, /gridDensity:\s*1\.25/);
   assert.match(gridDefaults, /gridIntensity:\s*0\.28/);
   assert.match(gridDefaults, /gridScale:\s*1\.46/);
-  assert.match(gridDefaults, /lineThickness:\s*0\.92/);
+  assert.match(gridDefaults, /lineThickness:\s*0\.6/);
   assert.match(gridDefaults, /starDensity:\s*0\.507/);
   assert.match(gridDefaults, /starIntensity:\s*1\.12/);
   assert.match(gridDefaults, /starRadius:\s*0\.7/);
@@ -256,6 +291,9 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   assert.doesNotMatch(styles, /42dot-sans-latin\.woff2/);
   assert.doesNotMatch(styles, /Asta Sans|42dot Sans|SFMono-Regular/);
   assert.match(styles, /--hero-parallax-x/);
+  assert.match(styles, /--hero-hole-x:\s*0px/);
+  assert.match(styles, /var\(--hero-hole-x\)/);
+  assert.match(styles, /--hero-content-gravity-x:\s*0px/);
   assert.match(styles, /--feature-fill-scale/);
   assert.match(
     styles,

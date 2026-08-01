@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { type RefObject, useEffect, useRef } from "react";
 import * as THREE from "three";
 import "./SpaceGridCanvas.css";
 import {
@@ -31,6 +31,7 @@ const FRAGMENT_SHADER = `
   uniform float uEdgeFade;
   uniform float uLineThickness;
   uniform float uGridGlow;
+  uniform float uGridDensity;
   uniform float uGridIntensity;
   uniform float uGridScale;
   uniform float uStarDensity;
@@ -53,6 +54,12 @@ const FRAGMENT_SHADER = `
       derivative * (thickness + 1.15),
       distanceToLine
     );
+  }
+
+  float oneSidedGridTrail(float coordinate, float trailLength) {
+    float trailPosition = fract(coordinate - 0.5);
+    float normalizedTrail = trailPosition / max(trailLength, 0.001);
+    return 1.0 - smoothstep(0.0, 1.0, normalizedTrail);
   }
 
   float roundedBoxDistance(vec2 point, vec2 halfSize, float radius) {
@@ -257,7 +264,10 @@ const FRAGMENT_SHADER = `
     stars += radialStarLayer(starPoint, 2.0, 181.0, 5.5) * 0.32;
     stars *= starViewportFade;
 
-    vec2 tunnelHalfSize = vec2(0.49, 0.265)
+    vec2 tunnelHalfSize = vec2(
+      min(aspect * 0.4425, 0.5175),
+      0.315
+    )
       / max(uGridScale, 0.55);
     float xRatio = abs(tunnelPoint.x) / tunnelHalfSize.x;
     float yRatio = abs(tunnelPoint.y) / tunnelHalfSize.y;
@@ -275,18 +285,43 @@ const FRAGMENT_SHADER = `
     float acrossWall = hitsSideWall
       ? wallPoint.y / tunnelHalfSize.y
       : wallPoint.x / tunnelHalfSize.x;
-    float wallCells = hitsSideWall ? 6.0 : 10.0;
+    float gridDensity = clamp(uGridDensity, 0.5, 3.0);
+    float wallCells = (hitsSideWall ? 6.0 : 10.0) * gridDensity;
     float longitudinalCoordinate = (acrossWall * 0.5 + 0.5) * wallCells;
-    float depthCoordinate = (depth + uTime * uSpeed) * 10.0;
+    float depthCoordinate = (
+      depth + uTime * uSpeed
+    ) * 10.0 * gridDensity;
+    float outwardProgress = 1.0 - smoothstep(0.18, 1.02, depth);
+    float smearStrength = pow(
+      clamp(outwardProgress, 0.0, 1.0),
+      0.42
+    );
+    float terminalSmear = pow(
+      clamp(outwardProgress, 0.0, 1.0),
+      2.6
+    );
+    float outwardIntensity = mix(
+      0.08,
+      1.0,
+      pow(smoothstep(0.2, 0.96, depth), 1.65)
+    );
 
     float longitudinalLines = gridLine(
       longitudinalCoordinate,
-      uLineThickness * 0.74
+      uLineThickness * (
+        mix(0.74, 2.8, smearStrength) + terminalSmear * 2.2
+      )
     );
     float depthSlices = gridLine(depthCoordinate, uLineThickness);
+    float depthTrail = oneSidedGridTrail(
+      depthCoordinate,
+      mix(0.035, 0.92, smearStrength) + terminalSmear * 0.55
+    ) * smearStrength * mix(1.0, 1.35, terminalSmear);
     float longitudinalGlow = gridLine(
       longitudinalCoordinate,
-      uLineThickness * 3.25
+      uLineThickness * (
+        mix(3.25, 8.2, smearStrength) + terminalSmear * 5.0
+      )
     );
     float depthGlow = gridLine(
       depthCoordinate,
@@ -302,7 +337,7 @@ const FRAGMENT_SHADER = `
     float holeDistance = roundedBoxDistance(
       tunnelPoint,
       tunnelHalfSize,
-      0.035
+      0.05
     );
     float holeEdgeWidth = max(fwidth(holeDistance), 0.0005);
     float outsideHole = smoothstep(
@@ -313,15 +348,27 @@ const FRAGMENT_SHADER = `
 
     float nearFade = smoothstep(0.22, 0.38, depth);
     float horizonFade = 1.0 - smoothstep(0.94, 1.035, depth);
-    float mesh = max(depthSlices, longitudinalLines * 0.78);
+    float movingDepthSlices = max(
+      depthSlices,
+      depthTrail * 0.78
+    );
+    float movingDepthGlow = max(
+      depthGlow,
+      depthTrail
+    );
+    float mesh = max(movingDepthSlices, longitudinalLines * 0.78);
     mesh = max(mesh, wallSeam * 0.84);
-    float meshGlow = max(depthGlow, longitudinalGlow * 0.74);
+    float meshGlow = max(movingDepthGlow, longitudinalGlow * 0.74);
     meshGlow = max(meshGlow, wallSeam * 0.4);
-    mesh *= outsideHole * nearFade * horizonFade;
+    mesh *= outsideHole
+      * nearFade
+      * horizonFade
+      * outwardIntensity;
     meshGlow *= outsideHole
       * nearFade
       * horizonFade
-      * gridViewportFade;
+      * gridViewportFade
+      * pow(outwardIntensity, 0.72);
     meshGlow = pow(clamp(meshGlow, 0.0, 1.0), 1.28)
       * uGridGlow
       * uGridIntensity
@@ -355,6 +402,8 @@ const FRAGMENT_SHADER = `
   }
 `;
 
+const CONTENT_GRAVITY_FOLLOW = 0.015;
+
 export interface SpaceGridCanvasProps {
   backgroundColor?: string;
   centerFollow?: number;
@@ -364,9 +413,11 @@ export interface SpaceGridCanvasProps {
   gravityRadius?: number;
   gravityStrength?: number;
   gridColor?: string;
+  gridDensity?: number;
   gridGlow?: number;
   gridIntensity?: number;
   gridScale?: number;
+  holeMotionTargetRef?: RefObject<HTMLElement | null>;
   lineThickness?: number;
   motionMode?: SpaceGridMotionMode;
   paused?: boolean;
@@ -387,6 +438,7 @@ interface LiveSettings {
   gravityRadius: number;
   gravityStrength: number;
   gridColor: string;
+  gridDensity: number;
   gridGlow: number;
   gridIntensity: number;
   gridScale: number;
@@ -420,9 +472,11 @@ export function SpaceGridCanvas({
   gravityRadius = SPACE_GRID_DEFAULTS.gravityRadius,
   gravityStrength = SPACE_GRID_DEFAULTS.gravityStrength,
   gridColor = SPACE_GRID_DEFAULTS.gridColor,
+  gridDensity = SPACE_GRID_DEFAULTS.gridDensity,
   gridGlow = SPACE_GRID_DEFAULTS.gridGlow,
   gridIntensity = SPACE_GRID_DEFAULTS.gridIntensity,
   gridScale = SPACE_GRID_DEFAULTS.gridScale,
+  holeMotionTargetRef,
   lineThickness = SPACE_GRID_DEFAULTS.lineThickness,
   motionMode = SPACE_GRID_DEFAULTS.motionMode,
   paused = SPACE_GRID_DEFAULTS.paused,
@@ -444,6 +498,7 @@ export function SpaceGridCanvas({
     gravityRadius,
     gravityStrength,
     gridColor,
+    gridDensity,
     gridGlow,
     gridIntensity,
     gridScale,
@@ -466,6 +521,7 @@ export function SpaceGridCanvas({
       gravityRadius,
       gravityStrength,
       gridColor,
+      gridDensity,
       gridGlow,
       gridIntensity,
       gridScale,
@@ -486,6 +542,7 @@ export function SpaceGridCanvas({
     gravityRadius,
     gravityStrength,
     gridColor,
+    gridDensity,
     gridGlow,
     gridIntensity,
     gridScale,
@@ -504,6 +561,7 @@ export function SpaceGridCanvas({
     const container = containerRef.current;
     const canvas = canvasRef.current;
     if (!container || !canvas) return;
+    const holeMotionTarget = holeMotionTargetRef?.current;
 
     const reducedMotionQuery = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -519,6 +577,8 @@ export function SpaceGridCanvas({
     let isIntersecting = true;
     let isDocumentVisible = !document.hidden;
     let loopIsRunning = false;
+    let viewportHeight = 1;
+    let viewportWidth = 1;
     let renderer: THREE.WebGLRenderer;
 
     const markRendererUnavailable = () => {
@@ -561,6 +621,7 @@ export function SpaceGridCanvas({
       uGravityRadius: { value: settingsRef.current.gravityRadius },
       uGravityStrength: { value: settingsRef.current.gravityStrength },
       uGridColor: { value: new THREE.Color(settingsRef.current.gridColor) },
+      uGridDensity: { value: settingsRef.current.gridDensity },
       uGridGlow: { value: settingsRef.current.gridGlow },
       uGridIntensity: { value: settingsRef.current.gridIntensity },
       uGridScale: { value: settingsRef.current.gridScale },
@@ -603,6 +664,7 @@ export function SpaceGridCanvas({
       uniforms.uEdgeFade.value = settings.edgeFade;
       uniforms.uGravityRadius.value = settings.gravityRadius;
       uniforms.uGravityStrength.value = settings.gravityStrength;
+      uniforms.uGridDensity.value = settings.gridDensity;
       uniforms.uGridGlow.value = settings.gridGlow;
       uniforms.uGridIntensity.value = settings.gridIntensity;
       uniforms.uGridScale.value = settings.gridScale;
@@ -634,6 +696,49 @@ export function SpaceGridCanvas({
       }
     };
 
+    const publishHoleMotion = () => {
+      if (!holeMotionTarget) return;
+
+      const aspect = viewportWidth / Math.max(viewportHeight, 1);
+      const pointerRangeX = Math.min(aspect * 0.46, 0.88);
+      const centerFollow = settingsRef.current.centerFollow;
+      const contentGravityFollow =
+        pointerActivityCurrent *
+        settingsRef.current.gravityStrength *
+        CONTENT_GRAVITY_FOLLOW;
+      const offsetX =
+        pointerCurrent.x * pointerRangeX * centerFollow * viewportHeight;
+      const offsetY =
+        -pointerCurrent.y * 0.36 * centerFollow * viewportHeight;
+      const gravityOffsetX =
+        pointerCurrent.x *
+        pointerRangeX *
+        contentGravityFollow *
+        viewportHeight;
+      const gravityOffsetY =
+        -pointerCurrent.y *
+        0.36 *
+        contentGravityFollow *
+        viewportHeight;
+
+      holeMotionTarget.style.setProperty(
+        "--hero-hole-x",
+        `${offsetX.toFixed(2)}px`,
+      );
+      holeMotionTarget.style.setProperty(
+        "--hero-hole-y",
+        `${offsetY.toFixed(2)}px`,
+      );
+      holeMotionTarget.style.setProperty(
+        "--hero-content-gravity-x",
+        `${gravityOffsetX.toFixed(2)}px`,
+      );
+      holeMotionTarget.style.setProperty(
+        "--hero-content-gravity-y",
+        `${gravityOffsetY.toFixed(2)}px`,
+      );
+    };
+
     const renderFrame = (frameTime: number) => {
       const deltaSeconds = Math.min(
         Math.max((frameTime - lastFrameTime) / 1000, 0),
@@ -653,6 +758,7 @@ export function SpaceGridCanvas({
 
       uniforms.uPointerActivity.value = pointerActivityCurrent;
       uniforms.uTime.value = elapsed;
+      publishHoleMotion();
 
       try {
         renderer.render(scene, camera);
@@ -674,6 +780,7 @@ export function SpaceGridCanvas({
       pointerActivityCurrent = 0;
       uniforms.uPointerActivity.value = 0;
       uniforms.uTime.value = 0;
+      publishHoleMotion();
 
       try {
         renderer.render(scene, camera);
@@ -711,6 +818,8 @@ export function SpaceGridCanvas({
       const bounds = container.getBoundingClientRect();
       const width = Math.max(1, Math.round(bounds.width));
       const height = Math.max(1, Math.round(bounds.height));
+      viewportWidth = width;
+      viewportHeight = height;
       renderer.setSize(width, height, false);
       renderer.getDrawingBufferSize(resolution);
       renderStill();
@@ -808,6 +917,10 @@ export function SpaceGridCanvas({
         handleMotionPreferenceChange,
       );
       finePointerQuery.removeEventListener("change", resetPointer);
+      holeMotionTarget?.style.removeProperty("--hero-hole-x");
+      holeMotionTarget?.style.removeProperty("--hero-hole-y");
+      holeMotionTarget?.style.removeProperty("--hero-content-gravity-x");
+      holeMotionTarget?.style.removeProperty("--hero-content-gravity-y");
       canvas.removeEventListener("webglcontextlost", handleContextLost);
       canvas.removeEventListener(
         "webglcontextrestored",
@@ -817,7 +930,7 @@ export function SpaceGridCanvas({
       material.dispose();
       renderer.dispose();
     };
-  }, [dprCap, motionMode, shaderRevision]);
+  }, [dprCap, holeMotionTargetRef, motionMode, shaderRevision]);
 
   return (
     <div

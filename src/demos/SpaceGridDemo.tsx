@@ -12,6 +12,7 @@ interface DemoSettings {
   edgeFade: number;
   gravityRadius: number;
   gravityStrength: number;
+  gridDensity: number;
   gridGlow: number;
   gridIntensity: number;
   gridScale: number;
@@ -28,6 +29,7 @@ const INITIAL_SETTINGS: DemoSettings = {
   edgeFade: HERO_SPACE_GRID_SETTINGS.edgeFade,
   gravityRadius: HERO_SPACE_GRID_SETTINGS.gravityRadius,
   gravityStrength: HERO_SPACE_GRID_SETTINGS.gravityStrength,
+  gridDensity: HERO_SPACE_GRID_SETTINGS.gridDensity,
   gridGlow: HERO_SPACE_GRID_SETTINGS.gridGlow,
   gridIntensity: HERO_SPACE_GRID_SETTINGS.gridIntensity,
   gridScale: HERO_SPACE_GRID_SETTINGS.gridScale,
@@ -125,6 +127,7 @@ export function SpaceGridDemo() {
           gravityRadius={settings.gravityRadius}
           gravityStrength={settings.gravityStrength}
           gridColor={HERO_SPACE_GRID_SETTINGS.gridColor}
+          gridDensity={settings.gridDensity}
           gridGlow={settings.gridGlow}
           gridIntensity={settings.gridIntensity}
           gridScale={settings.gridScale}
@@ -195,6 +198,14 @@ export function SpaceGridDemo() {
               step={0.01}
               value={settings.centerFollow}
               onChange={updateSetting("centerFollow")}
+            />
+            <RangeControl
+              label="Mesh density"
+              min={0.5}
+              max={2.5}
+              step={0.01}
+              value={settings.gridDensity}
+              onChange={updateSetting("gridDensity")}
             />
             <RangeControl
               label="Line weight"
