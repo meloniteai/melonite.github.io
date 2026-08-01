@@ -2,7 +2,7 @@ export function HeroCopy() {
   return (
     <div className="hero-copy" data-figma-node="542:2277">
       <h1 id="hero-title">
-        A tool for the new CTO Superbuilder - move extremely fast without
+        A tool for the new CTO Superbuilder. Move extremely fast without
         compromising quality
       </h1>
       <p>
