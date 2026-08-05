@@ -94,7 +94,7 @@ test("builds the lp-new-all-light page while retaining the production mesh", asy
   assert.match(installSection, /OPEN SOURCE \(MIT\)/);
   assert.match(
     installCommand,
-    /curl -fsSL https:\/\/github\.com\/meloniteai\/melonite-desktop\/releases\/latest\/download\/install\.sh \| sh/,
+    /curl -fsSL https:\/\/get.melonite.ai \| sh/,
   );
   assert.match(
     styles,

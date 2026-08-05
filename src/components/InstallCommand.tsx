@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 export const INSTALL_COMMAND =
-  "curl -fsSL https://github.com/meloniteai/melonite-desktop/releases/latest/download/install.sh | sh";
+  "curl -fsSL https://get.melonite.ai | sh";
 
 export function InstallCommand() {
   const [copied, setCopied] = useState(false);
