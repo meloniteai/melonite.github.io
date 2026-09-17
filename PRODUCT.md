@@ -6,26 +6,26 @@ brand
 
 ## Users
 
-Visitors encountering Melonite, a startup company, through its public-facing brand site.
+Researchers and decision makers at AI labs considering RL environments, evaluations, and benchmarks.
 
 ## Product Purpose
 
-Introduce Melonite through a memorable, scroll-driven hero that resolves a distorted flower into a clear brand mark.
+Introduce Melonite’s work and the team’s background in a concise single-page presentation, with a direct email contact.
 
 ## Brand Personality
 
-Expressive, polished, and experimental without becoming visually noisy or generic.
+Concise, thoughtful, and understated. Assume an expert audience without making the copy overly technical or promotional.
 
 ## Anti-references
 
-Avoid generic startup landing-page patterns, unnecessary redesigns, oversized standalone artwork, and changes that dilute the established scroll interaction.
+Avoid generic sales language, product demos, download prompts, beta messaging, social links, and scroll-driven effects.
 
 ## Design Principles
 
-- Preserve the established composition and interaction unless a change is explicitly requested.
-- Make the animated flower integral to the Melonite identity.
-- Use one strong visual idea per viewport.
-- Keep typography refined and legible while allowing expressive display forms.
+- Retain the Melonite mark, typography, and existing atmospheric background.
+- Keep the introduction, team paragraph, and email contact together in one view where space allows.
+- Let content flow naturally on smaller screens and when text is enlarged.
+- Keep the text stationary and legible; do not require scrolling to reveal content.
 
 ## Accessibility & Inclusion
 
