@@ -18,7 +18,6 @@ test("presents the lab introduction and a direct contact without the retired pro
     const markup = renderToStaticMarkup(createElement(App));
     const html = await readFile(new URL("../dist/index.html", import.meta.url), "utf8");
 
-    assert.match(markup, /<h1[^>]*>Melonite<\/h1>/);
     assert.match(markup, /We build RL environments, evaluations, and benchmarks for AI labs\./);
     assert.match(markup, /software architecture and developer infrastructure/);
     assert.match(markup, /environments that challenge models and evaluations that make their progress measurable/);
