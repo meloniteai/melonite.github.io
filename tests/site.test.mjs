@@ -18,9 +18,11 @@ test("presents the lab introduction and a direct contact without the retired pro
     const markup = renderToStaticMarkup(createElement(App));
     const html = await readFile(new URL("../dist/index.html", import.meta.url), "utf8");
 
-    assert.match(markup, /We build RL environments, evaluations, and benchmarks for AI labs\./);
-    assert.match(markup, /software architecture and developer infrastructure/);
-    assert.match(markup, /environments that challenge models and evaluations that make their progress measurable/);
+    assert.match(markup, /We are a data research lab focusing on RL environments for frontier models\./);
+    assert.match(markup, /Our RL tasks are based on real proprietary financial data with emphasis on:/);
+    assert.match(markup, /<ul><li>Precision evidence reconciliation from large sets of files\.<\/li>/);
+    assert.match(markup, /<li>Judgment calls and decision making that require strong grounding in data\.<\/li>/);
+    assert.match(markup, /<li>Failures that have a substantial economic impact and make AI less reliable\.<\/li><\/ul>/);
     assert.match(markup, /href="mailto:contact@melonite\.ai"/);
     assert.equal((markup.match(/<section\b/g) ?? []).length, 1);
     assert.doesNotMatch(markup, /<nav\b|<footer\b|Request Invite|Closed beta|Download|Superbuilder|GitHub|Discord|x\.com|app\.melonite\.ai/i);

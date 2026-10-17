@@ -8,7 +8,7 @@
 
 :root {
   color-scheme: light;
-  --offwhite: #f0ede5;
+  --page-background: #fff;
   --purple: #6b59c7;
   --charcoal: #3c3c3c;
   --dark-charcoal: #1f1e1e;
@@ -21,14 +21,14 @@
 
 html {
   min-width: 320px;
-  background: var(--offwhite);
+  background: var(--page-background);
 }
 
 body {
   min-width: 320px;
   margin: 0;
   color: var(--dark-charcoal);
-  background: var(--offwhite);
+  background: var(--page-background);
   font-family: var(--font-jost);
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
@@ -49,7 +49,7 @@ a {
   min-height: 100svh;
   overflow: hidden;
   isolation: isolate;
-  background: var(--offwhite);
+  background: var(--page-background);
 }
 
 .hero-section::after {
@@ -59,14 +59,14 @@ a {
   background:
     radial-gradient(
       ellipse 48% 68% at 50% 56%,
-      rgba(240, 237, 229, 0.34) 0%,
-      rgba(240, 237, 229, 0.22) 52%,
-      rgba(240, 237, 229, 0.04) 100%
+      rgba(255, 255, 255, 0.34) 0%,
+      rgba(255, 255, 255, 0.22) 52%,
+      rgba(255, 255, 255, 0.04) 100%
     ),
     linear-gradient(
       180deg,
-      rgba(240, 237, 229, 0.03),
-      rgba(240, 237, 229, 0.12)
+      rgba(255, 255, 255, 0.03),
+      rgba(255, 255, 255, 0.12)
     );
   content: "";
   pointer-events: none;
@@ -88,7 +88,7 @@ a {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: var(--offwhite);
+  background: var(--page-background);
   pointer-events: none;
 }
 
@@ -135,6 +135,8 @@ a {
   position: relative;
   z-index: 5;
   width: min(100%, 44rem);
+  /* Match the mesh square's center at 58.8% of the viewport height. */
+  margin-top: max(0px, calc(17.6svh - 2rem));
   text-align: center;
 }
 
@@ -166,13 +168,28 @@ a {
   text-wrap: pretty;
 }
 
+.hero-team p {
+  margin: 0;
+  text-align: left;
+}
+
+.hero-team ul {
+  margin: 1rem auto 0;
+  padding-left: 1.5rem;
+  text-align: left;
+}
+
+.hero-team li + li {
+  margin-top: 0.5rem;
+}
+
 .contact-link {
   display: inline-flex;
   min-height: 44px;
   align-items: center;
   margin-top: 1.75rem;
   color: #51419d;
-  font-size: 1rem;
+  font-size: 1.125rem;
   line-height: 1.5;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.3em;
@@ -219,12 +236,16 @@ a:focus-visible {
     padding: 7rem 1.5rem 4rem;
   }
 
+  .hero-copy {
+    margin-top: 0;
+  }
+
   .hero-section::after {
     background: radial-gradient(
       ellipse 86% 61% at 50% 51%,
-      rgba(240, 237, 229, 0.34) 0%,
-      rgba(240, 237, 229, 0.22) 58%,
-      rgba(240, 237, 229, 0.04) 100%
+      rgba(255, 255, 255, 0.34) 0%,
+      rgba(255, 255, 255, 0.22) 58%,
+      rgba(255, 255, 255, 0.04) 100%
     );
   }
 
@@ -239,6 +260,10 @@ a:focus-visible {
     margin-top: 1.75rem;
     font-size: 1rem;
     line-height: 1.6;
+  }
+
+  .contact-link {
+    font-size: 1rem;
   }
 
   .fog-transition {
