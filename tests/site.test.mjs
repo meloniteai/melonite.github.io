@@ -25,7 +25,9 @@ test("presents the lab introduction and a direct contact without the retired pro
     assert.match(markup, /<li>Failures that have a substantial economic impact and make AI less reliable\.<\/li><\/ul>/);
     assert.match(markup, /href="mailto:contact@melonite\.ai"/);
     assert.equal((markup.match(/<section\b/g) ?? []).length, 1);
-    assert.doesNotMatch(markup, /<nav\b|<footer\b|Request Invite|Closed beta|Download|Superbuilder|GitHub|Discord|x\.com|app\.melonite\.ai/i);
+    assert.match(markup, /<\/main><footer class="site-footer">Melonite inc\.<\/footer>$/);
+    assert.equal((markup.match(/<footer\b/g) ?? []).length, 1);
+    assert.doesNotMatch(markup, /<nav\b|Request Invite|Closed beta|Download|Superbuilder|GitHub|Discord|x\.com|app\.melonite\.ai/i);
 
     assert.match(html, /<title>Melonite \| RL environments, evaluations, and benchmarks<\/title>/);
     assert.match(html, /content="We build RL environments, evaluations, and benchmarks for AI labs\."/);

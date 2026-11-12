@@ -38,6 +38,14 @@ main {
   width: 100%;
 }
 
+.site-footer {
+  padding: 1.5rem;
+  color: var(--charcoal);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
 a {
   color: inherit;
   font: inherit;
