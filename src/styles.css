@@ -34,11 +34,20 @@ body {
   text-rendering: geometricPrecision;
 }
 
+.site-shell {
+  position: relative;
+}
+
 main {
   width: 100%;
 }
 
 .site-footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 4;
   padding: 1.5rem;
   color: var(--charcoal);
   font-size: 0.875rem;
@@ -241,7 +250,7 @@ a:focus-visible {
 
 @media (max-width: 800px) {
   .hero-canvas {
-    padding: 7rem 1.5rem 4rem;
+    padding: 7rem 1.5rem 6rem;
   }
 
   .hero-copy {
