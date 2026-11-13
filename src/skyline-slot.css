@@ -1,0 +1,12 @@
+/* A generous, parent-sized image column for the landing-page layout. */
+.skyline-slot {
+  inline-size: 100%;
+  min-inline-size: 0;
+  aspect-ratio: 3 / 2;
+  margin-inline-start: auto;
+  align-self: end;
+  overflow: hidden;
+}
+@media (max-width: 540px) {
+  .skyline-slot { aspect-ratio: 4 / 5; }
+}
