@@ -2,15 +2,21 @@ import { defineConfig } from 'vite';
 import type { ViteDevServer } from 'vite';
 import { join, resolve, sep } from 'node:path';
 import { generatePosts, normalizeBase, projectRoot } from './scripts/generate-posts.ts';
+import { generatePartners, partnerPaths } from './scripts/generate-partners.ts';
 
 export default defineConfig(async () => {
   const base = normalizeBase(process.env.BASE_PATH);
   const articles = await generatePosts(projectRoot, base);
+  await generatePartners(projectRoot, base);
   return {
     base,
     build: {
       rollupOptions: {
-        input: [join(projectRoot, 'index.html'), ...articles.map((article) => join(projectRoot, article.path, 'index.html'))],
+        input: [
+          join(projectRoot, 'index.html'),
+          ...articles.map((article) => join(projectRoot, article.path, 'index.html')),
+          ...partnerPaths.map((path) => join(projectRoot, path, 'index.html')),
+        ],
       },
     },
     plugins: [{

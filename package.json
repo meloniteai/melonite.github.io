@@ -9,7 +9,7 @@
     "build": "npm run typecheck && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "npm run content && tsc --noEmit",
-    "content": "node scripts/generate-posts.ts",
+    "content": "node scripts/generate-content.ts",
     "check:build": "node scripts/check-build.ts"
   },
   "dependencies": {

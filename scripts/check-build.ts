@@ -2,11 +2,17 @@ import assert from 'node:assert/strict';
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { join } from 'node:path';
 import { normalizeBase, projectRoot, parseArticle } from './generate-posts.ts';
+import { partnerPaths } from './generate-partners.ts';
+import { site } from '../src/site.ts';
 
 const base = normalizeBase(process.env.BASE_PATH);
 const output = join(projectRoot, 'dist');
 const files = await readdir(join(projectRoot, 'content/posts'));
-const pages = ['index.html'];
+const pages = ['index.html', ...partnerPaths.map((path) => path + 'index.html')];
+const partners = await readFile(join(output, 'partners/index.html'), 'utf8');
+assert(partners.includes(`action="https://formsubmit.co/${site.contactEmail}"`), 'Partners form must deliver to the configured contact email.');
+assert(partners.includes('method="POST"'), 'Partners form must POST its fields.');
+assert(partners.includes(`value="${new URL(base + 'partners/thank-you/', site.url).href}"`), 'Partners return URL must respect BASE_PATH.');
 for (const file of files.filter((name) => name.endsWith('.md'))) {
   const article = parseArticle(await readFile(join(projectRoot, 'content/posts', file), 'utf8'), file, base);
   if (article.draft) continue;

@@ -4,6 +4,7 @@ tmp/
 .DS_Store
 .generated/
 /posts/
+/partners/
 output/
 
 # Local configuration and package-manager logs

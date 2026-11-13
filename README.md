@@ -36,8 +36,7 @@ and footer are shared by the home page and articles through `src/site-layout.ts`
 The logo uses `assets/inspo/header-logo.svg` with its original proportions.
 
 - Contact opens an email to `contact@melonite.ai`.
-- Partners is an inactive page-link placeholder. Set its `href` and remove
-  `aria-disabled` in `src/site-layout.ts` when its page is ready.
+- Partners opens `/partners/`, with an inquiry form and a separate thank-you page.
 - Published article headlines and arrows are ordinary links to separate pages.
 - CRE Bench remains an inactive headline until `content/posts/cre-bench.md`
   is added. Its placeholder is in `src/content.ts` and is automatically replaced
@@ -47,6 +46,26 @@ The logo uses `assets/inspo/header-logo.svg` with its original proportions.
 `src/styles.css` owns the responsive layout. Editable content is
 escaped before it is rendered as HTML. The Three.js/GLSL bundle is only loaded on
 the home page and artwork previews; articles have a small independent entry point.
+
+## Partners page and email delivery
+
+`scripts/generate-partners.ts` owns the Partners copy and form markup. It builds
+`/partners/` and `/partners/thank-you/` as real static pages with the shared header,
+footer, and typography. `scripts/generate-content.ts` generates these alongside
+the Markdown articles. Both routes work on direct visits and with a repository
+base path. Generated `/partners/` files are ignored; edit the script instead.
+
+The form requires Full name, Email, Company, and Role; the message is optional.
+It posts to [FormSubmit](https://formsubmit.co/) for delivery to
+`contact@melonite.ai`, using the visitor's email as Reply-To. The provider's
+default spam protection stays enabled. Successful submissions return to the
+thank-you page. There are no browser-side API keys or server processes.
+
+**One-time activation:** the first submission triggers a FormSubmit confirmation
+email to `contact@melonite.ai`. Confirm that email before relying on delivery,
+then send a test inquiry and verify its arrival. Until this recipient-owned step
+is completed, email delivery is not verified. The form also provides a direct
+email link. `src/site.ts` configures the contact address and public site URL.
 
 ## Editing and adding Markdown posts
 
