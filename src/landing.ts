@@ -4,7 +4,7 @@ import { escapeHtml, renderHeader, renderFooter } from './site-layout.ts';
 import { bindPlaceholderLinks } from './navigation.ts';
 import logoUrl from '../assets/inspo/header-logo.svg';
 
-export const skylineDescription = 'A New York skyline with an Empire State Building silhouette and lower buildings tapering toward the left, formed from paragraphs inspired by E. B. White’s Here is New York. Fine white grain drifts gently through the sky. Moving the cursor anywhere on the page scrolls the text along the building faces.';
+export const skylineDescription = 'A New York skyline with an Empire State Building silhouette and lower buildings tapering toward the left, formed from paragraphs inspired by E. B. White’s Here is New York. Fine white grain drifts gently through the sky. Text scrolls automatically on touch screens and follows cursor movement on desktop, unless reduced motion is enabled.';
 
 function formatDate(date: string): string {
   return new Intl.DateTimeFormat('en-US', {

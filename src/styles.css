@@ -88,7 +88,7 @@ a:hover, button:hover { text-decoration: underline; text-underline-offset: 5px; 
   .site-shell { width: calc(100% - 64px); padding-top: 36px; }
   .journal-layout { grid-template-columns: 1fr; margin-top: 48px; }
   .posts-column { grid-column: auto; grid-row: auto; margin-right: 0; padding: 0; }
-  .journal-layout .skyline-figure { grid-column: auto; grid-row: auto; width: min(80%, 608px); }
+  .journal-layout .skyline-figure { grid-column: auto; grid-row: auto; width: 100%; }
   .journal-layout .skyline { height: auto; aspect-ratio: 3 / 2; }
   .post-list { gap: 30px; }
 }

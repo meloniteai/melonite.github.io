@@ -184,8 +184,9 @@ its previous scale: about 480px wide at a 1102px viewport and 550px on larger
 screens. The renderer expands the camera to the left, revealing the tall tower's
 narrow return wall and joining its base with a continuous foreground facade.
 
-Below 940px, the compact tower composition takes a separate row at 80% of the
-available width. On phones, a taller 4:5 composition preserves the silhouettes.
+Below 940px, the compact tower composition takes a separate row spanning the
+full content width, aligned with the article links. On phones, a taller 4:5
+composition preserves the silhouettes without an empty strip on the left.
 
 Standalone, label-free previews are still available:
 
@@ -227,12 +228,15 @@ Grain is sized in CSS pixels so its scale is consistent across pixel ratios and
 PNG exports. The gradient stays fixed, while the grain moves independently of
 cursor input. Exports freeze the grain for a consistent snapshot.
 
-Cursor movement anywhere on the page gives the rows momentum at slightly
-different speeds. Stopping or leaving the page lets them settle without resetting
-their positions. The architecture
-stays fixed. The ambient sky clock runs at 30 fps while visible, even when the
+On desktop, cursor movement anywhere on the page gives the rows momentum at
+slightly different speeds. Stopping or leaving the page lets them settle without
+resetting their positions. On touch screens without hover, the text scrolls
+automatically at a gentle, steady pace, with updates capped at 30 fps, including
+on 120 Hz phones. Touch input preserves page scrolling. The architecture stays
+fixed. The ambient sky clock runs at 30 fps while visible, even when the desktop
 cursor and text are idle. Both animations pause offscreen or in a background
-tab and honor reduced-motion preferences. Touch input preserves scrolling.
+tab and honor reduced-motion preferences; mobile text resumes automatically
+when visible again.
 Concurrent sky and text updates share one scheduled WebGL draw per frame.
 Pass `{ motion: false }` for a static instance, or `{ motionTarget: document }`
 for page-wide input (as used on this page). By default an embedded instance

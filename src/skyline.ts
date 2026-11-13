@@ -206,7 +206,7 @@ function landmarkGeometry(width: number, height: number, left: boolean, profile:
 
 /**
  * Mount the artwork in any sized element. Cursor movement gives the text rows
- * momentum; geometry stays fixed. Rendering sleeps once the text settles.
+ * momentum on desktop; touch screens scroll automatically. Geometry stays fixed.
  */
 export function createSkyline(container: HTMLElement, { onError = () => {}, motion = true, motionTarget, extendLeft = false }: SkylineOptions = {}): Skyline {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, preserveDrawingBuffer: true });
@@ -392,7 +392,7 @@ export function createSkyline(container: HTMLElement, { onError = () => {}, moti
   function contextLost(event: Event) {
     event.preventDefault();
     lost = true;
-    textMotion.pause();
+    textMotion.suspend();
     skyMotion.suspend();
     cancelAnimationFrame(pendingRender);
     pendingRender = 0;
@@ -414,7 +414,7 @@ export function createSkyline(container: HTMLElement, { onError = () => {}, moti
 
   async function exportPng(width = 2400) {
     if (disposed || lost) throw new Error('The artwork is unavailable. Reload the page and try again.');
-    textMotion.pause();
+    textMotion.suspend();
     skyMotion.suspend();
     const previousRatio = renderer.getPixelRatio();
     const previousSize = renderer.getSize(new THREE.Vector2());
@@ -430,7 +430,7 @@ export function createSkyline(container: HTMLElement, { onError = () => {}, moti
       renderer.setPixelRatio(previousRatio);
       renderer.setSize(previousSize.x, previousSize.y, false);
       render();
-      if (!lost) skyMotion.resume();
+      if (!lost) { textMotion.resume(); skyMotion.resume(); }
     }
   }
 
