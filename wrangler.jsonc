@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "melonite-partners",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-11-13",
+  "workers_dev": true,
+  "preview_urls": false,
+  "vars": {
+    "ALLOWED_ORIGIN": "https://melonite.ai",
+    "FROM_EMAIL": "Melonite Website <website@melonite.ai>",
+    "TO_EMAIL": "contact@melonite.ai"
+  },
+  "ratelimits": [
+    { "name": "IP_RATE_LIMITER", "namespace_id": "4871152801", "simple": { "limit": 3, "period": 60 } },
+    { "name": "SITE_RATE_LIMITER", "namespace_id": "4871152802", "simple": { "limit": 20, "period": 60 } }
+  ]
+}

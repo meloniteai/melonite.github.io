@@ -10,7 +10,8 @@
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "npm run content && tsc --noEmit",
     "content": "node scripts/generate-content.ts",
-    "check:build": "node scripts/check-build.ts"
+    "check:build": "node scripts/check-build.ts",
+    "check:worker": "wrangler deploy --dry-run --outdir .wrangler/build"
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "5.3.0",
@@ -22,7 +23,8 @@
     "gray-matter": "4.0.3",
     "markdown-it": "15.0.3",
     "typescript": "^5.9.3",
-    "vite": "5.4.21"
+    "vite": "5.4.21",
+    "wrangler": "4.161.0"
   },
   "engines": {
     "node": ">=22.18.0"

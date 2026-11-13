@@ -56,16 +56,48 @@ the Markdown articles. Both routes work on direct visits and with a repository
 base path. Generated `/partners/` files are ignored; edit the script instead.
 
 The form requires Full name, Email, Company, and Role; the message is optional.
-It posts to [FormSubmit](https://formsubmit.co/) for delivery to
-`contact@melonite.ai`, using the visitor's email as Reply-To. The provider's
-default spam protection stays enabled. Successful submissions return to the
-thank-you page. There are no browser-side API keys or server processes.
+It sends to a Cloudflare Worker, which delivers inquiries through Resend from
+`Melonite Website <website@melonite.ai>` to `contact@melonite.ai`, with the visitor
+as Reply-To. Because `melonite.ai` is verified in Resend, the sender address does
+not need a separate mailbox. The website remains on GitHub Pages.
 
-**One-time activation:** the first submission triggers a FormSubmit confirmation
-email to `contact@melonite.ai`. Confirm that email before relying on delivery,
-then send a test inquiry and verify its arrival. Until this recipient-owned step
-is completed, email delivery is not verified. The form also provides a direct
-email link. `src/site.ts` configures the contact address and public site URL.
+The Worker in `worker/index.ts` validates input, fixes the recipient and sender,
+limits body size, rejects foreign browser origins, and uses a spam-trap field
+plus Cloudflare rate-limit bindings. Limits apply per Cloudflare location and
+are approximate; they are not a strict global quota. The form preserves its
+contents on failure and reuses an idempotency key when retrying unchanged data.
+The thank-you page opens only after Resend acknowledges the send request.
+Provider acceptance is not proof of inbox delivery; verify delivery with a real
+test inquiry after setup. No credentials or submitted data are logged by our code.
+
+### One-time setup
+
+In `meloniteai/melonite.github.io` → Settings → Secrets and variables → Actions,
+add these **repository secrets**:
+
+- `RESEND_API_KEY`: a Resend key with Sending access, restricted to `melonite.ai`.
+- `CLOUDFLARE_ACCOUNT_ID`: the account where the Worker should run.
+- `CLOUDFLARE_API_TOKEN`: an account API token with Workers Admin at the Workers
+  product scope for the first deployment. Creating a new Worker requires Admin;
+  afterward, narrow the token to Workers Editor for `melonite-partners`.
+
+The account must have a `workers.dev` subdomain enabled. The workflow deploys
+`melonite-partners` there, uploads the Resend key as an encrypted Worker secret,
+checks `/health` and invalid-input rejection without sending an email, then
+builds and publishes the website using the returned `/inquiry` URL. Missing
+secrets or a failed Worker check prevent website deployment. Secrets are passed
+only to the deployment steps, never to Vite or the browser bundle. Pull requests
+run checks against a nonfunctional placeholder URL and cannot deploy.
+
+Run **Build and deploy GitHub Pages** after adding or rotating a repository
+secret; updating a secret alone does not trigger a deployment. `wrangler.jsonc`
+sets the allowed origin, sender, recipient, and approximate request limits.
+Changes to these settings deploy through the same workflow.
+
+For local UI previews, set `PARTNERS_ENDPOINT` to a local test endpoint ending
+in `/inquiry`. Without that setting, submission is disabled and the email link
+is available. `npm test` uses mocked provider calls; it never sends real email.
+`npm run check:worker` validates and bundles the Worker without publishing it.
 
 ## Editing and adding Markdown posts
 
