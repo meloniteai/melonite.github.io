@@ -35,8 +35,9 @@ Edit `src/site.ts` for the site name, introduction, and copyright. The header
 and footer are shared by the home page and articles through `src/site-layout.ts`.
 The logo uses `assets/inspo/header-logo.svg` with its original proportions.
 
-- Contact and Partners are inactive page-link placeholders. Set their `href`
-  and remove `aria-disabled` in `src/site-layout.ts` when their pages are ready.
+- Contact opens an email to `contact@melonite.ai`.
+- Partners is an inactive page-link placeholder. Set its `href` and remove
+  `aria-disabled` in `src/site-layout.ts` when its page is ready.
 - Published article headlines and arrows are ordinary links to separate pages.
 - CRE Bench remains an inactive headline until `content/posts/cre-bench.md`
   is added. Its placeholder is in `src/content.ts` and is automatically replaced

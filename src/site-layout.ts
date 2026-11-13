@@ -13,7 +13,7 @@ export function renderHeader(base: string, logoUrl: string): string {
       <span>${escapeHtml(site.name)}</span>
     </a>
     <nav class="site-nav" aria-label="Main navigation">
-      <a href="#" data-page-link aria-disabled="true">Contact</a>
+      <a href="mailto:contact@melonite.ai">Contact</a>
       <span aria-hidden="true">·</span>
       <a href="#" data-page-link aria-disabled="true">Partners</a>
     </nav>
