@@ -38,9 +38,8 @@ The logo uses `assets/inspo/header-logo.svg` with its original proportions.
 - Contact opens an email to `contact@melonite.ai`.
 - Partners opens `/partners/`, with an inquiry form and a separate thank-you page.
 - Published article headlines and arrows are ordinary links to separate pages.
-- CRE Bench remains an inactive headline until `content/posts/cre-bench.md`
-  is added. Its placeholder is in `src/content.ts` and is automatically replaced
-  by the matching published article.
+- Blue Cell Bench opens `/posts/blue-cell-bench/`. Edit `content/posts/blue-cell-bench.md` for the
+  article and its eleven interactive ECharts figures.
 
 `src/landing.ts` renders the page, `src/main.ts` mounts the page and skyline, and
 `src/styles.css` owns the responsive layout. Editable content is
@@ -125,6 +124,11 @@ Optional `date: "2026-11-13"` displays a publication date; no date is invented
 when it is absent. `order` sorts the home-page list ascending; ties use newest
 date first, then filename. The filename determines the permanent URL:
 `content/posts/my-post.md` becomes `/posts/my-post/`.
+
+Headings receive readable section URLs and a small permalink on hover or focus.
+Set `toc: true` to add a compact, sticky contents sidebar on the left. On narrow
+screens it sits below the title. It follows the top-level `##` headings automatically;
+link within the post with Markdown such as `[Leaderboard](#leaderboard)`.
 
 Markdown saves automatically regenerate pages and refresh the dev preview.
 `npm run build` packages the current Markdown on every build. It emits a real
@@ -215,18 +219,22 @@ upper blue `#6780bc`, middle blue `#849cd0`, pale blue `#adbcdc`, and blue haze
 `#caccd4`. Warm accents are resampled from the supplied crop, saved as
 `assets/inspo/sunset-warm-detail.png`: cream `#ffe8c5`, buttery gold `#ffe2a2`,
 apricot `#fab081`, and muted coral `#c69683`.
-`src/shaders/sunset.glsl` fills the open sky at up to 42% strength, emphasizing
-the empty wedge above the low buildings. Blue remains dominant, with warmth
-beginning softly around the lower third. The expanded transition leaves room
-for cream, gold, apricot, and coral before the bottom fade. A gentle feather preserves color toward
-the perimeter before all four borders reach white; the top has a broader fade
-to avoid a visible horizontal band. Facades receive one tenth of that
-tint, keeping the building paper white and the ink black.
-The open sky has fine white grain in two layers that drift slowly at different
-speeds and fade with its edges; building faces and black lettering remain clean.
-Grain is sized in CSS pixels so its scale is consistent across pixel ratios and
-PNG exports. The gradient stays fixed, while the grain moves independently of
-cursor input. Exports freeze the grain for a consistent snapshot.
+`src/shaders/sunset.glsl` shades the open sky with procedural lithographic crayon
+texture, inspired by nineteenth-century hand-colored New York prints. Overlapping
+straight sweeps, small scumbled marks, and sparse fine hatching deposit pigment over
+paper grain. Steady crayon shading leaves the sky open, with only a few shallow
+cloud streaks and smaller marks providing most of the texture. The original gradient
+supplies the colors: blue remains dominant,
+followed by cream, gold, apricot, and coral near the horizon. Pale cloud gaps in
+the lower left also catch reflected cream, gold, and apricot sunset light. A gentle feather
+brings all four borders to white, with a broader fade along the top. Facades
+retain their original faint tint and clean black type.
+Fine grain in two layers drifts slowly inside the pigment, while the crayon
+shading stays fixed. Texture coordinates use the CSS viewport, with smaller
+marks on narrow screens and consistent scale across pixel ratios and PNG
+exports. Motion remains independent of cursor input. Exports freeze the grain
+for a consistent snapshot. The shader has a fixed evaluation cost per pixel
+and needs no bitmap textures or extra draw calls.
 
 On desktop, cursor movement anywhere on the page gives the rows momentum at
 slightly different speeds. Stopping or leaving the page lets them settle without
@@ -256,11 +264,66 @@ The four long paragraphs in `src/excerpts.ts` are original adaptations, not
 verbatim excerpts or text authored by E. B. White. They draw on the supplied
 *Here is New York* PDF's themes of newcomers (book pp. 26–27), urban poetry
 (p. 29), and vertical Manhattan (pp. 30–31). A reproduction limit prevented
-including longer verbatim passages. Attribution lives in this file and the
-source so the artwork itself remains free of labels.
+including longer verbatim passages. The homepage includes an inspiration credit
+beneath the artwork, linking to the PDF hosted on Yale CampusPress. The standalone artwork
+previews remain free of labels.
 
 ## Design references
 
 The source design references (photos and the E. B. White PDF mentioned above)
 remain in the local design workspace. This repository includes the logo needed
 by the website; the skyline and sky are generated from TypeScript and GLSL.
+
+## Blue Cell Bench chart snapshot
+
+The Blue Cell Bench article uses fenced `cre-chart` blocks containing a figure ID,
+for example `pareto`. `scripts/benchmark-figures.ts` renders static, accessible
+summary tables at build time. `src/benchmark-charts.ts` loads ECharts only on
+articles with figures and draws charts as they approach the viewport. Wide
+figures scroll within their own region on narrow screens.
+
+All charts and tables use one data file,
+`public/research/cre-bench/chart-data.json`. The site builds without the private
+source repository or DOCX. To refresh the data from a local source checkout:
+
+```sh
+python3 scripts/import-cre-bench.py /path/to/gaiabench
+npm run build
+npm test
+npm run check:build
+```
+
+The importer reuses the source report's calculations and category anonymization,
+checks source hashes/cohorts, and allowlists exported fields. Do not copy the raw
+handoff JSON, its manifest, DOCX files, rubric mappings, or trajectories into
+this public repository. Review changes to the article's numerical claims when
+refreshing the frozen data. The importer deliberately fails on a changed cohort
+so updates require review.
+
+The desktop's Agy app replays selected excerpts from one recorded run near
+its model family's pooled median score (70.2, against a median of 70.6).
+`src/solver-agent-data.ts` contains narration, command and output excerpts
+with identifying names replaced and filenames redacted. Each passage was compared
+against the original trajectory before redaction. Markdown formatting is removed
+for text playback. The final excerpt includes the original acquisition
+recommendation and offer price. Source schedules, personal information and
+private grading maps are omitted. Do not replace this file with a raw export.
+The toolbar identifies the model and effort, and the icon uses the same asset
+as the Pareto chart. The replay does not include a benchmark score or the failed
+spreadsheet-engine attempt.
+
+On completion, Agy displays recorded totals from the same source run:
+20,305,773 tokens (20,043,273 input including cache, plus 262,500 output including
+thinking), 4,218.49429 seconds of agent execution (displayed to the nearest
+second), and 126 total trajectory steps (123 agent steps). Execution excludes
+setup and grading. Cost is omitted because the subscription run has no recorded
+cost allocation. These totals describe the original run, not the shortened
+replay, and remain hidden until playback finishes.
+
+Playback starts on first opening Agy, pauses while the window or browser tab
+is hidden, and retains its transcript and scroll position when reopened.
+Text, tool calls and inter-message pauses all run at 1.5× the original replay
+speed. Pause, Show all and Replay offer explicit playback control. Reduced-motion
+visitors see the full transcript immediately. Commands are display-only; no
+agent or shell runs in the browser. This replay does not populate the separate
+illustrative Excel window.

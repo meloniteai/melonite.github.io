@@ -6,14 +6,73 @@ import MarkdownIt from 'markdown-it';
 import type { Post } from '../src/post.ts';
 import { site } from '../src/site.ts';
 import { escapeHtml, renderHeader, renderFooter } from '../src/site-layout.ts';
+import { renderBenchmarkFigure, renderMetricsDashboard } from './benchmark-figures.ts';
+import { renderSolverDesktop } from '../src/solver-desktop-view.ts';
 
 export const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const generatedMarker = '<!-- Generated from content/posts/; edit the Markdown source. -->';
 const markdown = new MarkdownIt({ html: false, linkify: true });
+type MarkdownToken = ReturnType<typeof markdown.parse>[number];
+
+function headingText(tokens: MarkdownToken[]): string {
+  return tokens.map((token) => {
+    if (token.children) return headingText(token.children);
+    if (token.type === 'softbreak' || token.type === 'hardbreak') return ' ';
+    return ['text', 'code_inline', 'image'].includes(token.type) ? token.content : '';
+  }).join('');
+}
+
+markdown.renderer.rules.heading_close = (tokens, index, options, _env, self) => {
+  const heading = tokens[index - 2];
+  const id = heading?.attrGet('id');
+  const title = headingText(tokens[index - 1]?.children ?? []);
+  const permalink = id ? ` <a class="section-permalink" href="#${escapeHtml(String(id))}" aria-label="Link to ${escapeHtml(title)}"><span aria-hidden="true">#</span></a>` : '';
+  return permalink + self.renderToken(tokens, index, options);
+};
+
+function renderArticleBody(tokens: MarkdownToken[], showContents: boolean, base: string): { html: string; contents?: string } {
+  const usedIds = new Set(['article-title', 'main-content']);
+  const sections: { id: string; title: string }[] = [];
+  tokens.forEach((token, index) => {
+    if (token.type !== 'heading_open') return;
+    const title = headingText(tokens[index + 1]?.children ?? []);
+    const slug = title.normalize('NFKD').replace(/\p{M}/gu, '').toLowerCase()
+      .replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '') || 'section';
+    let id = slug;
+    for (let suffix = 2; usedIds.has(id); suffix++) id = `${slug}-${suffix}`;
+    usedIds.add(id);
+    token.attrSet('id', id);
+    token.attrJoin('class', 'article-section-heading');
+    if (token.tag === 'h2' && token.level === 0) sections.push({ id, title });
+  });
+  const html = markdown.renderer.render(tokens, markdown.options, { base });
+  if (!showContents || !sections.length) return { html };
+  const contents = `<nav class="article-toc" aria-label="On this page"><span class="article-toc-label">On this page</span><ul role="list">${sections.map(({ id, title }) => `<li><a href="#${escapeHtml(id)}">${escapeHtml(title)}</a></li>`).join('')}</ul></nav>\n`;
+  return { html, contents };
+}
+
+const defaultFence = markdown.renderer.rules.fence!;
+markdown.renderer.rules.fence = (tokens, index, options, env, self) => {
+  const token = tokens[index];
+  if (token.info.trim() === 'article-cta') {
+    const content = markdown.parse(token.content, env ?? {});
+    prefixMarkdownUrls(content, typeof env?.base === 'string' ? env.base : '/');
+    return `<footer class="article-cta" aria-label="Work with us">${markdown.renderer.render(content, options, env)}</footer>`;
+  }
+  if (token.info.trim() === 'cre-desktop') {
+    if (token.content.trim() !== 'Alderwick-St-55') throw new Error('Unknown Blue Cell Bench desktop.');
+    return renderSolverDesktop();
+  }
+  if (token.info.trim() === 'cre-dashboard') return renderMetricsDashboard(token.content, source=>markdown.render(source));
+  return token.info.trim() === 'cre-chart'
+    ? renderBenchmarkFigure(token.content.trim())
+    : defaultFence(tokens, index, options, env, self);
+};
 
 export interface Article extends Post {
   path: string;
   html: string;
+  contents?: string;
   order: number;
   draft: boolean;
 }
@@ -45,6 +104,7 @@ export function parseArticle(source: string, filename: string, base = '/'): Arti
   if (data.description !== undefined && typeof data.description !== 'string') throw new Error(`${filename}: description must be text.`);
   if (data.order !== undefined && (typeof data.order !== 'number' || !Number.isFinite(data.order))) throw new Error(`${filename}: order must be a number.`);
   if (data.draft !== undefined && typeof data.draft !== 'boolean') throw new Error(`${filename}: draft must be true or false.`);
+  if (data.toc !== undefined && typeof data.toc !== 'boolean') throw new Error(`${filename}: toc must be true or false.`);
   let date: string | undefined;
   if (data.date !== undefined) {
     date = data.date instanceof Date ? data.date.toISOString().slice(0, 10) : String(data.date);
@@ -58,7 +118,7 @@ export function parseArticle(source: string, filename: string, base = '/'): Arti
   return {
     id, title: data.title.trim(), path: `posts/${id}/`, date,
     description: data.description?.trim(), order: data.order ?? 100, draft: data.draft ?? false,
-    html: markdown.renderer.render(tokens, markdown.options, {}),
+    ...renderArticleBody(tokens, data.toc === true, normalizeBase(base)),
   };
 }
 
@@ -82,13 +142,14 @@ ${generatedMarker}
   <body>
     <div class="site-shell article-shell">
       ${renderHeader(base, '/assets/inspo/header-logo.svg')}
-      <main id="main-content" class="article-main">
+      <main id="main-content" class="article-main${article.html.includes('data-benchmark-chart=') ? ' article-main--research' : ''}${article.contents ? ' article-main--contents' : ''}">
         <a class="back-link" href="${escapeHtml(base)}">← Back to home</a>
-        <article aria-labelledby="article-title">
+        <article${article.contents ? ' class="article-with-contents"' : ''} aria-labelledby="article-title">
           <header class="article-header">
             <h1 id="article-title">${escapeHtml(article.title)}</h1>
             ${article.date ? `<time class="article-date" datetime="${article.date}">${date}</time>` : ''}
           </header>
+          ${article.contents ?? ''}
           <div class="article-body">${article.html}</div>
         </article>
       </main>

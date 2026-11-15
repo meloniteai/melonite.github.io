@@ -1,8 +1,8 @@
 // Original paragraph-length adaptations of themes in the supplied PDF.
 // These are NOT verbatim excerpts or prose written by E. B. White.
 // Source themes: newcomers (book pp. 26–27), urban poetry (p. 29),
-// and vertical Manhattan (pp. 30–31). Attribution is kept here and in README
-// so the visible artwork can consist solely of building faces.
+// and vertical Manhattan (pp. 30–31). The homepage credits this inspiration
+// beneath the artwork; further provenance is kept in README.
 export const paragraphs = [
   `New York gathers distant lives into neighboring rooms. A window lights up above a bakery; someone returns from rehearsal while someone else leaves for work. In the space of a single block, a hundred private ambitions pass one another without introduction. Together they make a city that feels larger than its streets can possibly contain. Its beauty lives in this closeness, in the unexpected arrangement of strangers, in the small everyday discoveries waiting beyond an ordinary doorway. Every arrival adds a different way of seeing, and every morning gives the island another chance to begin.`,
   `People arrive carrying a version of the future they have not yet learned to describe. The city gives that imagined life an address, a staircase, a train to catch. A musician finds a room above a restaurant. A writer discovers a table near the window. A family opens a shop and makes the pavement outside it familiar. Such beginnings bring their energy into the streets, where hope becomes a practical activity repeated day after day. New York is renewed by these acts of faith, by the people who decide that somewhere among its millions of doors there might be one for them.`,

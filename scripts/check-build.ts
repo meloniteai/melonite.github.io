@@ -18,7 +18,7 @@ for (const file of files.filter((name) => name.endsWith('.md'))) {
   const page = join(article.path, 'index.html');
   const html = await readFile(join(output, page), 'utf8');
   // Vite can rewrite image URLs while retaining the same article content.
-  const body = html.match(/<div class="article-body">([\s\S]*?)<\/div>/)?.[1] ?? '';
+  const body = html.match(/<div class="article-body">([\s\S]*?)<\/div>\s*<\/article>/)?.[1] ?? '';
   const text = (value: string) => value.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
   assert.equal(text(body), text(article.html), `${page}: Markdown body must be in the built HTML.`);
   assert(html.includes('<article '), `${page}: missing article markup.`);

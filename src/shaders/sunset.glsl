@@ -20,6 +20,39 @@ float skyGrain(vec2 point) {
   );
 }
 
+// Lithographic crayon catches the tooth of the stone/paper. Broad, overlapping
+// sweeps establish the tone; a few flat streaks interrupt the open evening sky.
+// All pigment is procedural, with no photograph or repeating bitmap texture.
+float skyLithograph(vec2 point) {
+  vec2 sweep = point;
+  // A gentle, straight slant keeps the clouds level without curling their
+  // silhouettes. Stretch the grain horizontally into broken evening streaks.
+  sweep.y += point.x * 0.012;
+  float broad = skyGrain(sweep * vec2(0.005, 0.060) + vec2(3.2, 7.1));
+  float scumble = skyGrain(sweep * vec2(0.021, 0.043) + vec2(17.8, 2.4));
+  float small = skyGrain(sweep * vec2(0.055, 0.080) + vec2(8.4, 31.2));
+  // Reserve pale cloud breaks for rare peaks, stretched into shallow streaks.
+  // Steadier crayon pressure keeps the rest of the sunset open and unclouded;
+  // the fine paper tooth still breaks up the pigment throughout the sky.
+  float wisps = smoothstep(0.64, 0.84, broad * 0.88 + scumble * 0.12);
+  float pressure = (0.56 + scumble * 0.08 + small * 0.04) * (1.0 - wisps * 0.72);
+
+  // Fine, static granulation breaks the pigment at the scale of paper fibers.
+  // Heavier pressure fills more of those hollows, just as a soft crayon does.
+  float tooth = skyGrain(point * 1.45);
+  float fleck = skyGrain(point * 0.54 + vec2(48.3, 11.5));
+  float deposit = smoothstep(0.22, 0.78, tooth * 0.72 + fleck * 0.28 + pressure * 0.19);
+
+  // Sparse engraved-looking lines follow the same straight sweep. Derivatives
+  // keep the fine lines from aliasing at different pixel ratios/export sizes.
+  float line = sweep.y / 3.5 + skyGrain(point * 0.014) * 0.12;
+  float distanceToLine = abs(fract(line) - 0.5);
+  float aa = max(fwidth(line), 0.035);
+  float hatch = 1.0 - smoothstep(0.075 - aa, 0.075 + aa, distanceToLine);
+  float hatchPatch = smoothstep(0.48, 0.73, scumble) * smoothstep(0.25, 0.6, small);
+  return pressure * (0.38 + deposit * 0.62) + hatch * hatchPatch * 0.14;
+}
+
 // Sky samples from assets/inspo/97e829ce06133233f550935cd7b4652e.jpg.
 // Warm accents are sampled from assets/inspo/sunset-warm-detail.png. The blue
 // sky transitions through cream and gold into apricot and a muted coral horizon.
@@ -60,17 +93,33 @@ vec3 sunsetPaper(float surfaceStrength) {
   vec2 glow = (uv - vec2(mix(0.5, 0.38, uSkyExpanded), 0.55)) / vec2(0.86, 0.84);
   float atmosphere = exp(-dot(glow, glow) * 0.25);
 
-  vec3 paper = mix(vec3(1.0), sky, uSkyStrength * surfaceStrength * edgeFade * atmosphere);
+  // The buildings retain their almost-white paper. Only the open sky receives
+  // the crayon texture and softly feathered gaps in the pigment.
+  if (surfaceStrength < 0.5) {
+    return mix(vec3(1.0), sky, uSkyStrength * surfaceStrength * edgeFade * atmosphere);
+  }
+  float brushScale = clamp(uSkyViewport.x / 900.0, 0.65, 1.0);
+  vec2 brushPoint = uv * uSkyViewport / brushScale;
+  float paint = skyLithograph(brushPoint);
 
-  // Keep the facades clean. Two fine grain layers drift at different speeds
-  // through the open sky, independently of pointer input and text scrolling.
-  if (surfaceStrength < 0.5) return paper;
+  // The pale gaps read as clouds, so give them reflected sunset light as well
+  // as coloring the crayon pigment. Warmth rises softly from the lower left;
+  // the shared edge fade still brings the artwork cleanly back to white.
+  float sunsetBounce = smoothstep(0.48, 0.84, down)
+    * (1.0 - smoothstep(0.34, 0.68, uv.x));
+  vec3 cloudLight = mix(cream, gold, smoothstep(0.53, 0.74, down));
+  cloudLight = mix(cloudLight, apricot, smoothstep(0.70, 0.92, down) * 0.72);
+  vec3 cloudPaper = mix(vec3(1.0), cloudLight, sunsetBounce * 0.34 * edgeFade * atmosphere);
+
+  // A little of the existing moving grain lives inside the pigment, while
+  // the crayon shading stays fixed. CSS coordinates preserve texture size on
+  // Retina displays and in high-resolution PNG exports.
   vec2 grainPoint = uv * uSkyViewport;
   float driftTime = uSkyTime * 1.25;
   float nearGrain = skyGrain(grainPoint / 0.8 + driftTime * vec2(1.4, 0.35));
   float farGrain = skyGrain(grainPoint / 1.35 + driftTime * vec2(0.33, -0.18) + vec2(73.1, 19.7));
   // Restore fine-grain contrast after interpolation without increasing opacity.
   float grain = clamp((mix(nearGrain, farGrain, 0.22) - 0.5) * 1.8 + 0.5, 0.0, 1.0);
-  grain *= grain;
-  return mix(paper, vec3(1.0), grain * 0.184 * edgeFade);
+  paint *= 1.0 - grain * grain * 0.10;
+  return mix(cloudPaper, sky, clamp(paint * uSkyStrength * 1.65, 0.0, 0.78) * edgeFade * atmosphere);
 }

@@ -22,12 +22,33 @@ A second paragraph.`;
 
 test('Markdown supports formatting and local links under a GitHub project path', () => {
   const article = parseArticle('---\ntitle: Test\n---\n## Details\n\n**Strong** and [home](/).\n\n![View](/images/view.jpg)', 'test.md', '/repo/');
-  assert.match(article.html, /<h2>Details<\/h2>/);
+  assert.match(article.html, /<h2 id="details" class="article-section-heading">Details /);
+  assert.match(article.html, /href="#details" aria-label="Link to Details"/);
   assert.match(article.html, /<strong>Strong<\/strong>/);
   assert.match(article.html, /href="\/repo\/"/);
   assert.match(article.html, /src="\/repo\/images\/view.jpg"/);
   const html = renderArticle(article, '/repo/');
   assert.match(html, /class="back-link" href="\/repo\/"/);
+});
+
+test('section links have unique readable IDs and optional contents precede the article body', () => {
+  const source = '---\ntitle: Navigation\ntoc: true\n---\nIntro text.\n\n## **Reward–Cost** & `risk`\n\nDetails.\n\n### A subsection\n\n## Reward–Cost & risk\n\n## Article title\n\n> ## Quoted heading';
+  const article = parseArticle(source, 'navigation.md', '/repo/');
+  const { html, contents } = article;
+  assert(contents);
+  assert.equal((contents.match(/<li>/g) ?? []).length, 3);
+  assert(contents.includes('href="#reward-cost-risk">Reward–Cost &amp; risk</a>'));
+  assert(!contents.includes('A subsection'));
+  assert(!contents.includes('Quoted heading'));
+  const page = renderArticle(article, '/repo/');
+  assert(page.indexOf('id="article-title"') < page.indexOf(contents));
+  assert(page.indexOf(contents) < page.indexOf('<div class="article-body">'));
+  assert(page.includes('class="article-with-contents"'));
+  const ids = [...html.matchAll(/<h[1-6] id="([^"]+)"/g)].map(match => match[1]);
+  assert.deepEqual(ids, ['reward-cost-risk', 'a-subsection', 'reward-cost-risk-2', 'article-title-2', 'quoted-heading']);
+  for (const id of ids) assert(html.includes(`href="#${id}"`));
+  assert.equal(parseArticle(source.replace('toc: true', 'toc: false'), 'navigation.md').contents, undefined);
+  assert.equal(parseArticle('---\ntitle: Short\ntoc: true\n---\nJust a paragraph.', 'short.md').contents, undefined);
 });
 
 test('raw HTML and unsafe Markdown links do not become executable content', () => {
@@ -39,11 +60,22 @@ test('raw HTML and unsafe Markdown links do not become executable content', () =
   assert.match(html, /&lt;script&gt;/);
 });
 
+test('closing CTA preserves email and project-relative links while escaping raw HTML', () => {
+  const source = '---\ntitle: Invitation\n---\n```article-cta\nCome work with us.\n\n[Get in touch →](mailto:contact@melonite.ai) [Partner with us →](/partners/)\n\n<script>alert(1)</script>\n```';
+  const { html } = parseArticle(source, 'invitation.md', '/repo/');
+  assert.match(html, /<footer class="article-cta" aria-label="Work with us">/);
+  assert.match(html, /href="mailto:contact@melonite.ai"/);
+  assert.match(html, /href="\/repo\/partners\/"/);
+  assert.match(html, /&lt;script&gt;/);
+  assert(!html.includes('<script>'));
+});
+
 test('invalid metadata and paths fail with clear errors', () => {
   assert.throws(() => parseArticle('No metadata', 'test.md'), /title is required/);
   assert.throws(() => parseArticle('---\ntitle: Test\n---\nText', 'Bad Name.md'), /hyphenated/);
   assert.throws(() => parseArticle('---\ntitle: Test\ndate: "2026-02-30"\n---\nText', 'test.md'), /valid YYYY-MM-DD/);
   assert.throws(() => parseArticle('---\ntitle: Test\ndraft: "false"\n---\nText', 'test.md'), /true or false/);
+  assert.throws(() => parseArticle('---\ntitle: Test\ntoc: "true"\n---\nText', 'test.md'), /toc must be true or false/);
   assert.throws(() => normalizeBase('/../escape/'), /BASE_PATH/);
   assert.equal(normalizeBase('repository'), '/repository/');
 });

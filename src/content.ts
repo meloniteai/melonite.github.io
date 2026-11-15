@@ -3,8 +3,8 @@ import type { Post } from './post.ts';
 import { site } from './site.ts';
 
 // Preserve the approved second headline until its Markdown article is ready.
-// Adding content/posts/cre-bench.md automatically replaces this placeholder.
-const placeholders: Post[] = [{ id: 'cre-bench', title: 'CRE Bench - Our Financial Analyst Benchmark' }];
+// Adding content/posts/blue-cell-bench.md automatically replaces this placeholder.
+const placeholders: Post[] = [{ id: 'blue-cell-bench', title: 'Blue Cell Bench: Can AI Underwrite the Deal?' }];
 
 export const siteContent = {
   ...site,

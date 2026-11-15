@@ -241,7 +241,7 @@ export function createSkyline(container: HTMLElement, { onError = () => {}, moti
     toneMapped: false,
   });
   const skyMesh = new THREE.Mesh(skyGeometry, skyMaterial);
-  skyMesh.name = 'Blue sunset sky fill';
+  skyMesh.name = 'Lithographic sunset sky';
   skyMesh.renderOrder = -10;
   skyMesh.frustumCulled = false;
   let resources: (THREE.BufferGeometry | THREE.Material | THREE.Texture)[] = [];
@@ -339,7 +339,7 @@ export function createSkyline(container: HTMLElement, { onError = () => {}, moti
     if (disposed || lost) return;
     cancelAnimationFrame(pendingRender);
     pendingRender = 0;
-    // Drawing-buffer coordinates keep the wash identical across pixel ratios
+    // Drawing-buffer coordinates keep the paint aligned across pixel ratios
     // and exported PNG sizes, and aligned between all overlapping faces.
     renderer.getDrawingBufferSize(skyUniforms.uSkyResolution.value);
     renderer.render(scene, camera);

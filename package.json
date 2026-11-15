@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "5.3.0",
+    "echarts": "6.1.0",
     "three": "0.168.0"
   },
   "devDependencies": {
@@ -23,7 +24,7 @@
     "gray-matter": "4.0.3",
     "markdown-it": "15.0.3",
     "typescript": "^5.9.3",
-    "vite": "5.4.21",
+    "vite": "6.4.6",
     "wrangler": "4.161.0"
   },
   "engines": {
