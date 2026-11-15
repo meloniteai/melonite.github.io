@@ -220,19 +220,19 @@ The sky palette is sampled from `assets/inspo/97e829ce06133233f550935cd7b4652e.j
 upper blue `#6780bc`, middle blue `#849cd0`, pale blue `#adbcdc`, and blue haze
 `#caccd4`. Warm accents are resampled from the supplied crop, saved as
 `assets/inspo/sunset-warm-detail.png`: cream `#ffe8c5`, buttery gold `#ffe2a2`,
-apricot `#fab081`, and muted coral `#c69683`.
-`src/shaders/sunset.glsl` shades the open sky with procedural lithographic crayon
-texture, inspired by nineteenth-century hand-colored New York prints. Overlapping
-straight sweeps, small scumbled marks, and sparse fine hatching deposit pigment over
-paper grain. Steady crayon shading leaves the sky open, with only a few shallow
-cloud streaks and smaller marks providing most of the texture. The original gradient
-supplies the colors: blue remains dominant,
-followed by cream, gold, apricot, and coral near the horizon. Pale cloud gaps in
+apricot `#fab081`, and muted coral `#c69683`. A subtle turquoise `#5aaeae`
+spans both halves between the upper blue and warm horizon.
+`src/shaders/sunset.glsl` shades the open sky with procedural dry-brush texture,
+following the supplied chalky brush-stroke reference. Broad diagonal passes overlap
+over a light, grainy first coat, with uneven pressure, frayed edges and paper tooth.
+Flat, broken cloud banks interrupt the pigment without large blank paper gaps.
+Across the full composition, the gradient moves from cool blue through turquoise
+to cream, gold, apricot, and coral near the horizon. Pale cloud gaps in
 the lower left also catch reflected cream, gold, and apricot sunset light. A gentle feather
 brings all four borders to white, with a broader fade along the top. Facades
 retain their original faint tint and clean black type.
-Fine grain in two layers drifts slowly inside the pigment, while the crayon
-shading stays fixed. Texture coordinates use the CSS viewport, with smaller
+Fine grain in two layers drifts slowly inside the pigment, while the brush
+strokes stay fixed. Texture coordinates use the CSS viewport, with smaller
 marks on narrow screens and consistent scale across pixel ratios and PNG
 exports. Motion remains independent of cursor input. Exports freeze the grain
 for a consistent snapshot. The shader has a fixed evaluation cost per pixel

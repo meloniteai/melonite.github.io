@@ -1,4 +1,5 @@
 uniform sampler2D uType;
+uniform sampler2D uRowWidths;
 uniform float uInk;
 uniform float uFadeStart;
 uniform float uFadeEnd;
@@ -26,9 +27,11 @@ void main() {
   // Each entire row advances along its own wall plane. Slightly different
   // rates make the paragraphs feel alive without moving the building mesh.
   float rowSpeed = mix(0.65, 1.15, hash(row + 19.0));
-  vec2 typeUv = vec2(vUv.x + uScroll * rowSpeed * uMotionScale / uTypeWidth, vUv.y);
+  float rowWidth = texture(uRowWidths, vec2(0.5, (row + 0.5) / ceil(uRows))).r;
+  float alongRow = vUv.x + uScroll * rowSpeed * uMotionScale / uTypeWidth;
+  vec2 typeUv = vec2(mod(alongRow, rowWidth), vUv.y);
   // Explicit original gradients prevent the row-to-row UV discontinuity from
-  // blurring glyphs. Horizontal RepeatWrapping makes the lines continuous.
+  // blurring glyphs, including where each single-spaced line repeats.
   float printedType = 1.0 - textureGrad(uType, typeUv, dFdx(vUv), dFdy(vUv)).r;
 
   // Preserve the hairline antenna at compact sizes. All broad building faces

@@ -128,6 +128,7 @@ function createTypeTexture(width: number, height: number, offset: number, maxTex
   const gap = ctx.measureText(' ').width;
   const leading = LEADING * typeScale;
   const rows = Math.ceil(height / leading);
+  const rowWidths = new Float32Array(rows);
 
   for (let row = 0; row < rows; row++) {
     const line = [];
@@ -140,12 +141,12 @@ function createTypeTexture(width: number, height: number, offset: number, maxTex
       wordWidth += nextWidth;
       cursor++;
     }
-    const spacing = line.length > 1 ? (available - wordWidth) / (line.length - 1) : 0;
-    let x = 2 / CONDENSE;
-    for (const word of line) {
-      ctx.fillText(word, x, row * leading + 1.4 * typeScale);
-      x += ctx.measureText(word).width + spacing;
-    }
+    // Keep natural spaces instead of stretching short rows to justify them.
+    // Repeat at the actual line ending so unused atlas space never scrolls in.
+    const text = line.join(' ');
+    const repeatWidth = Math.min(ctx.measureText(text).width + gap, width / CONDENSE);
+    ctx.fillText(text, 0, row * leading + 1.4 * typeScale, repeatWidth - gap);
+    rowWidths[row] = repeatWidth * CONDENSE / width;
   }
 
   const texture = new THREE.CanvasTexture(canvas);
@@ -154,9 +155,13 @@ function createTypeTexture(width: number, height: number, offset: number, maxTex
   texture.anisotropy = anisotropy;
   texture.minFilter = THREE.LinearMipmapLinearFilter;
   texture.magFilter = THREE.LinearFilter;
+  const rowWidthTexture = new THREE.DataTexture(rowWidths, 1, rows, THREE.RedFormat, THREE.FloatType);
+  rowWidthTexture.minFilter = THREE.NearestFilter;
+  rowWidthTexture.magFilter = THREE.NearestFilter;
+  rowWidthTexture.needsUpdate = true;
   // The fractional count is intentional: shader row boundaries must match
   // exact typeset baselines even when the final line is only partially visible.
-  return { texture, rows: height / leading };
+  return { texture, rowWidthTexture, rows: height / leading };
 }
 
 function facadeGeometry(width: number, height: number, left: boolean) {
@@ -241,7 +246,7 @@ export function createSkyline(container: HTMLElement, { onError = () => {}, moti
     toneMapped: false,
   });
   const skyMesh = new THREE.Mesh(skyGeometry, skyMaterial);
-  skyMesh.name = 'Lithographic sunset sky';
+  skyMesh.name = 'Dry-brush sunset sky';
   skyMesh.renderOrder = -10;
   skyMesh.frustumCulled = false;
   let resources: (THREE.BufferGeometry | THREE.Material | THREE.Texture)[] = [];
@@ -291,13 +296,14 @@ export function createSkyline(container: HTMLElement, { onError = () => {}, moti
         // proportions when the composition changes from portrait to landscape.
         const faceWidth = width * perspective * (building.profile ? verticalScale : 1);
         const atlasWidth = building.profile ? faceWidth * 2 : (building.textWidth?.[side] ?? width) * perspective;
-        const { texture, rows } = createTypeTexture(atlasWidth, faceHeight, building.seed * 13 + side * 47,
+        const { texture, rowWidthTexture, rows } = createTypeTexture(atlasWidth, faceHeight, building.seed * 13 + side * 47,
           maxTextureSize, anisotropy, typeScale);
         const material = new THREE.ShaderMaterial({
           vertexShader, fragmentShader: coloredFacadeShader,
           uniforms: {
             ...skyUniforms,
             uType: { value: texture },
+            uRowWidths: { value: rowWidthTexture },
             uAnchor: { value: new THREE.Vector2(building.anchor[0], building.anchor[1] * verticalScale) },
             uPosterHeight: { value: height },
             uClipToPoster: { value: clip },
@@ -329,7 +335,7 @@ export function createSkyline(container: HTMLElement, { onError = () => {}, moti
         // a valid culling volume for this architectural camera.
         mesh.frustumCulled = false;
         scene.add(mesh);
-        resources.push(geometry, material, texture);
+        resources.push(geometry, material, texture, rowWidthTexture);
       });
     });
     container.dataset.buildings = String(buildings.length);

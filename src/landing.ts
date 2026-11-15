@@ -4,7 +4,7 @@ import { escapeHtml, renderHeader, renderFooter } from './site-layout.ts';
 import { bindPlaceholderLinks } from './navigation.ts';
 import logoUrl from '../assets/inspo/header-logo.svg';
 
-export const skylineDescription = 'A New York skyline with an Empire State Building silhouette and lower buildings tapering toward the left, formed from paragraphs inspired by E. B. White’s Here is New York. Soft lithographic crayon shading, delicate straight hatching, and sparse, flat cloud streaks color the sky from blue to a warm sunset, with paper grain showing through the pigment. Text scrolls automatically on touch screens and follows cursor movement on desktop, unless reduced motion is enabled.';
+export const skylineDescription = 'A New York skyline with an Empire State Building silhouette and lower buildings tapering toward the left, formed from paragraphs inspired by E. B. White’s Here is New York. Broad, diagonal dry-brush strokes and paper grain color the sky from blue through turquoise to a warm sunset, with flat cloud streaks catching the sunset light. Text scrolls automatically on touch screens and follows cursor movement on desktop, unless reduced motion is enabled.';
 
 function formatDate(date: string): string {
   return new Intl.DateTimeFormat('en-US', {
