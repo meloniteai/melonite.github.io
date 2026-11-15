@@ -11,6 +11,18 @@ export function bindArticleNavigation(root: Document = document): () => void {
   });
   if (!sections.length) return () => {};
 
+  // Enhance the mobile menu only once its control is ready; without JavaScript
+  // the section links remain visible and usable.
+  const toggle = navigation.querySelector<HTMLButtonElement>('.article-toc-toggle');
+  function toggleContents(): void {
+    toggle?.setAttribute('aria-expanded', String(toggle.getAttribute('aria-expanded') !== 'true'));
+  }
+  if (toggle) {
+    toggle.addEventListener('click', toggleContents);
+    toggle.hidden = false;
+    navigation.classList.add('article-toc--collapsible');
+  }
+
   let current: HTMLAnchorElement | undefined;
   let frame: number | undefined;
   let disposed = false;
@@ -49,6 +61,12 @@ export function bindArticleNavigation(root: Document = document): () => void {
 
   return () => {
     disposed = true;
+    toggle?.removeEventListener('click', toggleContents);
+    if (toggle) {
+      toggle.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+    navigation.classList.remove('article-toc--collapsible');
     view.removeEventListener('scroll', scheduleUpdate);
     view.removeEventListener('resize', scheduleUpdate);
     view.removeEventListener('hashchange', scheduleUpdate);
