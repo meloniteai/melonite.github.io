@@ -1,13 +1,14 @@
 import { defineConfig } from 'vite';
 import type { ViteDevServer } from 'vite';
 import { join, resolve, sep } from 'node:path';
-import { generatePosts, normalizeBase, projectRoot } from './scripts/generate-posts.ts';
-import { generatePartners, partnerPaths } from './scripts/generate-partners.ts';
+import { normalizeBase, projectRoot } from './scripts/generate-posts.ts';
+import { partnerPaths } from './scripts/generate-partners.ts';
+import { generateSiteContent } from './scripts/generate-content.ts';
+import { homeMetadata, renderPageMetadata } from './scripts/page-metadata.ts';
 
 export default defineConfig(async () => {
   const base = normalizeBase(process.env.BASE_PATH);
-  const articles = await generatePosts(projectRoot, base);
-  await generatePartners(projectRoot, base);
+  const articles = await generateSiteContent(projectRoot, base);
   return {
     base,
     build: {
@@ -21,6 +22,12 @@ export default defineConfig(async () => {
     },
     plugins: [{
       name: 'markdown-pages',
+      transformIndexHtml: {
+        order: 'pre' as const,
+        handler(html: string) {
+          return html.replace('<!-- site-metadata -->', renderPageMetadata(homeMetadata, base));
+        },
+      },
       configureServer(server: ViteDevServer) {
         const contentDirectory = join(projectRoot, 'content/posts');
         server.watcher.add(contentDirectory);
@@ -28,7 +35,7 @@ export default defineConfig(async () => {
         const onContentChange = (event: string, file: string) => {
           if (!['add', 'change', 'unlink'].includes(event) || !resolve(file).startsWith(contentDirectory + sep) || !file.endsWith('.md')) return;
           pending = pending.then(async () => {
-            await generatePosts(projectRoot, base);
+            await generateSiteContent(projectRoot, base);
             server.ws.send({ type: 'full-reload' });
           }).catch((error: Error) => {
             server.config.logger.error(error.message);

@@ -5,6 +5,12 @@ tmp/
 .generated/
 /posts/
 /partners/
+# Generated from the existing logo, bundled fonts, and page metadata.
+/public/favicon.svg
+/public/favicon.ico
+/public/favicon-32x32.png
+/public/apple-touch-icon.png
+/public/social/
 output/
 
 # Local configuration and package-manager logs

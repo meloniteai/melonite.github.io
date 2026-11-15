@@ -2,10 +2,20 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { site } from '../src/site.ts';
 import { escapeHtml, renderHeader, renderFooter } from '../src/site-layout.ts';
+import { renderPageMetadata } from './page-metadata.ts';
+import type { PageMetadata } from './page-metadata.ts';
 
 const headline = 'We provide services to organizations looking to expand and refine their use of AI.';
 const description = 'We specialize in data research, evaluations, and model post-training.';
 export const partnerPaths = ['partners/', 'partners/thank-you/'] as const;
+
+export function partnerMetadata(thankYou = false): PageMetadata {
+  return {
+    title: thankYou ? 'Thank you' : 'Partner With Us',
+    description: headline + ' ' + description,
+    path: partnerPaths[thankYou ? 1 : 0],
+  };
+}
 
 export function partnerEndpoint(): string {
   const endpoint = process.env.PARTNERS_ENDPOINT ?? '';
@@ -26,9 +36,8 @@ function page(base: string, title: string, body: string, thankYou = false): stri
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#ffffff" />
-    <meta name="description" content="${escapeHtml(headline + ' ' + description)}" />
+    ${renderPageMetadata(partnerMetadata(thankYou), base)}
     ${thankYou ? '<meta name="robots" content="noindex" />' : ''}
-    <link rel="icon" href="data:," />
     <title>${escapeHtml(title)} — ${escapeHtml(site.name)}</title>
   </head>
   <body>
