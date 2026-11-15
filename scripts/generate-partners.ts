@@ -3,7 +3,7 @@ import { dirname, join } from 'node:path';
 import { site } from '../src/site.ts';
 import { escapeHtml, renderHeader, renderFooter } from '../src/site-layout.ts';
 
-const headline = "We partner with the world's leading enterprises to accelerate the progress of frontier AI.";
+const headline = 'We provide services to organizations looking to expand and refine their use of AI.';
 const description = 'We specialize in data research, evaluations, and model post-training.';
 export const partnerPaths = ['partners/', 'partners/thank-you/'] as const;
 
@@ -47,7 +47,7 @@ function page(base: string, title: string, body: string, thankYou = false): stri
 
 export function renderPartners(base: string): string {
   const endpoint = partnerEndpoint();
-  return page(base, 'Partners', `
+  return page(base, 'Partner With Us', `
         <header class="partners-hero">
           <h1>${escapeHtml(headline)}</h1>
           <p>${escapeHtml(description)}</p>
@@ -75,10 +75,10 @@ export function renderPartners(base: string): string {
             <textarea id="message" name="message" rows="3" maxlength="4000"></textarea>
           </label>
           <div class="form-actions">
-            <button class="form-submit" type="submit" disabled>Send inquiry <span aria-hidden="true">→</span></button>
+            <button class="form-submit" type="submit" disabled>Send message <span aria-hidden="true">→</span></button>
             <p>Prefer email? <a href="mailto:${escapeHtml(site.contactEmail)}">${escapeHtml(site.contactEmail)}</a></p>
           </div>
-          <p class="form-status" role="alert" tabindex="-1"${endpoint ? ' hidden' : ''}>Please email ${escapeHtml(site.contactEmail)} to get in touch.</p>
+          <p class="form-status" role="alert" tabindex="-1" hidden></p>
           <noscript><p>Please enable JavaScript to use this form, or email <a href="mailto:${escapeHtml(site.contactEmail)}">${escapeHtml(site.contactEmail)}</a>.</p></noscript>
         </form>`);
 }

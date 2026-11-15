@@ -5,8 +5,9 @@ prepared for static hosting on GitHub Pages. There is no server or database to r
 the repository's Markdown files are the content source.
 The Melonite page uses black text on white, with a soft blue sunset sky inside the
 skyline artwork. It includes the supplied SVG
-logo beside the name, Contact / Partners navigation, the mission statement,
-two article headlines with arrow links, and an interactive skyline on the lower right.
+logo beside the name, Contact / Partner With Us navigation, a centered hero and introduction,
+and two article links in a horizontal row above the full-width interactive skyline.
+The article links wrap on smaller screens, with arrows inline beside their titles on mobile.
 All typography uses Cormorant Garamond, bundled locally through
 `@fontsource/cormorant-garamond`: Regular (400) for body copy, Medium (500) for
 navigation and article links, SemiBold (600) for the hero and wordmark, and
@@ -31,12 +32,12 @@ page links, and asset/font paths. `npm run preview` serves that production build
 
 ## Page content
 
-Edit `src/site.ts` for the site name, introduction, and copyright. The header
+Edit `src/site.ts` for the site name, hero headline, introduction, and copyright. The header
 and footer are shared by the home page and articles through `src/site-layout.ts`.
 The logo uses `assets/inspo/header-logo.svg` with its original proportions.
 
 - Contact opens an email to `contact@melonite.ai`.
-- Partners opens `/partners/`, with an inquiry form and a separate thank-you page.
+- Partner With Us opens `/partners/`, with a message form and a separate thank-you page.
 - Published article headlines and arrows are ordinary links to separate pages.
 - Blue Cell Bench opens `/posts/blue-cell-bench/`. Edit `content/posts/blue-cell-bench.md` for the
   article and its eleven interactive ECharts figures.

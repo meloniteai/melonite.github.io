@@ -15,7 +15,7 @@ export function renderHeader(base: string, logoUrl: string, currentPage?: 'partn
     <nav class="site-nav" aria-label="Main navigation">
       <a href="mailto:${escapeHtml(site.contactEmail)}">Contact</a>
       <span aria-hidden="true">·</span>
-      <a href="${escapeHtml(base + 'partners/')}"${currentPage === 'partners' ? ' aria-current="page"' : ''}>Partners</a>
+      <a href="${escapeHtml(base + 'partners/')}"${currentPage === 'partners' ? ' aria-current="page"' : ''}>Partner With Us</a>
     </nav>
   </header>`;
 }

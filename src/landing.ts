@@ -31,13 +31,14 @@ export function renderSkyline(showCredit = false): string {
 }
 
 export function mountLanding(root: HTMLElement): () => void {
-  const { name, introduction, posts } = siteContent;
+  const { name, headline, introduction, posts } = siteContent;
   document.title = name;
   root.innerHTML = `
     <div class="site-shell site-shell--landing">
       ${renderHeader(import.meta.env.BASE_URL, logoUrl)}
       <main id="main-content">
-        <h1 class="introduction">${escapeHtml(introduction)}</h1>
+        <h1 class="hero-title">${escapeHtml(headline)}</h1>
+        <p class="introduction">${escapeHtml(introduction)}</p>
         <section id="posts" class="journal-layout" aria-label="Articles">
           <div class="posts-column">
             <ol class="post-list">${postRows(posts)}</ol>
