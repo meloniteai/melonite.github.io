@@ -8,6 +8,7 @@ import { site } from '../src/site.ts';
 import { escapeHtml, renderHeader, renderFooter } from '../src/site-layout.ts';
 import { renderBenchmarkFigure, renderMetricsDashboard } from './benchmark-figures.ts';
 import { renderSolverDesktop } from '../src/solver-desktop-view.ts';
+import { renderPageMetadata } from './page-metadata.ts';
 
 export const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const generatedMarker = '<!-- Generated from content/posts/; edit the Markdown source. -->';
@@ -132,11 +133,7 @@ ${generatedMarker}
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#ffffff" />
-    <meta name="description" content="${escapeHtml(description)}" />
-    <meta property="og:type" content="article" />
-    <meta property="og:title" content="${escapeHtml(article.title)}" />
-    <meta property="og:description" content="${escapeHtml(description)}" />
-    <link rel="icon" href="data:," />
+    ${renderPageMetadata({ title: article.title, description, path: article.path, type: 'article' }, base)}
     <title>${escapeHtml(article.title)} — ${escapeHtml(site.name)}</title>
   </head>
   <body>

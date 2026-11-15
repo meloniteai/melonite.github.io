@@ -36,6 +36,27 @@ Edit `src/site.ts` for the site name, hero headline, introduction, and copyright
 and footer are shared by the home page and articles through `src/site-layout.ts`.
 The logo uses `assets/inspo/header-logo.svg` with its original proportions.
 
+### Favicons and link previews
+
+Every page includes a logo favicon (SVG, PNG, and ICO), an Apple touch icon,
+canonical URL, and Open Graph / Twitter metadata in its initial HTML. Sharing
+the homepage, a published article, or the Partners page can show a branded
+1200 × 630 PNG card. Crawlers do not need to execute JavaScript.
+
+`scripts/page-metadata.ts` defines the metadata. `scripts/generate-brand-assets.ts`
+renders the existing logo and locally bundled Cormorant Garamond fonts into icons
+and page-specific preview images. The build generates `public/social/` and the
+favicon files automatically; these files are ignored, so edit the generator
+instead. Article cards follow the Markdown `title` and `description`, and cards
+for unpublished or deleted posts are removed. These build tools add no browser
+JavaScript or runtime service.
+
+`site.url` in `src/site.ts` is the public origin used for absolute preview and
+canonical URLs. `BASE_PATH` is respected for project-site deployments.
+`npm run check:build` checks every generated page's metadata, image files,
+dimensions, size, and icon links. WhatsApp, Slack, and other apps control their
+preview layouts and may cache previously shared URLs after a deployment.
+
 - Contact opens an email to `contact@melonite.ai`.
 - Partner With Us opens `/partners/`, with a message form and a separate thank-you page.
 - Published article headlines and arrows are ordinary links to separate pages.
