@@ -127,7 +127,9 @@ date first, then filename. The filename determines the permanent URL:
 
 Headings receive readable section URLs and a small permalink on hover or focus.
 Set `toc: true` to add a compact, sticky contents sidebar on the left. On narrow
-screens it sits below the title. It follows the top-level `##` headings automatically;
+screens it collapses into an “On this page” toggle below the title, with vertically
+stacked links when expanded. Without JavaScript, the links remain visible.
+It follows the top-level `##` headings automatically;
 link within the post with Markdown such as `[Leaderboard](#leaderboard)`.
 
 Markdown saves automatically regenerate pages and refresh the dev preview.

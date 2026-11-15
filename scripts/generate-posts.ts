@@ -31,7 +31,7 @@ markdown.renderer.rules.heading_close = (tokens, index, options, _env, self) => 
 };
 
 function renderArticleBody(tokens: MarkdownToken[], showContents: boolean, base: string): { html: string; contents?: string } {
-  const usedIds = new Set(['article-title', 'main-content']);
+  const usedIds = new Set(['article-title', 'main-content', 'article-contents']);
   const sections: { id: string; title: string }[] = [];
   tokens.forEach((token, index) => {
     if (token.type !== 'heading_open') return;
@@ -47,7 +47,7 @@ function renderArticleBody(tokens: MarkdownToken[], showContents: boolean, base:
   });
   const html = markdown.renderer.render(tokens, markdown.options, { base });
   if (!showContents || !sections.length) return { html };
-  const contents = `<nav class="article-toc" aria-label="On this page"><span class="article-toc-label">On this page</span><ul role="list">${sections.map(({ id, title }) => `<li><a href="#${escapeHtml(id)}">${escapeHtml(title)}</a></li>`).join('')}</ul></nav>\n`;
+  const contents = `<nav class="article-toc" aria-label="On this page"><span class="article-toc-label">On this page</span><button class="article-toc-toggle" type="button" aria-expanded="false" aria-controls="article-contents" hidden>On this page</button><ul id="article-contents" role="list">${sections.map(({ id, title }) => `<li><a href="#${escapeHtml(id)}">${escapeHtml(title)}</a></li>`).join('')}</ul></nav>\n`;
   return { html, contents };
 }
 
