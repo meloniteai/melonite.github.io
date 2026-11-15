@@ -16,23 +16,23 @@ button:focus-visible, a:focus-visible { outline: 1px solid currentColor; outline
 a:hover, button:hover { text-decoration: underline; text-underline-offset: 5px; }
 ::selection { color: white; background: black; }
 .site-shell { width: min(1184px, calc(100% - 96px)); margin-inline: auto; padding: 48px 0 40px; }
+.site-shell--landing { padding-block: 32px 24px; }
 .site-header { display: flex; align-items: center; justify-content: space-between; gap: 28px; }
 .site-name { display: inline-flex; align-items: center; gap: 10px; font-size: 24px; font-weight: 600; line-height: 1.4; }
 .site-logo { display: block; width: 50px; height: auto; flex-shrink: 0; }
 .site-nav { display: flex; align-items: center; gap: 16px; font-size: 18px; font-weight: 500; line-height: 1.5; }
 .site-footer { margin-top: 27px; text-align: center; font-size: 14px; font-weight: 400; line-height: 1.5; }
 .site-footer p { margin: 0; }
-.introduction { margin: 44px 0 0; max-width: 760px; font-size: clamp(26px, 2.5vw, 30px); font-weight: 600; line-height: 1.4; }
-/* Add one article-text row (about 32px) above the skyline. */
-.journal-layout { --column-gap: 44px; container-type: inline-size; display: grid; grid-template-columns: minmax(280px, .76fr) minmax(0, 1.24fr); column-gap: var(--column-gap); row-gap: 56px; margin-top: 56px; align-items: end; }
+.introduction { margin: 56px 0 0; max-width: 800px; font-size: clamp(23px, 2vw, 26px); font-weight: 600; line-height: 1.3; }
+.journal-layout { --column-gap: 44px; container-type: inline-size; display: grid; grid-template-columns: minmax(280px, .76fr) minmax(0, 1.24fr); column-gap: var(--column-gap); row-gap: 24px; margin-top: 24px; align-items: end; }
 /* Let arrows use part of the column gap without squeezing the headlines. */
 .posts-column { grid-column: 1; grid-row: 1; position: relative; z-index: 1; align-self: start; display: flex; flex-direction: column; margin-right: -32px; }
 #posts { scroll-margin-top: 32px; }
-.post-list { display: grid; gap: 34px; margin: 0; padding: 0; list-style: none; }
+.post-list { display: grid; gap: 16px; margin: 0; padding: 0; list-style: none; }
 .post-row { display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 16px; align-items: baseline; }
 .post-row--undated { grid-template-columns: minmax(0, 1fr); }
 .post-row time { font-size: 12px; line-height: 1.5; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.post-title { display: inline-flex; align-items: baseline; gap: 13px; max-width: 100%; font-size: 22px; font-weight: 500; line-height: 1.45; text-align: left; }
+.post-title { display: inline-flex; align-items: baseline; gap: 13px; max-width: 100%; font-size: 21px; font-weight: 500; line-height: 1.4; text-align: left; }
 .post-arrow { display: inline-block; flex-shrink: 0; font-size: 19px; line-height: 1; }
 .post-copy p { margin: 7px 0 0; font-size: 13px; line-height: 1.6; }
 .skyline-figure { width: 100%; min-width: 0; margin: 0; align-self: end; }
@@ -115,24 +115,24 @@ a:hover, button:hover { text-decoration: underline; text-underline-offset: 5px; 
 @media (min-width: 1280px) { .journal-layout { --column-gap: 64px; } }
 @media (max-width: 940px) {
   .site-shell { width: calc(100% - 64px); padding-top: 36px; }
-  .journal-layout { grid-template-columns: 1fr; margin-top: 48px; }
+  .site-shell--landing { padding-top: 28px; }
+  .journal-layout { grid-template-columns: 1fr; }
   .posts-column { grid-column: auto; grid-row: auto; margin-right: 0; padding: 0; }
   .journal-layout .skyline-figure { grid-column: auto; grid-row: auto; width: 100%; }
   .journal-layout .skyline { height: auto; aspect-ratio: 3 / 2; }
-  .post-list { gap: 30px; }
 }
 @media (max-width: 540px) {
   .site-shell { width: calc(100% - 40px); padding: 28px 0 24px; }
+  .site-shell--landing { padding-block: 24px 20px; }
   .site-name { font-size: 22px; }
   .site-logo { width: 44px; }
   .site-header { gap: 16px; }
   .site-nav { gap: 10px; font-size: 16px; }
   .site-footer { margin-top: 11px; }
-  .introduction { margin-top: 34px; font-size: 28px; max-width: 310px; }
-  .journal-layout { margin-top: 42px; }
+  .introduction { font-size: 23px; }
   .post-row { grid-template-columns: 54px minmax(0, 1fr); gap: 14px; }
   .post-row--undated { grid-template-columns: minmax(0, 1fr); }
-  .post-title { font-size: 21px; }
+  .post-title { font-size: 20px; }
   .journal-layout .skyline { aspect-ratio: 4 / 5; }
   .artwork-preview { padding: 16px; }
   .slot-preview .artwork-preview { padding: 16px; }

@@ -53,6 +53,12 @@ float skyLithograph(vec2 point) {
   return pressure * (0.38 + deposit * 0.62) + hatch * hatchPatch * 0.14;
 }
 
+// Share a broad, screen-space upper feather between the sky and building ink.
+// Cropped towers and the Empire State spire dissolve into the page together.
+float skylineTopFade(float down) {
+  return pow(smoothstep(0.0, 0.30, down), 0.85);
+}
+
 // Sky samples from assets/inspo/97e829ce06133233f550935cd7b4652e.jpg.
 // Warm accents are sampled from assets/inspo/sunset-warm-detail.png. The blue
 // sky transitions through cream and gold into apricot and a muted coral horizon.
@@ -81,13 +87,10 @@ vec3 sunsetPaper(float surfaceStrength) {
   sky = mix(sky, coral, smoothstep(0.89, 0.98, horizon));
 
   float sides = smoothstep(0.0, 0.12, uv.x) * (1.0 - smoothstep(0.88, 1.0, uv.x));
-  // Begin fading farther below the top so the blue reaches white gradually
-  // instead of forming a narrow, visibly horizontal band. Side fades stay put.
-  float topFade = smoothstep(0.0, 0.30, down);
-  float ends = topFade * (1.0 - smoothstep(0.90, 1.0, down));
+  float bottomFade = 1.0 - smoothstep(0.90, 1.0, down);
   // Retain more color through the feather while still arriving smoothly at
   // pure white at the boundary, without a hard rectangular edge.
-  float edgeFade = pow(sides * ends, 0.85);
+  float edgeFade = skylineTopFade(down) * pow(sides * bottomFade, 0.85);
   // Fill the empty wedge above the lower west buildings, rather than pulling
   // the strongest color toward the densely occupied right-hand tower group.
   vec2 glow = (uv - vec2(mix(0.5, 0.38, uSkyExpanded), 0.55)) / vec2(0.86, 0.84);

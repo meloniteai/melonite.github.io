@@ -34,7 +34,7 @@ export function mountLanding(root: HTMLElement): () => void {
   const { name, introduction, posts } = siteContent;
   document.title = name;
   root.innerHTML = `
-    <div class="site-shell">
+    <div class="site-shell site-shell--landing">
       ${renderHeader(import.meta.env.BASE_URL, logoUrl)}
       <main id="main-content">
         <h1 class="introduction">${escapeHtml(introduction)}</h1>

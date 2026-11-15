@@ -43,6 +43,8 @@ void main() {
   float lineInk = mix(0.79, 1.0, hash(row));
   float edge = mix(1.0, 0.72 + 0.28 * vUv.x, uEdgeShade);
   float streetHaze = 1.0 - smoothstep(0.88, 0.986, vPoster.y);
-  float ink = clamp(glyph * uInk * haze * lineInk * edge * streetHaze, 0.0, 1.0);
+  // Bring the ink back sooner than the sky pigment, keeping the feather subtle.
+  float topFade = pow(skylineTopFade(1.0 - gl_FragCoord.y / uSkyResolution.y), 0.70);
+  float ink = clamp(glyph * uInk * haze * lineInk * edge * streetHaze, 0.0, 1.0) * topFade;
   gl_FragColor = vec4(sunsetPaper(0.10) * (1.0 - ink), 1.0);
 }

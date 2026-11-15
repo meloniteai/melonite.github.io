@@ -3,7 +3,7 @@ import { dirname, join } from 'node:path';
 import { site } from '../src/site.ts';
 import { escapeHtml, renderHeader, renderFooter } from '../src/site-layout.ts';
 
-const headline = 'Partner with us to adopt or fine‑tune frontier AI for your organization.';
+const headline = "We partner with the world's leading enterprises to accelerate the progress of frontier AI.";
 const description = 'We specialize in data research, evaluations, and model post-training.';
 export const partnerPaths = ['partners/', 'partners/thank-you/'] as const;
 
