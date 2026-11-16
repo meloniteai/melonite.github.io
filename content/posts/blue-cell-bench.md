@@ -1,7 +1,7 @@
 ---
 title: "Blue Cell Bench: Can AI Underwrite the Deal?"
 description: Results from 459 commercial real estate underwriting submissions across 11 model and effort configurations.
-order: 2
+order: 1
 toc: true
 ---
 

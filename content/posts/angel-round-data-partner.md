@@ -1,7 +1,7 @@
 ---
 title: Announcing our Angel Round and Data Partner
 description: Welcoming GAIA Real Estate as our data partner and angel investor, starting with rigorous CRE underwriting evaluations.
-order: 1
+order: 2
 ---
 
 We’re excited to announce our partnership with GAIA Real Estate, one of New York’s leading commercial real estate firms. This partnership gives us access to GAIA’s deep expertise in real estate private equity, high-quality real-world data, and decades of hard-earned insight.
