@@ -43,9 +43,14 @@ pareto
 
 ## Grader Criteria
 
-The graders in Blue Cell Bench are fully deterministic and are derived from real supervision materials: investment memos, investment committee notes, and populated analyst workbooks.
 
-The reward rubric uses approximately 127 criteria per task. These criteria treat underwriting as an incremental, layered analysis, reflecting how financial analysts work in practice. Solvers encounter varied deal room files including PDF, XLSX, and MSG files, and a realistic prompt resembling the everyday work of a private equity CRE analyst. Mean rubric credit varies substantially by category.
+The criteria are derived from real supervision materials: investment memos, investment committee notes, and populated analyst workbooks. The reward rubric uses approximately 127 criteria per task. These criteria treat underwriting as an incremental, layered analysis, reflecting how financial analysts work in practice. Solvers encounter varied deal room files including PDF, XLSX, and MSG files, and a realistic prompt resembling the everyday work of a private equity CRE analyst. Mean rubric credit varies substantially by category.
+
+The dilemma between using a deterministic verifier, a judge, or some hybrid is real. On one hand, verifiers that stem from good quality supervision are what surface real errors in model submissions. These are exactly the quality checks you cannot and should not handwave. On the other, translating supervision material into code is an engineering challenge that comes with a slew of problems that can make a grader unfair or outright useless.
+
+Fairness and calibration are not just questions of tolerance, or whether an answer is right or wrong depending on context, but ultimately a question of whether the verifier is a useful instrument for hillclimbing on the actual task, rewarding effectively within the resource constraints of training. 
+
+In BCB, we’ve landed on a somewhat hybrid animal. The graders are deterministic, but the solver gets the full list of fields, units, basis, and calculation periods, and is asked to fill in a dedicated sheet from which the code can predictably extract calculations. That comes with the tradeoff of being somewhat easier to game or reward hack, so we have to work a little harder on producing good and bad fixtures to minimize the chance that a fabricated workbook scores high. The verifier also checks the workbook itself to ensure the underwriting process was gradually built before the solver submitted the results.
 
 ```cre-chart
 categories
@@ -55,7 +60,7 @@ categories
 
 We designed the graders to reward precise evidence reconciliation, numerical accuracy, economic impact, and the modularity and robustness of the analyst workbook. A separate pass/fail verdict captures whether a submission meets all critical underwriting requirements. These requirements address the failures that can force an analyst to discard a frontier model's work entirely and start from scratch.
 
-As the breakdown above shows, modular grading exposes multiple areas where frontier performance is lacking. Failures tend to cluster where evidence reconciliation meets intricate, long-term cash-flow projections. We like to think of financial modeling as the older brother of arithmetic, whose exact, step-by-step logic is itself a learned capability in LLMs, not a given. CoT helps models work through those steps, and learning how to verify them is a further training concern that we bake into the training corpora. It’s not that financial modeling is not verifiable, but its verification methodology differs from coding, where implementations can be checked to “behave right” within certain contextual boundaries. In financial modeling, those boundaries can be harder to establish and reproduce. Capturing how an analyst verifies while working, and making that process available as training data is therefore an important frontier of its own.
+As the breakdown above shows, modular grading exposes multiple areas where frontier performance is lacking. Failures tend to cluster where evidence reconciliation meets intricate, long-term cash-flow projections. We like to think of financial modeling as the older brother of arithmetic, whose exact, step-by-step logic is itself a learned capability in LLMs, not a given. CoT helps models work through those steps, and learning how to verify them is a further training concern that's baked into the training corpora. It’s not that financial modeling is not verifiable, but its verification methodology differs from coding, where implementations can be checked to “behave right” within certain contextual boundaries. In financial modeling, those boundaries can be harder to establish and reproduce. Capturing how an analyst verifies while working, and making that process available as training data is therefore an important frontier of its own.
 
 ## Summary
 
