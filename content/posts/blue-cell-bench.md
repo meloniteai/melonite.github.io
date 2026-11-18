@@ -66,7 +66,7 @@ As the breakdown above shows, modular grading exposes multiple areas where front
 
 Agents achieve a mean reward of 71.7, but only 12.0% of submissions meet every essential requirement. The solver's work remains net-not-useful if verifying and correcting it takes more work than it saves.
 
-We believe progress in frontier AI depends heavily on realistic benchmarks like Blue Cell Bench to close the gap between potentially useful and trustworthy work. Outside of coding, math and other highly verifiable domains, much of the world's data remains out of reach and within organizations, yet data realism and the presence of high-quality supervision materials is often overlooked in discussions of RSI and superintelligence. We look forward to building more finance benchmarks through partnerships like ours with GAIA Real Estate.
+We believe progress in frontier AI depends heavily on realistic benchmarks like Blue Cell Bench to close the gap between potentially useful and trustworthy work. Outside of coding, math and other highly verifiable domains, much of the world's data remains out of reach and within organizations, yet data realism and the presence of high-quality supervision is often overlooked in discussions of RSI and superintelligence. We look forward to building more finance benchmarks through partnerships like ours with GAIA Real Estate.
 
 ## Reward, Cost, and Trajectory Analysis
 
