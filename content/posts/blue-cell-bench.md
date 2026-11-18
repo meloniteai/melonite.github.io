@@ -7,9 +7,9 @@ toc: true
 
 We're happy to announce Blue Cell Bench, our commercial real estate underwriting evaluation built on real-world deal materials. We partnered with GAIA Real Estate, a long-standing US-based real estate firm, to create this evaluation and test frontier AI capabilities in this domain.
 
-Private equity CRE analysis is about assessing risk and allocating capital: deciding where to invest, at what price, and on what terms. Analysts turn fragmented deal materials into discounted cash flows, IRR projections, and risk measures such as debt-service coverage and downside sensitivity, then judge whether expected returns justify the risks.
+Private equity CRE analysis is about assessing risk and allocating capital: deciding where to invest, at what price, and on what terms. Analysts turn fragmented deal materials into discounted cash flows, IRR projections, and risk measures such as debt-service coverage and downside sensitivity, to asses and justify risky investments.
 
-The underwriting process brings all of these together, and we explore why training models for intricate financial modeling remains in its early days, with much still to unravel.
+The underwriting process brings all of these together, and we explore why evaluating models on intricate financial modeling remains in its early days, with much still to unravel.
 
 ## Environment
 
@@ -44,9 +44,9 @@ pareto
 ## Grader Criteria
 
 
-The criteria are derived from real supervision materials: investment memos, investment committee notes, and populated analyst workbooks. The reward rubric uses approximately 127 criteria per task. These criteria treat underwriting as an incremental, layered analysis, reflecting how financial analysts work in practice. Solvers encounter varied deal room files including PDF, XLSX, and MSG files, and a realistic prompt resembling the everyday work of a private equity CRE analyst. Mean rubric credit varies substantially by category.
+The criteria are derived from organic supervision: investment memos, investment committee notes, and populated analyst workbooks. The reward rubric uses approximately 127 criteria per task. These criteria treat underwriting as an incremental, layered analysis, reflecting how financial analysts work in practice. Solvers encounter varied deal room files including PDF, XLSX, and MSG files, and a realistic prompt resembling the everyday work of a private equity CRE analyst. Mean rubric credit varies substantially by category.
 
-The dilemma between using a deterministic verifier, a judge, or some hybrid is real. On one hand, verifiers that stem from good quality supervision are what surface real errors in model submissions. These are exactly the quality checks you cannot and should not handwave. On the other, translating supervision material into code is an engineering challenge that comes with a slew of problems that can make a grader unfair or outright useless.
+The dilemma between using a deterministic verifier, a judge, or some hybrid is real. On one hand, verifiers that stem from good quality supervision are what surface real errors in model submissions. These are exactly the quality checks you cannot and should not handwave. On the other, translating raw supervision into code is an engineering challenge that comes with a slew of problems that can make a grader unfair or outright useless.
 
 Fairness and calibration are not just questions of tolerance, or whether an answer is right or wrong depending on context, but ultimately a question of whether the verifier is a useful instrument for hillclimbing on the actual task, rewarding effectively within the resource constraints of training. 
 
