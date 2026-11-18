@@ -1,5 +1,5 @@
 ---
-title: Announcing our Angel Round and Data Partner
+title: Announcing Our Data Partner and Backing
 description: Welcoming GAIA Real Estate as our data partner and angel investor, starting with rigorous CRE underwriting evaluations.
 order: 2
 ---
@@ -9,4 +9,5 @@ We’re excited to announce our partnership with GAIA Real Estate, one of New Yo
 Our first joint initiative focuses on CRE underwriting. Together, we’re developing rigorous evaluations using real deal-room materials to assess how frontier AI handles aspects like underwriting and asset management.
 
 
-We’re also pleased to welcome GAIA as an investor in our angel round. Their backing will help us as we extend our research efforts within the Finance sector and grow our team.
+We’re also pleased to welcome GAIA as an angel investor. Their backing will help us as we extend our footing within the finance sector and grow our team.
+
