@@ -1,11 +1,11 @@
 ---
-title: "Blue Cell Bench: Can AI Underwrite the Deal?"
+title: "Blue Cell Bench: A 100% Organic, Long-Horizon Financial Analyst Eval"
 description: Results from commercial real estate underwriting submissions across 11 model and effort configurations.
 order: 1
 toc: true
 ---
 
-We're happy to announce Blue Cell Bench, our commercial real estate underwriting evaluation built on real-world deal materials. We partnered with GAIA Real Estate, a long-standing US-based real estate firm, to create this evaluation and test frontier AI capabilities in this domain.
+We're happy to announce Blue Cell Bench, our commercial real estate underwriting evaluation built on real-world deal materials. We partnered with GAIA Real Estate, a long-standing US-based real estate firm, to create this evaluation and test frontier AI capabilities in private equity real estate underwriting.
 
 Private equity CRE analysis is about assessing risk and allocating capital: deciding where to invest, at what price, and on what terms. Analysts turn fragmented deal materials into discounted cash flows, IRR projections, and risk measures such as debt-service coverage and downside sensitivity, to asses and justify risky investments.
 
@@ -14,8 +14,6 @@ The underwriting process brings all of these together, and we explore why evalua
 ## Environment
 
 Each task includes a directory containing dozens of anonymized files from a real deal room. Solvers receive an environment with terminal access and Python and are required to produce a completed Excel underwriting workbook.
-
-Some of the existing work in adjacent finance evals include Computer Use. In Blue Cell Bench, we focus on the nuanced underwriting process itself, while largely deferring the complexity of navigating human interfaces. CRE underwriting involves specialized software beyond Excel, but this evaluation focuses on the core financial methodology.
 
 ```cre-desktop
 Alderwick-St-55
@@ -50,7 +48,7 @@ The dilemma between using a deterministic verifier, a judge, or some hybrid is r
 
 Fairness and calibration are not just questions of tolerance, or whether an answer is right or wrong depending on context, but ultimately a question of whether the verifier is a useful instrument for hillclimbing on the actual task, rewarding effectively within the resource constraints of training. 
 
-In BCB, we’ve landed on a somewhat hybrid animal. The graders are deterministic, but the solver gets the full list of fields, units, basis, and calculation periods, and is asked to fill in a dedicated sheet from which the code can predictably extract calculations. That comes with the tradeoff of being somewhat easier to game or reward hack, so we use a mix of good and bad workbook fixtures as tests, and verifier checks of the workbook structure itself to ensure the underwriting process was gradually built before the solver submitted the results.
+In BCB, we’ve landed on a somewhat hybrid animal. The graders are deterministic, but the solver gets the full list of fields, units, basis, and calculation periods, and is asked to fill in a dedicated sheet from which the code can predictably extract calculations. That comes with the tradeoff of being somewhat easier to game or reward hack, so we use a mix of good and bad workbook fixtures as tests, and verifier checks of the workbook structure itself to ensure the underwriting process was built gradually rather than gamed by the model.
 
 ```cre-chart
 categories
