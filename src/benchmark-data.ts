@@ -1,3 +1,5 @@
+import { leaderboardAddenda } from './benchmark-addenda.ts';
+
 export type Metric = 'score' | 'duration_minutes' | 'cost' | 'tokens_input' | 'tokens_output' | 'tokens_cache';
 export interface Stats { mean: number; median: number; p90: number; min: number; max: number; q1: number; q3: number }
 export interface Configuration {
@@ -31,16 +33,34 @@ export type FigureId = keyof typeof figureTitles;
 export function isFigureId(value: string): value is FigureId { return Object.hasOwn(figureTitles, value); }
 export const format = (n: number | null, digits = 1): string => n === null ? 'Unavailable' : n.toLocaleString('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits });
 
-export function rankByMeanReward(configurations: readonly Configuration[]): Configuration[] {
-  return [...configurations].sort((a, b) => b.stats.score.mean - a.stats.score.mean);
+export function leaderboardRows(data: BenchmarkData) {
+  return [
+    ...data.configurations.map(c => ({ label: c.label, family: c.family, meanReward: c.stats.score.mean, passRate: c.passRate })),
+    ...leaderboardAddenda,
+  ].sort((a, b) => b.meanReward - a.meanReward);
+}
+
+export function paretoRows(data: BenchmarkData): BenchmarkData['pareto'] {
+  const points = [
+    ...data.pareto,
+    ...leaderboardAddenda.map(c => ({ label: c.label, mean_score: c.meanReward, mean_cost: c.meanCost })),
+  ];
+  return points.map(p => ({
+    ...p,
+    frontier: !points.some(q => q.mean_cost <= p.mean_cost && q.mean_score >= p.mean_score
+      && (q.mean_cost < p.mean_cost || q.mean_score > p.mean_score)),
+  }));
 }
 
 /** The same reviewed measurements feed the static accessible tables and ECharts. */
 export function figureTable(id: FigureId, data: BenchmarkData): { headers: string[]; rows: string[][] } {
-  const cs = id === 'baseline' ? rankByMeanReward(data.configurations) : data.configurations;
-  if (id === 'baseline') return { headers: ['Model / effort', 'Mean reward (0–100)', 'Pass rate (%)'], rows: cs.map(c=>[c.label,format(c.stats.score.mean),format(c.passRate)]) };
-  if (id === 'pass-rate') return { headers: ['Model / effort', 'Pass rate (%)'], rows: [...cs].sort((a,b) => b.passRate-a.passRate).map(c => [c.label, format(c.passRate)]) };
-  if (id === 'pareto') return { headers: ['Model / effort', 'Mean reward', 'Mean cost (USD)', 'On frontier'], rows: data.pareto.map(p => [p.label, format(p.mean_score), format(p.mean_cost, 2), p.frontier ? 'Yes' : 'No']) };
+  const cs = data.configurations;
+  if (id === 'baseline') return { headers: ['Model / effort', 'Mean reward (0–100)', 'Pass rate (%)'], rows: leaderboardRows(data).map(c=>[c.label,format(c.meanReward),format(c.passRate)]) };
+  if (id === 'pass-rate') return { headers: ['Model / effort', 'Pass rate (%)'], rows: leaderboardRows(data).sort((a,b) => b.passRate-a.passRate).map(c => [c.label, format(c.passRate)]) };
+  if (id === 'pareto') return {
+    headers: ['Model / effort', 'Mean reward', 'Mean cost (USD)', 'On frontier'],
+    rows: paretoRows(data).map(p => [p.label, format(p.mean_score), format(p.mean_cost, 2), p.frontier ? 'Yes' : 'No']),
+  };
   if (id === 'reward-bands') return { headers: ['Reward band', 'Pass rate (%)'], rows: data.rewardBands.map(b => [`${b.lower}–${b.upper}${b.upper === 100 ? ' (inclusive)' : ' (upper excluded)'}`, format(b.rate)]) };
   if (id === 'histogram') return { headers: ['Reward band', 'Submissions', 'Passing', 'Pass rate (%)'], rows: data.rewardBands.map(b => [`${b.lower}–${b.upper}${b.upper === 100 ? ' (inclusive)' : ' (upper excluded)'}`, format(b.submissions,0), format(b.passing,0), format(b.rate)]) };
   if (id === 'categories') return { headers: ['Model / effort', ...Array.from({length:9},(_,i)=>`Category ${i+1} (%)`)], rows: cs.map(c=>[c.label,...Array.from({length:9},(_,i)=>format(data.categories.find(r=>r.label===c.label && r.category===i+1)?.mean ?? null))]) };

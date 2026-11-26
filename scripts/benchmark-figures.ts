@@ -1,21 +1,26 @@
 import { readFileSync } from 'node:fs';
 import { escapeHtml } from '../src/site-layout.ts';
-import { figureTitles, figureTable, isFigureId, rankByMeanReward, format } from '../src/benchmark-data.ts';
+import { figureTitles, figureTable, isFigureId, leaderboardRows, format } from '../src/benchmark-data.ts';
 import type { BenchmarkData, FigureId } from '../src/benchmark-data.ts';
-import { chartPalette, configurationColor } from '../src/benchmark-theme.ts';
+import { benchmarkProvider, chartPalette, configurationColor } from '../src/benchmark-theme.ts';
 
 const data: BenchmarkData = JSON.parse(readFileSync(new URL('../public/research/cre-bench/chart-data.json', import.meta.url), 'utf8'));
 function renderLeaderboard(): string {
-  const ranked = rankByMeanReward(data.configurations);
-  const bestReward = ranked[0].stats.score.mean;
+  const ranked = leaderboardRows(data);
+  const bestReward = ranked[0].meanReward;
   const bestPass = Math.max(...ranked.map(c=>c.passRate));
   const cell = (value: number, color: string, suffix: string, best: boolean) => `<td class="benchmark-score${best?' benchmark-score-best':''}"><span class="benchmark-meter" aria-hidden="true"><span style="width:${value}%;background:${color}"></span></span><span class="benchmark-score-value">${format(value)}${suffix}</span></td>`;
+  const name = (label: string, family: string) => {
+    const provider = benchmarkProvider(family);
+    const icon = provider ? `<img class="benchmark-provider-icon" src="../../assets/cre-bench/lab-icons/${provider}.png" width="16" height="16" alt="">` : '';
+    return `<span class="benchmark-model-name">${icon}<span>${escapeHtml(label)}</span></span>`;
+  };
   return `<figure class="benchmark-figure benchmark-leaderboard" id="figure-baseline" aria-labelledby="title-baseline">
     <figcaption id="title-baseline">${figureTitles.baseline}</figcaption>
     <div class="benchmark-leaderboard-scroll"><table class="benchmark-leaderboard-table" aria-label="Mean reward and pass rate by model and effort">
       <colgroup><col style="width:36%"><col style="width:32%"><col style="width:32%"></colgroup>
       <thead><tr><th scope="col">Model / effort</th><th scope="col" aria-sort="descending"><button data-leaderboard-sort="score">Mean reward <span>(0–100)</span><span class="benchmark-sort-arrow" aria-hidden="true"> ↓</span></button></th><th scope="col" aria-sort="none"><button data-leaderboard-sort="passRate">Pass rate <span>(%)</span><span class="benchmark-sort-arrow" aria-hidden="true"></span></button></th></tr></thead>
-      <tbody>${ranked.map(c=>`<tr data-score="${c.stats.score.mean}" data-pass-rate="${c.passRate}"><th scope="row">${escapeHtml(c.label)}</th>${cell(c.stats.score.mean,c.stats.score.mean===bestReward?chartPalette.navy:configurationColor(c.family),'',c.stats.score.mean===bestReward)}${cell(c.passRate,c.passRate===bestPass?chartPalette.navy:chartPalette.teal,'%',c.passRate===bestPass)}</tr>`).join('')}</tbody>
+      <tbody>${ranked.map(c=>`<tr data-score="${c.meanReward}" data-pass-rate="${c.passRate}"><th scope="row">${name(c.label,c.family)}</th>${cell(c.meanReward,c.meanReward===bestReward?chartPalette.navy:configurationColor(c.family),'',c.meanReward===bestReward)}${cell(c.passRate,c.passRate===bestPass?chartPalette.navy:chartPalette.teal,'%',c.passRate===bestPass)}</tr>`).join('')}</tbody>
     </table></div><span class="benchmark-sr-only" data-leaderboard-status aria-live="polite">Sorted by mean reward, descending.</span>
   </figure>`;
 }
