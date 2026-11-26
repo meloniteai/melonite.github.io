@@ -16,3 +16,5 @@ Current google.svg / google.png use the genuine official blue/purple Google Gemi
 - mistral.png: Mistral’s pixel M, from the [favicon in Mistral’s official repository](https://github.com/mistralai/mistral-common/blob/main/docs/assets/logo_favicon.png). Transparent padding trimmed and resized; colors and proportions preserved.
 
 - nvidia.png: NVIDIA provider mark from its [website favicon](https://www.nvidia.com/favicon.ico), converted to PNG for chart rendering.
+
+- zai.png: [Z.ai’s website icon](https://z-cdn.chatglm.cn/z-ai/static/logo.svg), converted to PNG for chart rendering.

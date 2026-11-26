@@ -12,10 +12,11 @@ const familyColors: Record<string, string> = {
 
 export const configurationColor = (family: string) => familyColors[family] ?? chartPalette.mauve;
 
-export function benchmarkProvider(family: string | undefined): 'openai' | 'anthropic' | 'google' | 'mistral' | 'nvidia' | undefined {
+export function benchmarkProvider(family: string | undefined): 'openai' | 'anthropic' | 'google' | 'mistral' | 'nvidia' | 'zai' | undefined {
   if (family?.startsWith('GPT')) return 'openai';
   if (family?.startsWith('Anthropic')) return 'anthropic';
   if (family?.startsWith('Gemini')) return 'google';
   if (family?.startsWith('Mistral')) return 'mistral';
   if (family?.startsWith('NVIDIA')) return 'nvidia';
+  if (family?.startsWith('GLM')) return 'zai';
 }
