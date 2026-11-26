@@ -13,8 +13,9 @@ import openaiIcon from '../assets/cre-bench/lab-icons/openai.png';
 import anthropicIcon from '../assets/cre-bench/lab-icons/anthropic.png';
 import geminiIcon from '../assets/cre-bench/lab-icons/google.png';
 import mistralIcon from '../assets/cre-bench/lab-icons/mistral.png';
+import nvidiaIcon from '../assets/cre-bench/lab-icons/nvidia.png';
 
-const providerIcons = { openai: openaiIcon, anthropic: anthropicIcon, google: geminiIcon, mistral: mistralIcon };
+const providerIcons = { openai: openaiIcon, anthropic: anthropicIcon, google: geminiIcon, mistral: mistralIcon, nvidia: nvidiaIcon };
 
 use([BarChart, BoxplotChart, HeatmapChart, LineChart, ScatterChart, AriaComponent, GridComponent, LegendComponent, MarkLineComponent, TitleComponent, TooltipComponent, VisualMapComponent, SVGRenderer, LabelLayout]);
 
@@ -113,12 +114,13 @@ export function chartOption(id: FigureId, data: BenchmarkData): EChartsOption {
       'Gemini Flash / medium': [-8, 35], 'Gemini Flash / high': [35, 72],
       'Anthropic Opus / xhigh': [-75, -28], 'Anthropic Fable / high': [-110, 36],
       'Mistral Large 4 / high': [20, -43],
+      'NVIDIA Nemotron 3.5 Super VL': [28, 8],
     };
     const points = paretoRows(data);
     const frontier = points.filter(p=>p.frontier).sort((a,b)=>a.mean_cost-b.mean_cost);
     return { ...common, grid: { left: 0, right: 35, top: 40, bottom: 65 },
       xAxis: xAxis('Mean cost per submission (USD)',20),
-      yAxis: { type: 'value', name: 'Mean reward (0–100)', nameLocation: 'end', nameTextStyle: { align: 'left' }, min: 50, max: 90, interval: 10, axisLine, splitLine },
+      yAxis: { type: 'value', name: 'Mean reward (0–100)', nameLocation: 'end', nameTextStyle: { align: 'left' }, min: 40, max: 90, interval: 10, axisLine, splitLine },
       series: [{ type: 'line', name: 'Observed frontier', data: frontier.map(p=>[p.mean_cost,p.mean_score]), symbol: 'none', lineStyle: { color: palette.teal, width: 2.5 }, silent: true },
         ...points.map((p): SeriesOption => {
           const family = cs.find(c=>c.label===p.label)?.family;

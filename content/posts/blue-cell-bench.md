@@ -37,7 +37,7 @@ baseline
 pareto
 ```
 
-*Mean reward versus mean cost per submission. Teal line: observed Pareto frontier · reward axis: 50–90.*
+*Mean reward versus mean cost per submission. Teal line: observed Pareto frontier · reward axis: 40–90.*
 
 ## Grader Criteria
 
