@@ -14,8 +14,9 @@ import anthropicIcon from '../assets/cre-bench/lab-icons/anthropic.png';
 import geminiIcon from '../assets/cre-bench/lab-icons/google.png';
 import mistralIcon from '../assets/cre-bench/lab-icons/mistral.png';
 import nvidiaIcon from '../assets/cre-bench/lab-icons/nvidia.png';
+import zaiIcon from '../assets/cre-bench/lab-icons/zai.png';
 
-const providerIcons = { openai: openaiIcon, anthropic: anthropicIcon, google: geminiIcon, mistral: mistralIcon, nvidia: nvidiaIcon };
+const providerIcons = { openai: openaiIcon, anthropic: anthropicIcon, google: geminiIcon, mistral: mistralIcon, nvidia: nvidiaIcon, zai: zaiIcon };
 
 use([BarChart, BoxplotChart, HeatmapChart, LineChart, ScatterChart, AriaComponent, GridComponent, LegendComponent, MarkLineComponent, TitleComponent, TooltipComponent, VisualMapComponent, SVGRenderer, LabelLayout]);
 
@@ -114,6 +115,7 @@ export function chartOption(id: FigureId, data: BenchmarkData): EChartsOption {
       'Gemini Flash / medium': [-8, 35], 'Gemini Flash / high': [35, 72],
       'Anthropic Opus / xhigh': [-75, -28], 'Anthropic Fable / high': [-110, 36],
       'Mistral Large 4 / high': [20, -43],
+      'GLM 5.3 / max': [24, 2],
       'NVIDIA Nemotron 3.5 Super VL': [28, 8],
     };
     const points = paretoRows(data);
