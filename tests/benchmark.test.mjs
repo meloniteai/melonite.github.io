@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { parseArticle } from '../scripts/generate-posts.ts';
-import { figureTitles, figureTable } from '../src/benchmark-data.ts';
+import { figureTitles, figureTable, paretoRows } from '../src/benchmark-data.ts';
 
 const raw = await readFile(new URL('../public/research/cre-bench/chart-data.json', import.meta.url), 'utf8');
 const data = JSON.parse(raw);
@@ -66,6 +66,9 @@ test('all report figures and accessible tables survive static generation under a
   assert.equal((article.html.match(/<table>/g)||[]).length,9);
   for(const id of Object.keys(figureTitles).filter(id=>!['baseline','pass-rate'].includes(id))) assert(article.html.includes(`data-benchmark-chart="${id}"`));
   assert(article.html.includes('class="benchmark-leaderboard-table"'));
+  const icons = [...article.html.matchAll(/class="benchmark-provider-icon" src="[^"]+\/(openai|anthropic|google|mistral)\.png"/g)].map(match=>match[1]);
+  assert.equal(icons.length,12);
+  assert.deepEqual([...new Set(icons)].sort(),['anthropic','google','mistral','openai']);
   const ids = [...article.html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
   assert.equal(new Set(ids).size, ids.length, 'Article IDs must remain unique.');
   for (const [, target] of (article.html + article.contents).matchAll(/href="#([^"]+)"/g)) assert(ids.includes(target), `Missing section target: ${target}`);
@@ -86,12 +89,29 @@ test('combined leaderboard pairs both metrics by model and preserves source orde
   const originalLabels=data.configurations.map(c=>c.label);
   const {headers,rows}=figureTable('baseline',data);
   assert.deepEqual(headers,['Model / effort','Mean reward (0–100)','Pass rate (%)']);
-  assert.equal(rows.length,11);
+  assert.equal(rows.length,12);
   for(const [i,row] of rows.entries()) {
+    if(i) assert(Number(rows[i-1][1])>=Number(row[1]));
+    if(row[0]==='Mistral Large 4 / high') {
+      assert.deepEqual(row,['Mistral Large 4 / high','59.6','0.0']);
+      continue;
+    }
     const configuration=data.configurations.find(c=>c.label===row[0]);
     assert.equal(Number(row[1]),Number(configuration.stats.score.mean.toFixed(1)));
     assert.equal(Number(row[2]),Number(configuration.passRate.toFixed(1)));
-    if(i) assert(Number(rows[i-1][1])>=Number(row[1]));
   }
   assert.deepEqual(data.configurations.map(c=>c.label),originalLabels);
+});
+
+test('Mistral addendum appears only in the leaderboard, pass rate and Pareto', () => {
+  const label='Mistral Large 4 / high';
+  assert.deepEqual(figureTable('pass-rate',data).rows.find(row=>row[0]===label),[label,'0.0']);
+  assert.deepEqual(figureTable('pareto',data).rows.find(row=>row[0]===label),[label,'59.6','1.16','No']);
+  assert.deepEqual(paretoRows(data).find(point=>point.label===label),
+    {label,mean_score:59.64496869928124,mean_cost:1.157,frontier:false});
+  assert.deepEqual(paretoRows(data).filter(point=>point.frontier), data.pareto.filter(point=>point.frontier));
+  assert(!data.pareto.some(point=>point.label===label));
+  for(const id of Object.keys(figureTitles).filter(id=>!['baseline','pass-rate','pareto'].includes(id))) {
+    assert(!figureTable(id,data).rows.some(row=>row[0]===label),id);
+  }
 });

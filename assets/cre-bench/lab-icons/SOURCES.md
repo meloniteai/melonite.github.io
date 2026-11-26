@@ -12,3 +12,5 @@ All three selected SVGs parsed as XML and inspected: no scripts, event attribute
 
 
 Current google.svg / google.png use the genuine official blue/purple Google Gemini sparkle. See GEMINI-BLUE-SOURCE.md for exact CDN URL and terms. The black Simple Icons Gemini fallback is no longer bundled. PNG transparent padding is trimmed for consistent visible marker sizing; SVG geometry/colors are unchanged.
+
+- mistral.png: Mistral’s pixel M, from the [favicon in Mistral’s official repository](https://github.com/mistralai/mistral-common/blob/main/docs/assets/logo_favicon.png). Transparent padding trimmed and resized; colors and proportions preserved.

@@ -6,12 +6,15 @@ import { LabelLayout } from 'echarts/features';
 import type { EChartsOption, SeriesOption } from 'echarts';
 import type { ECharts } from 'echarts/core';
 import type { BenchmarkData, Configuration, FigureId, Metric } from './benchmark-data.ts';
-import { figureTitles, format, isFigureId, rankByMeanReward } from './benchmark-data.ts';
-import { chartPalette as palette, configurationColor } from './benchmark-theme.ts';
+import { figureTitles, format, isFigureId, leaderboardRows, paretoRows } from './benchmark-data.ts';
+import { benchmarkProvider, chartPalette as palette, configurationColor } from './benchmark-theme.ts';
 import { mountBenchmarkUI } from './benchmark-ui.ts';
 import openaiIcon from '../assets/cre-bench/lab-icons/openai.png';
 import anthropicIcon from '../assets/cre-bench/lab-icons/anthropic.png';
 import geminiIcon from '../assets/cre-bench/lab-icons/google.png';
+import mistralIcon from '../assets/cre-bench/lab-icons/mistral.png';
+
+const providerIcons = { openai: openaiIcon, anthropic: anthropicIcon, google: geminiIcon, mistral: mistralIcon };
 
 use([BarChart, BoxplotChart, HeatmapChart, LineChart, ScatterChart, AriaComponent, GridComponent, LegendComponent, MarkLineComponent, TitleComponent, TooltipComponent, VisualMapComponent, SVGRenderer, LabelLayout]);
 
@@ -89,12 +92,13 @@ export function chartOption(id: FigureId, data: BenchmarkData): EChartsOption {
   const cs = data.configurations;
   const common = base(id);
   if (id === 'pass-rate' || id === 'baseline') {
-    const ranked = id === 'pass-rate' ? [...cs].sort((a,b)=>b.passRate-a.passRate) : rankByMeanReward(cs);
-    const score = (c: Configuration) => id === 'pass-rate' ? c.passRate : c.stats.score.mean;
+    const ranked = leaderboardRows(data);
+    if (id === 'pass-rate') ranked.sort((a,b)=>b.passRate-a.passRate);
+    const score = (c: typeof ranked[number]) => id === 'pass-rate' ? c.passRate : c.meanReward;
     const best = score(ranked[0]);
     return { ...common, xAxis: xAxis(id === 'pass-rate' ? 'Passing submissions (%)' : 'Mean reward (0–100)', 100), yAxis: rowsAxis(ranked.map(c=>c.label)),
       series: [{ type: 'bar', barMaxWidth: 22, showBackground: id==='pass-rate', backgroundStyle: { color: palette.chalk, opacity: .3 },
-        data: ranked.map(c=>({ value: score(c), itemStyle: { color: score(c) === best ? palette.navy : color(c) }, label: { fontWeight: score(c) === best ? 600 : 400 } })),
+        data: ranked.map(c=>({ value: score(c), itemStyle: { color: score(c) === best ? palette.navy : configurationColor(c.family) }, label: { fontWeight: score(c) === best ? 600 : 400 } })),
         label: { show: true, position: 'right', color: ink, formatter: p=>f(Number(p.value))+(id==='pass-rate'?'%':'') },
         tooltip: { valueFormatter: v=>f(Number(v))+(id==='pass-rate'?'%':' / 100') },
       }],
@@ -108,20 +112,24 @@ export function chartOption(id: FigureId, data: BenchmarkData): EChartsOption {
       'Gemini Argon / high': [35, 18], 'Gemini Argon / medium': [35, 26],
       'Gemini Flash / medium': [-8, 35], 'Gemini Flash / high': [35, 72],
       'Anthropic Opus / xhigh': [-75, -28], 'Anthropic Fable / high': [-110, 36],
+      'Mistral Large 4 / high': [20, -43],
     };
-    const frontier = data.pareto.filter(p=>p.frontier).sort((a,b)=>a.mean_cost-b.mean_cost);
+    const points = paretoRows(data);
+    const frontier = points.filter(p=>p.frontier).sort((a,b)=>a.mean_cost-b.mean_cost);
     return { ...common, grid: { left: 0, right: 35, top: 40, bottom: 65 },
       xAxis: xAxis('Mean cost per submission (USD)',20),
       yAxis: { type: 'value', name: 'Mean reward (0–100)', nameLocation: 'end', nameTextStyle: { align: 'left' }, min: 50, max: 90, interval: 10, axisLine, splitLine },
       series: [{ type: 'line', name: 'Observed frontier', data: frontier.map(p=>[p.mean_cost,p.mean_score]), symbol: 'none', lineStyle: { color: palette.teal, width: 2.5 }, silent: true },
-        ...data.pareto.map((p): SeriesOption => {
-          const c = cs.find(c=>c.label===p.label)!;
-          const providerIcon = c.family.startsWith('GPT') ? openaiIcon : c.family.startsWith('Gemini') ? geminiIcon : anthropicIcon;
-          return { type: 'scatter', name: p.label, symbol: `image://${providerIcon}`, symbolSize: 20, symbolKeepAspect: true, z: 4,
-            data: [[p.mean_cost,p.mean_score]], itemStyle: { opacity: 1 },
+        ...points.map((p): SeriesOption => {
+          const family = cs.find(c=>c.label===p.label)?.family;
+          const provider = benchmarkProvider(family ?? leaderboardRows(data).find(c=>c.label===p.label)?.family);
+          const providerIcon = provider ? providerIcons[provider] : null;
+          const [dx,dy] = offsets[p.label] ?? [0,0];
+          return { type: 'scatter', name: p.label, symbol: providerIcon ? `image://${providerIcon}` : 'diamond', symbolSize: providerIcon ? 20 : 13, symbolKeepAspect: true, z: 4,
+            data: [[p.mean_cost,p.mean_score]], itemStyle: { opacity: 1, ...(providerIcon ? {} : { color: palette.brown }) },
             label: { show: true, formatter: p.label, position: 'right', fontSize: 12, color: p.frontier ? palette.teal : ink, fontWeight: p.frontier ? 600 : 400 },
             labelLine: { show: true, lineStyle: { color: p.frontier ? palette.teal : palette.rose, width: 1 } },
-            labelLayout: { dx: offsets[p.label][0], dy: offsets[p.label][1] },
+            labelLayout: { dx, dy },
             tooltip: { formatter: () => `${p.label}<br>Mean reward: ${f(p.mean_score)} / 100<br>Mean cost: ${money(p.mean_cost)}<br>${p.frontier ? 'On observed frontier' : 'Below observed frontier'}` },
           };
         })],
